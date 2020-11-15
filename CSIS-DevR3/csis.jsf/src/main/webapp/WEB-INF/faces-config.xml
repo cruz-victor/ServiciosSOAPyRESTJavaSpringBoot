@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<faces-config version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+	<application>
+		<resource-handler>org.omnifaces.resourcehandler.CombinedResourceHandler</resource-handler>
+	</application>
+	
+	<navigation-rule>
+		<from-view-id>login.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>success</from-outcome>
+			<to-view-id>menu.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-action>#{loginBean.submit}</from-action>
+			<from-outcome>failure</from-outcome>
+			<to-view-id>login.xhtml</to-view-id>
+		</navigation-case>
+
+	</navigation-rule>
+	
+	<lifecycle>
+       <phase-listener>bo.gob.sin.sen.enmo.jsf.controller.SessionTimeoutListener</phase-listener>
+    </lifecycle>
+	
+	
+</faces-config>

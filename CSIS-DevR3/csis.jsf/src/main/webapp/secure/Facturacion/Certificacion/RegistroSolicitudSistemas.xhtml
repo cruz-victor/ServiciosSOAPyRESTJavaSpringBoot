@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre"> 
+
+	<f:metadata>
+		<!-- <f:viewAction action="#{logedBean.check}" /> -->
+		<f:viewAction action="#{registroSolicitudSistemasController.Load}" />
+	</f:metadata>
+
+	<ui:define name="title">
+       FACTURACION
+    </ui:define>
+
+	<ui:define name="body">
+			
+			<div class="box box-primary">
+				<h:form id="formregistroSolicitudSistemas">
+					<div class="box-header with-border">
+						<h3 class="box-title">Verificación del checklist de pruebas manuales</h3>
+
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool"
+								data-widget="collapse">
+								<i class="fa fa-minus"></i>
+							</button>
+						</div>
+					</div>					
+
+					<div class="box-body">
+						<div class="chart">
+							<div class="row">
+								<div class="col-xs-12">
+									<p:fieldset legend="Datos Básicos" toggleable="true" toggleSpeed="500">
+										<sre:ComponenteBusquedaDatosBasicos
+													ComponenteLabelNit="NIT"
+													ComponenteInputTextNit="#{busquedaDatosBasicosComponent.nitDatosBasicosDto.nit}"													
+													ComponenteLabelDependencia="DEPENDENCIA"
+													ComponenteLabelRazonSocial="NOMBRE O RAZON SOCIAL"
+													ComponenteButtonNit="#{registroSolicitudSistemasController.BuscarContribuyente}"
+													ComponenteTextButtonNit="Buscar"
+													ComponenteEsVisibleLimpiar="true"
+													ComponenteTextButtonLimpiar="Limpiar"
+													ComponenteButtonLimpiar="#{registroSolicitudSistemasController.LimpiarBusqueda}"
+													ComponenteNombreFormPrincipal="formregistroSolicitudSistemas">
+											</sre:ComponenteBusquedaDatosBasicos>
+									</p:fieldset>
+								</div>
+							</div>
+
+							<p />
+							<br />
+						 
+						 	<h:panelGroup id="idListadoDetalles">
+								<h:panelGroup id="idListadoSistemas" rendered="#{registroSolicitudSistemasController.comportamientoPaginaModel.esVisiblePanelGroup and registroSolicitudSistemasController.comportamientoPaginaModel.esVisiblePanel}">
+									<div class="row">
+										<div class="col-xs-12">
+											<p:fieldset legend="Listado de Sistemas" toggleable="true" toggleSpeed="500"
+												style="margin-bottom:20px">
+		
+												<div class="row">
+													<div class="col-xs-12">
+											
+														<p:dataTable id="listaDatoContribuyentes"
+															value="#{registroSolicitudSistemasController.sistemasCertificadosList.listaEstadoCertificacion}"
+															filteredValue="#{registroSolicitudSistemasController.sistemasCertificadosList.listaSistemasCertificadosFiltrar}"
+															var="ecs"
+															rowIndexVar="rowIndex"
+															rows="5"
+															widgetVar="listaDatoContribuyentes"
+															paginator="true"
+															sortMode="multiple"
+							            		 			paginatorPosition="bottom"
+							            		 			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							            		 			currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"													
+															styleClass="table table-striped table-bordered table-hover table-sm">
+		
+															<f:facet name="header">													
+														            <p:outputPanel>
+														                <h:outputText value="Filtrar:"/>
+														        		<div>        
+														                	<p:inputText id="globalFilter" onkeyup="PF('listaDatoContribuyentes').filter()" placeholder="Digite la búsqueda"/>
+														                </div>											                
+														            </p:outputPanel>											            
+													        </f:facet>
+		
+															<p:column>
+																<f:facet name="header">
+																	<h:outputText value="Nro."></h:outputText>
+																</f:facet>
+																<h:outputText value="#{rowIndex+1}"></h:outputText>
+															</p:column>
+															<p:column sortBy="#{ecs.nombreSistema}" filterBy="#{ecs.nombreSistema}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="SISTEMA"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.nombreSistema}"></h:outputText>
+															</p:column>
+															<p:column sortBy="#{ecs.cuis}" filterBy="#{ecs.cuis}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="CUIS"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.cuis}"></h:outputText>
+															</p:column>
+															<p:column sortBy="#{ecs.version}" filterBy="#{ecs.version}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="VERSION"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.version}"></h:outputText>
+															</p:column>
+															<p:column sortBy="#{ecs.fechaEmisionCertificado}">
+																<f:facet name="header">
+																	<h:outputText value="FECHA INICIO"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.fechaEmisionCertificado}">
+																	<f:convertDateTime pattern="dd/MM/yyyy" />
+																</h:outputText>
+															</p:column>
+															
+															<p:column sortBy="#{ecs.descripcionEstadoPrueba}" filterBy="#{ecs.descripcionEstadoPrueba}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="ESTADO CERTIFICACION"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.descripcionEstadoPrueba}"></h:outputText>
+															</p:column>
+															
+															<p:column>
+																<f:facet name="header">
+																	<h:outputText value="OPERACIONES"></h:outputText>
+																	<br/>
+																	<p:commandLink value="Limpiar Filtros" styleClass="text-blue" onclick="PF('listaDatoContribuyentes').clearFilters();">
+																	</p:commandLink>
+																	<!-- <f:ajax  update=":formregistroSolicitudSistemas:listaDatoContribuyentes"></f:ajax> --> 
+																</f:facet>	
+																<p:commandLink styleClass="text-red"  rendered="#{(ecs.estadoSolicitudCertificacionId== registroSolicitudSistemasController.valorEnProceso) or (ecs.estadoSolicitudCertificacionId== registroSolicitudSistemasController.valorEnVerificacion) or (ecs.estadoSolicitudCertificacionId== registroSolicitudSistemasController.valorEnAutorizacion)?true:false}" ajax="true" update=":formregistroSolicitudSistemas:panelCuadroDialogo" value="Rechazar" oncomplete="PF('cuadroDialogo').show()">								            								             		             	
+												                   <f:setPropertyActionListener value="#{ecs.solicitudCertificacionId}" target="#{registroSolicitudSistemasController.pasosCertificacionSeleccionableModel.pruebasSistemasSeleccionado.solicitudCertificacionId}" />								                	
+												                </p:commandLink >																									
+																<em>    </em>
+																 <p:commandLink styleClass="text-green" update=":formregistroSolicitudSistemas:idListadoDetalles :formregistroSolicitudSistemas:listaDatoContribuyentesConsulta" value="Ver Detalles" actionListener="#{registroSolicitudSistemasController.VerDetallesPruebas(ecs.sistemaId,ecs.solicitudCertificacionId,ecs.contribuyenteId,ecs.estadoSolicitudCertificacionId, ecs.nombreSistema)}">								      
+																 	<f:ajax update=":formregistroSolicitudSistemas:idListadoDetalles :formregistroSolicitudSistemas:listaDatoContribuyentesConsulta"></f:ajax>																 									                	
+												                </p:commandLink >
+																
+															</p:column>
+		
+														</p:dataTable>
+																			
+													</div>
+												</div>
+											</p:fieldset>
+											
+											
+											
+										</div>
+									</div>
+								</h:panelGroup>
+								
+								
+								<p:dialog header="Advertencia" widgetVar="cuadroDialogo" position="center center" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+							        <p:outputPanel  style="text-align:center;">
+							            <h:outputText value="¿Está seguro de Rechazar la certificación?" />
+								    	
+								    	
+								    	<br/>
+								    	
+								    	<div class="box-footer">
+								    	
+									    	<p:commandButton id="idAceptarRechazo" value="Aceptar" actionListener="#{registroSolicitudSistemasController.RechazarSolicitudCertificacion(registroSolicitudSistemasController.pasosCertificacionSeleccionableModel.pruebasSistemasSeleccionado.solicitudCertificacionId)}"
+									    	                 oncomplete="PF('listaDatoContribuyentes').filter();PF('cuadroDialogo').hide();" update="@widgetVar(listaDatoContribuyentes)">					    	
+									    	</p:commandButton>
+								    	
+								    	</div>
+							        </p:outputPanel>
+							    </p:dialog>	
+								
+								<h:panelGroup id="idListadoPruebas" rendered="#{!registroSolicitudSistemasController.comportamientoPaginaModel.esVisiblePanelGroup}">
+									<div class="row">
+										<div class="col-xs-12">
+											<p:fieldset legend="Pruebas Realizadas" toggleable="true" toggleSpeed="500"
+												style="margin-bottom:20px">
+						
+														
+														<p:dataTable id="listaDatoContribuyentesConsulta"
+															widgetVar="listaDatoContribuyentesConsulta"
+															value="#{registroSolicitudSistemasController.pruebasSistemaList.listaPruebasSistemas}"
+															var="ep"
+															rowIndexVar="rowIndex"
+															rows="5"
+															filteredValue="#{registroSolicitudSistemasController.pruebasSistemaList.listaPasosFiltrada}"
+															emptyMessage="No hay datos para mostrar" 
+															lazy="false"
+															paginator="true"
+															sortMode="multiple"
+							            		 			paginatorPosition="bottom"
+							            		 			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							            		 			currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"			            		 							            		 			
+															styleClass="table table-striped table-bordered table-hover table-sm">
+																		
+															<f:facet name="header">													
+														            <p:outputPanel>
+														                <h:outputText value="SISTEMA : #{registroSolicitudSistemasController.pasosCertificacionSeleccionableModel.nombreSistema}"/>										                
+														            </p:outputPanel>											            
+													        </f:facet>
+																							 													
+															<p:column>
+																<f:facet name="header">
+																	<h:outputText value="Nro."></h:outputText>
+																</f:facet>
+																<h:outputText value="#{rowIndex+1}"></h:outputText>
+															</p:column>
+															
+															<p:column  sortBy="#{ep.nombrePrueba}" filterBy="#{ep.nombrePrueba}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="Descripción de la prueba"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ep.nombrePrueba}"></h:outputText>
+															</p:column>
+		
+															<p:column  sortBy="#{ep.descripcionEstadoPrueba}" filterBy="#{ep.descripcionEstadoPrueba}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="Estado"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ep.descripcionEstadoPrueba}"></h:outputText>
+															</p:column>
+															
+															<p:column sortBy="#{ep.fechaFin}" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="Fecha Aprobación"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ep.fechaFin}">
+																	<f:convertDateTime pattern="dd/MM/yyyy" />
+																</h:outputText>
+															</p:column>
+															
+															<p:column  sortBy="#{ep.observaciones}" filterBy="#{ep.observaciones}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="Observaciones"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ep.observaciones}"></h:outputText>
+															</p:column>
+															
+															<p:column>
+																<f:facet name="header">
+																	<h:outputText value="Operaciones"></h:outputText>
+																</f:facet>
+																
+																<p:commandLink styleClass="text-red"  rendered="#{registroSolicitudSistemasController.comportamientoPaginaModel.esVisibleLink and !registroSolicitudSistemasController.pruebasSistemaList.esEditable}" ajax="true" update=":formregistroSolicitudSistemas:panelCuadroDialogo" value="Cambiar Estado" 
+																			   title="Operaciones" actionListener="#{registroSolicitudSistemasController.verificaHuella(ep)}"						            								             		             	
+											                     			   oncomplete="PF('cuadroDialogoCambiarEstado').show()">
+											                	</p:commandLink>						                
+															</p:column>												
+															
+														</p:dataTable>
+														
+														<p:dialog header="Advertencia" widgetVar="cuadroDialogoCambiarEstado" closable="false" position="top" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+						
+															
+															
+													        <p:outputPanel id="panelCuadroDialogo" style="text-align:center;">													        
+																
+																<h:panelGroup rendered="#{registroSolicitudSistemasController.pasosCertificacionSeleccionableModel.pruebasSistemasSeleccionado.pruebaId==null?false:true}">																
+													        
+														            <h:outputText value="¿Está seguro de actualizar el estado?" />													          
+															    	<br/>
+															    	
+															    	<div class="box-footer">
+															    	
+															    	    <p:inputTextarea id="idObservaciones" rows="2" cols="33" value="#{pasosCertficacionSeleccionable.pasosCertificacionSeleccionableModel.pruebasSistemasSeleccionado.observaciones}"/>
+															    																        
+																        <p:selectOneRadio id="idEstadoPrueba" value="#{pasosCertficacionSeleccionable.pasosCertificacionSeleccionableModel.pruebasSistemasSeleccionado.estadoPruebaId}" columns="3">
+																	        <f:selectItems value="#{registroSolicitudSistemasController.certificacionParametrics.listaEstadoPruebas}" var="c" itemLabel="#{c.descripcion}" itemValue="#{c.clasificadorId}"/>
+																	    </p:selectOneRadio>
+															    	
+																    	<p:commandButton id="idAceptar" value="Aceptar" actionListener="#{registroSolicitudSistemasController.ActualizarEstadoCertificacion(pasosCertficacionSeleccionable.pasosCertificacionSeleccionableModel.pruebasSistemasSeleccionado)}"
+																    	                 oncomplete="PF('cuadroDialogoCambiarEstado').hide();" update=":formregistroSolicitudSistemas:idListadoDetalles">
+																    	             	
+																    	</p:commandButton>
+																    	
+																    	<p:commandButton id="idCancelar" value="Cancelar" onclick="PF('cuadroDialogoCambiarEstado').hide();">											    	
+																    	           <f:ajax render="nada"></f:ajax>      
+																    	</p:commandButton>
+															    	</div>
+														    	</h:panelGroup>
+														    	
+														    	<h:panelGroup rendered="#{registroSolicitudSistemasController.pasosCertificacionSeleccionableModel.pruebasSistemasSeleccionado.pruebaId==null?true:false}">
+														    	
+														    				<h:outputText value="Realice primeramente el registro de Verificación de huella" />		
+														    				
+														    				<div class="box-footer">
+															    				<p:commandButton id="idCancelarEstado" value="Cancelar" onclick="PF('cuadroDialogoCambiarEstado').hide();">											    	
+																	    	           <f:ajax render="nada"></f:ajax>   																	    	            
+																    			</p:commandButton>						
+																    		</div>										
+													            </h:panelGroup>
+													        </p:outputPanel>
+													    </p:dialog>
+													    
+													   	<p:dialog header="Advertencia" widgetVar="cuadroDialogoAprobar" closable="false" position="top" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+													
+													        <p:outputPanel id="panelCuadroDialogoAprobar" style="text-align:center;">
+													            <h:outputText value="¿Está seguro de Generar la visita insitu?" />
+													            
+														    	<br/>
+														    	
+														    	<div class="box-footer">	
+														    	
+															    	<p:commandButton id="idAceptarAprobacion" value="Aceptar" actionListener="#{registroSolicitudSistemasController.generarHabilitarEstadoCertificacion}"
+															    	      update=":formregistroSolicitudSistemas:idListadoDetalles @widgetVar(:formregistroSolicitudSistemas:idConfirmarAprobacion)" oncomplete="PF('cuadroDialogoAprobar').hide();"> 
+															    	      <f:ajax update=":formregistroSolicitudSistemas:idListadoDetalles @widgetVar(:formregistroSolicitudSistemas:idConfirmarAprobacion)" render=":formregistroSolicitudSistemas:idListadoDetalles"> </f:ajax>															    	       
+															    	</p:commandButton>
+															    	
+															    	<p:commandButton id="idCancelarAprobacion" value="Cancelar" onclick="PF('cuadroDialogoAprobar').hide();"> 
+															    	</p:commandButton>
+														    	</div>
+														    	
+													        </p:outputPanel>
+													    </p:dialog>
+													    
+													    
+													    <p:dialog header="Advertencia" widgetVar="cuadroDialogoDerivar" closable="false" position="top" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+													
+													        <p:outputPanel id="panelCuadroDialogoDerivar" style="text-align:center;">
+													            <h:outputText value="¿Está seguro de derivar las pruebas?" />
+													            
+														    	<br/>
+														    	
+														    	<div class="box-footer">	
+														    	
+															    	<p:commandButton id="idAceptarDerivar" value="Aceptar" actionListener="#{registroSolicitudSistemasController.derivarHabilitarEstadoCertificacion}"
+															    	      update=":formregistroSolicitudSistemas:idListadoDetalles @widgetVar(:formregistroSolicitudSistemas:idConfirmarAprobacion)" oncomplete="PF('cuadroDialogoDerivar').hide();"> 
+															    	      <f:ajax update=":formregistroSolicitudSistemas:idListadoDetalles @widgetVar(:formregistroSolicitudSistemas:idConfirmarAprobacion)" render=":formregistroSolicitudSistemas:idListadoDetalles"> </f:ajax>															    	       
+															    	</p:commandButton>
+															    	
+															    	<p:commandButton id="idCancelarDerivar" value="Cancelar" onclick="PF('cuadroDialogoDerivar').hide();"> 
+															    	</p:commandButton>
+														    	</div>
+														    	
+													        </p:outputPanel>
+													    </p:dialog>
+														
+														<div class="box-footer">
+												
+															<br />
+															<p:commandButton id="idVolver" value="Volver"
+																	actionListener="#{registroSolicitudSistemasController.VolverPaginaEstadoCertificacionSistemas}" 												
+																	styleClass="btn btn-primary pull-right" update=":formregistroSolicitudSistemas:idListadoDetalles">
+															</p:commandButton>
+															
+															<h:panelGroup rendered="#{registroSolicitudSistemasController.comportamientoPaginaModel.esVisibleBoton}" widgetVar="idConfirmarAprobacion" id="idConfirmarAprobacion">
+																												
+																<p:commandButton id="idConfirmarAprobacionLink" styleClass="btn btn-primary pull-right" update=":formregistroSolicitudSistemas:idListadoDetalles" value="Generar Visita Insitu" oncomplete="PF('cuadroDialogoAprobar').show()">							            								             		             	
+								                     				<f:ajax update=":formregistroSolicitudSistemas:idListadoDetalles"></f:ajax> 
+								               		 			</p:commandButton>	
+								               		 			
+								               		 			<p:commandButton id="idDerivacionLink" styleClass="btn btn-primary pull-right" update=":formregistroSolicitudSistemas:idListadoDetalles" value="Derivar" oncomplete="PF('cuadroDialogoDerivar').show()">							            								             		             	
+								                     				<f:ajax update=":formregistroSolicitudSistemas:idListadoDetalles"></f:ajax> 
+								               		 			</p:commandButton>	
+								               		 															
+															</h:panelGroup>	
+															
+														</div>
+													
+											</p:fieldset>
+										</div>
+									</div>
+								</h:panelGroup>
+							
+								
+							</h:panelGroup>
+						 
+						 
+						 
+						 </div>
+					</div>
+				</h:form>
+			</div>			
+	</ui:define>
+</ui:composition>

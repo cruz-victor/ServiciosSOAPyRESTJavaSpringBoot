@@ -1,0 +1,2236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<f:viewAction action="#{logedBean.check}" />
+		<f:viewAction
+			action="#{seguimientoCertificacionSistemasController.Load}" />
+	</f:metadata>
+
+	<ui:define name="title">
+		<!-- FACTURACION -->
+	</ui:define>
+
+	<ui:define name="body">
+
+		<style type="text/css">
+.old {
+	background-color: #efffcc !important;
+	/*background-color: #ffffcc !important;*/
+}
+</style>
+		<h:form id="formConsultaSistemasAsociadosContribuyente">
+			<p:panel header="Seguimiento de Certificación de Sistemas">
+				<p:remoteCommand name="rc"
+					update="idContenedorEtapasSistemas listaSeguimientoPruebas" />
+				<p:panel header="Datos Básicos" toggleable="true"
+					styleClass="card box-primary">
+					<p:panel style="border:none" styleClass="ui-fluid">
+						<sre:ComponenteDatosBasicos></sre:ComponenteDatosBasicos>
+					</p:panel>
+				</p:panel>
+				<br />
+				<br />
+				<h:panelGroup id="idContenedorOpciones" style="border:none">
+					<p:panel header="Sistemas Asociados" toggleable="true"
+						styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanel and !seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle}">
+						<p:dataTable id="idConsultaSistemasAsociadosContribuyente"
+							widgetVar="idConsultaSistemasAsociadosContribuyente"
+							value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSistemasProveedorDto.lista}"
+							var="lista" emptyMessage="No se encontraron registros."
+							rowIndexVar="rowIndex" rows="20" paginator="true"
+							sortMode="multiple" paginatorPosition="bottom"
+							rowsPerPageTemplate="50,75,100"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+							styleClass="table table-striped table-bordered table-hover table-sm">
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Nro."></h:outputText>
+								</f:facet>
+								<h:outputText value="#{rowIndex+1}"></h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Nombre de Sistema"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.nombreSistema}"></h:outputText>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Tipo Sistema"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.tipoSistema}">
+								</h:outputText>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Modalidad"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.modalidadFacturacion}">
+								</h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Porcentaje de Certificación"></h:outputText>
+								</f:facet>
+								<p:progressBar value="#{lista.porcentaje}" displayOnly="true" />
+								<h:outputText value="#{lista.porcentaje} %">
+								</h:outputText>
+							</p:column>
+							<p:column width="8%" style="text-align:center">
+								<f:facet name="header">
+									<br />
+									<h:outputText value="Ver Detalle de Etapas"></h:outputText>
+									<br />
+									<br />
+								</f:facet>
+								<p:commandButton id="idBotonAnular" styleClass="text-blue"
+									icon="fa fa-search" ajax="true" async="true" process="@this"
+									update="formConsultaSistemasAsociadosContribuyente"
+									title="Ver Detalle de Etapas"
+									actionListener="#{seguimientoCertificacionSistemasController.verDetalleSistema(lista)}">
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel header="Etapas de Certificación de Sistemas"
+						id="idContenedorEtapasSistemas" toggleable="true"
+						styleClass="card box-primary"
+						visible="#{!seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanel and !seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle}">
+						<p:outputPanel>
+							<sre:ComponenteCasosConcluidosPendientes
+								ComponenteConcluidos="Etapa concluida."
+								ComponentePendientes="Etapa pendiente." />
+						</p:outputPanel>
+						<p:spacer height="50"></p:spacer>
+						<p:dataTable id="listaSeguimientoPruebas"
+							value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoPruebasSistemas}"
+							var="ecs" rowIndexVar="rowIndex" rows="20"
+							widgetVar="listaSeguimientoPruebas" paginator="false"
+							styleClass="table table-striped table-bordered table-hover table-sm"
+							rowStyleClass="#{ecs.es_prueba_concluida eq 'true' ? 'old' : null}">
+							<f:facet name="header">
+
+							</f:facet>
+							<div class="ui-g-2 ui-md-2">
+
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Etapa de certificación"></h:outputText>
+									</f:facet>
+									<h:outputText value="#{ecs.descripcion_prueba}"></h:outputText>
+								</p:column>
+
+								<p:column style="text-align: left" headerText="Totales">
+									<p:outputPanel>
+										<p:row>
+											<p:column>
+												<h:graphicImage value="/images/ico_total_casos_pruebas.png"
+													style="margin-bottom: 5px"></h:graphicImage>
+												<h:outputText value="      Total de Casos de Prueba: "></h:outputText>
+											</p:column>
+											<p:column>
+												<h:outputText value="#{ecs.cantidad_pruebas}"
+													style="font-weight: bold"></h:outputText>
+												<br />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column>
+												<h:graphicImage value="/images/ico_total_casos_exitosos.png"
+													style="margin-bottom: 5px"></h:graphicImage>
+												<h:outputText value="      Casos de Prueba Exitoso: "></h:outputText>
+											</p:column>
+											<p:column>
+												<h:outputText value="#{ecs.cantidad_pruebas_exitoso}"
+													style="font-weight: bold"></h:outputText>
+												<br />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column>
+												<h:graphicImage
+													value="/images/ico_total_casos_pendientes.png"
+													style="margin-bottom: 5px"></h:graphicImage>
+												<h:outputText value="      Casos de Prueba Pendiente: "></h:outputText>
+											</p:column>
+											<p:column>
+												<h:outputText value="#{ecs.cantidad_pruebas_pendiente}"
+													style="font-weight: bold"></h:outputText>
+												<br />
+											</p:column>
+										</p:row>
+									</p:outputPanel>
+								</p:column>
+
+								<p:column style="height: 55px;width: 250px;">
+									<f:facet name="header">
+										<h:outputText value="Porcentaje Cubierto"></h:outputText>
+									</f:facet>
+									<p:chart type="metergauge"
+										model="#{seguimientoCertificacionSistemasController.setMeterGaugeModel(ecs.porcentaje)}"
+										style="width:90%;height:130px" />
+								</p:column>
+
+								<p:column width="8%" style="text-align:center">
+									<f:facet name="header">
+										<br />
+										<h:outputText value="Eventos"></h:outputText>
+										<br />
+										<br />
+									</f:facet>
+									<p:commandButton styleClass="text-blue" icon="fa fa-sign-out"
+										rendered="#{ecs.existe_fecha_fin_prueba}"
+										value="Reiniciar Etapa"
+										title="Reiniciar la Etapa de Certificación de Sistemas"
+										actionListener="#{seguimientoCertificacionSistemasController.reiniciarPruebaCertificacionSistema(ecs.prueba_certificacion_sistema_id)}"
+										update=":formConsultaSistemasAsociadosContribuyente:listaSeguimientoPruebas">
+										<p:confirm header="Confirmación"
+											message="¿Desea Reiniciar la #{ecs.descripcion_prueba}?. Los casos de prueba realizados se iniciaran!."
+											icon="fa fa-exclamation-triangle" />
+									</p:commandButton>
+
+									<p:commandButton styleClass="text-blue" icon="fa fa-sign-out"
+										rendered="#{!ecs.existe_fecha_fin_prueba}"
+										value="#{ecs.prueba_certificacion_sistema_id == null ? 'Iniciar Etapa' : 'Finalizar Etapa'}"
+										title="#{ecs.prueba_certificacion_sistema_id == null ? 'Iniciar Etapa de Certificación de Sistemas' : 'Finalizar Etapa de Certificación de Sistemas'}"
+										actionListener="#{seguimientoCertificacionSistemasController.actualizarPruebaCertificacionSistema(ecs.prueba_certificacion_sistema_id,ecs.etapa_certificacion_sistemas_id)}"
+										update=":formConsultaSistemasAsociadosContribuyente:listaSeguimientoPruebas">
+										<p:confirm header="Confirmación"
+											message="#{ecs.prueba_certificacion_sistema_id == null ? '¿Desea Iniciar' : '¿ Desea Finalizar'} la #{ecs.descripcion_prueba}?"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandButton>
+
+								</p:column>
+
+								<p:column width="12%" style="text-align:center">
+									<f:facet name="header">
+										<br />
+										<h:outputText value="Ver casos de pruebas"></h:outputText>
+										<br />
+										<br />
+									</f:facet>
+									<p:commandButton id="idBotonAnular" styleClass="text-blue"
+										validateClient="false" icon="fa fa-search" ajax="true"
+										async="true" process="@this"
+										disabled="#{ecs.prueba_certificacion_sistema_id eq null ? 'true' : 'false'}"
+										update="formConsultaSistemasAsociadosContribuyente"
+										title="Ver el detalle de la Etapa"
+										actionListener="#{seguimientoCertificacionSistemasController.verDetalleEtapa(ecs)}">
+									</p:commandButton>
+								</p:column>
+							</div>
+						</p:dataTable>
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:panelGrid columns="2"
+								columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+								styleClass="ui-fluid">
+								<p:commandButton value="Aceptar" type="button"
+									styleClass="btn btn-primary btn-sm ui-confirmdialog-yes"
+									icon="fa fa-check" />
+								<p:commandButton value="Cancelar" type="button"
+									styleClass="btn btn-warning btn-sm ui-confirmdialog-no"
+									icon="fa fa-times" />
+							</p:panelGrid>
+						</p:confirmDialog>
+						<p:panelGrid columns="4"
+							columnClasses="ui-grid-col-6, ui-grid-col-2, ui-grid-col-2, ui-grid-col-2"
+							layout="grid" styleClass="ui-fluid">
+							<p:row></p:row>
+							<p:row></p:row>
+							<p:row></p:row>
+
+							<p:commandButton id="idVolverInicio" value="Volver"
+								styleClass="btn btn-success btn-sm pull-right"
+								actionListener="#{seguimientoCertificacionSistemasController.Cancelar}">
+								<f:ajax render="nada"></f:ajax>
+							</p:commandButton>
+
+						</p:panelGrid>
+					</p:panel>
+
+					<p:panel
+						header="Listado de Pruebas #{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.descripcion_prueba}"
+						toggleable="true" styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle and seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.etapa_certificacion_sistemas_id==2850}">
+
+						<p:outputPanel>
+							<sre:ComponenteCasosConcluidosPendientes
+								ComponenteConcluidos="Caso de prueba concluida."
+								ComponentePendientes="Caso de prueba pendiente." />
+						</p:outputPanel>
+						<p:tabView>
+							<p:tab title="PRUEBAS OBLIGADAS">
+								<p:spacer height="10"></p:spacer>
+								<p:dataTable id="idDetalleCasosDePruebaEtapa0"
+									widgetVar="idDetalleEtapa0"
+									value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+									var="listaDetalleEtapa0"
+									rowStyleClass="#{listaDetalleEtapa0.satisfactorio eq true ? 'old' : null}"
+									emptyMessage="No se encontraron registros."
+									rowIndexVar="rowIndex" rows="20" paginator="true"
+									sortMode="multiple" paginatorPosition="bottom"
+									rowsPerPageTemplate="50,70,100"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+									styleClass="table table-striped table-bordered table-hover table-sm">
+									<p:column headerText="Nro." style="text-align: center">
+										<h:outputText value="#{rowIndex+1}"></h:outputText>
+									</p:column>
+									<p:column headerText="NIT emisor" style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.nit}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Fecha/Hora de emision"
+										style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.fecha_emision}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Sucursal" style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.sucursal}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Modalidad" style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.modalidad}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Tipo emision" style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.emision}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Documento fiscal"
+										style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.documento_fiscal}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Sector" style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.sector}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Número de factura"
+										style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.numero_factura}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Punto de venta"
+										style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.punto_venta}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Fecha de prueba"
+										style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.fecha_registro}">
+										</h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Porcentaje de avance"></h:outputText>
+										</f:facet>
+										<p:progressBar id="idBarraEtapa0"
+											value="#{listaDetalleEtapa0.porcentaje_avance}"
+											displayOnly="true" />
+										<h:outputText
+											value="#{listaDetalleEtapa0.porcentaje_avance} %" />
+										<p:tooltip for="idBarraEtapa0">
+											<i class="fa fa-check " />
+											<p:spacer width="5" height="5" />
+											<h:outputText
+												value="#{listaDetalleEtapa0.cantidad_casos_correctos} pruebas correctas" />
+											<br />
+											<i class="fa fa-close" />
+											<p:spacer width="7" height="7" />
+											<h:outputText
+												value="#{listaDetalleEtapa0.cantidad_casos_incorrectos} pruebas incorrectas" />
+											<br />
+											<i class="fa fa-exclamation" />
+											<p:spacer width="12" height="12" />
+											<h:outputText
+												value="#{listaDetalleEtapa0.cantidad_casos_esperados} pruebas esperadas" />
+										</p:tooltip>
+									</p:column>
+								</p:dataTable>
+							</p:tab>
+							<p:tab title="PRUEBAS DECLARADAS">
+								<p:spacer height="10"></p:spacer>
+								<p:dataTable id="idCasosDePruebaSugeridosEtapa0"
+									widgetVar="idCasosDePruebaSugeridosEtapa0"
+									emptyMessage="No se encontraron registros."
+									rowIndexVar="rowIndex"
+									value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaCasosPruebaSugeridasEtapa0}"
+									var="listaDetalleEtapa0"
+									rowStyleClass="#{listaDetalleEtapa0.es_caso_prueba_registrada eq true ? 'old' : null}">
+									<p:column headerText="Nro." style="text-align: center">
+										<h:outputText value="#{rowIndex+1}"></h:outputText>
+									</p:column>
+									<p:column headerText="NIT emisor" style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.nit}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Fecha/Hora de emision"
+										style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.fecha_emision}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Sucursal" style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.sucursal}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Modalidad" style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.modalidad}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Tipo emision" style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.emision}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Documento fiscal"
+										style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.documento_fiscal}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Sector" style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.sector}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Número de factura"
+										style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.numero_factura}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Punto de venta"
+										style="text-align: center">
+										<h:outputText value="#{listaDetalleEtapa0.punto_venta}">
+										</h:outputText>
+									</p:column>
+									<p:column headerText="Registrar" width="8%"
+										style="text-align:center">
+										<p:commandButton id="idBotonRegistrarPrueba"
+											icon="#{listaDetalleEtapa0.es_caso_prueba_registrada ? 'fa fa-lock':'fa fa-save'}"
+											disabled="#{listaDetalleEtapa0.es_caso_prueba_registrada}"
+											styleClass="text-blue" validateClient="false" ajax="true"
+											async="true" process="@this"
+											update="idCasosDePruebaSugeridosEtapa0" title="Registrar"
+											actionListener="#{seguimientoCertificacionSistemasController.registrarPruebaSugeridaEtapa0(listaDetalleEtapa0, seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.sistemaId)}">
+											<p:confirm header="Confirmación"
+												message="¿Usted ACEPTA que realizó este caso de prueba?"
+												icon="fa fa-exclamation-triangle" />
+											<p:tooltip id="toolTipContent" for="idBotonRegistrarPrueba"
+												position="left">
+												<h:graphicImage value="/images/ico_alerta.png" />
+ 							 	 		Presione para registrar el caso de prueba declarada.   
+								</p:tooltip>
+										</p:commandButton>
+									</p:column>
+								</p:dataTable>
+
+							</p:tab>
+						</p:tabView>
+
+					</p:panel>
+
+					<p:panel
+						header="Listado de Pruebas #{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.descripcion_prueba}"
+						toggleable="true" styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle and seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.etapa_certificacion_sistemas_id==2851}">
+						<p:outputPanel>
+							<sre:ComponenteCasosConcluidosPendientes
+								ComponenteConcluidos="Caso de prueba concluida."
+								ComponentePendientes="Caso de prueba pendiente." />
+						</p:outputPanel>
+
+						<p:spacer height="50"></p:spacer>
+						<p:dataTable id="idConsultaSeguimientoCertificacionSistemas1"
+							widgetVar="idConsultaSeguimientoCertificacionSistemas1"
+							value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+							var="lista" emptyMessage="No se encontraron registros."
+							rowIndexVar="rowIndex" rows="20" paginator="true"
+							sortMode="multiple" paginatorPosition="bottom"
+							rowsPerPageTemplate="50,75,100"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+							styleClass="table table-striped table-bordered table-hover table-sm"
+							rowStyleClass="#{lista.satisfactorio eq 'true' ? 'old' : null}">
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Nro."></h:outputText>
+								</f:facet>
+								<h:outputText value="#{rowIndex+1}"></h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Nombre del Servicio"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.descripcion_prueba_evento}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Sector"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.descripcion_sector}">
+								</h:outputText>
+							</p:column>
+
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Fecha de Prueba"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.fecha_registro}">
+									<f:convertDateTime pattern="dd-mm-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Porcentaje de avance"></h:outputText>
+								</f:facet>
+								<p:progressBar id="idBarraEtapa1"
+									value="#{lista.porcentaje_avance}" displayOnly="true" />
+								<h:outputText value="#{lista.porcentaje_avance} %">
+								</h:outputText>
+								<p:tooltip for="idBarraEtapa1">
+									<i class="fa fa-check " />
+									<p:spacer width="5" height="5" />
+									<h:outputText
+										value="#{lista.cantidad_casos_correctos} pruebas correctas" />
+									<br />
+									<i class="fa fa-close" />
+									<p:spacer width="7" height="7" />
+									<h:outputText
+										value="#{lista.cantidad_casos_incorrectos} pruebas incorrectas" />
+									<br />
+									<i class="fa fa-exclamation" />
+									<p:spacer width="12" height="12" />
+									<h:outputText
+										value="#{lista.cantidad_casos_esperados} pruebas esperadas" />
+								</p:tooltip>
+							</p:column>
+							<p:column width="8%" style="text-align:center">
+								<f:facet name="header">
+									<br />
+									<h:outputText value="Aprobado"></h:outputText>
+									<br />
+									<br />
+								</f:facet>
+								<h:graphicImage styleClass="text-red"
+									value="#{lista.satisfactorio ? '/images/ico_pruebas_correctas.png' : '/images/ico_pruebas_incorrectas.png'}"></h:graphicImage>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+
+					<p:panel
+						header="Listado de Pruebas #{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.descripcion_prueba}"
+						toggleable="true" styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle and seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.etapa_certificacion_sistemas_id==2852}">
+
+						<p:outputPanel>
+							<sre:ComponenteCasosConcluidosPendientes
+								ComponenteConcluidos="Caso de prueba concluida."
+								ComponentePendientes="Caso de prueba pendiente." />
+						</p:outputPanel>
+
+						<p:spacer height="50"></p:spacer>
+
+
+						<p:dataTable id="idConsultaSistemasAsociadosContribuyenteEtapa2"
+							widgetVar="idConsultaSistemasAsociadosContribuyenteEtapa2"
+							value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaDetallePruebasEtapa2}"
+							var="lista" emptyMessage="No se encontraron registros."
+							rowIndexVar="rowIndex" rows="20" paginator="true"
+							sortMode="multiple" paginatorPosition="bottom"
+							rowsPerPageTemplate="50,75,100"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+							styleClass="table table-striped table-bordered table-hover table-sm"
+							rowStyleClass="#{lista.porcentajecasoprueba >= 100? 'old' : null}">
+
+							<p:column headerText="Nro">
+								<h:outputText value="#{lista.exlnro}"></h:outputText>
+							</p:column>
+							<p:column headerText="Tipo de prueba">
+								<h:outputText
+									value="#{lista.exltipoprueba=='SUGERIDA'?'DECLARADA':lista.exltipoprueba}"></h:outputText>
+							</p:column>
+							<p:column headerText="Tipo emisión">
+								<h:outputText value="#{lista.exltipoemision}"></h:outputText>
+							</p:column>
+							<p:column headerText="Parametro de entrada">
+								<h:outputText value="#{lista.exlparametrodeentrada}"></h:outputText>
+							</p:column>
+							<p:column headerText="Valor parametro">
+								<h:outputText value="#{lista.exlvalorparametro}"></h:outputText>
+							</p:column>
+							<p:column headerText="Tipo Validación">
+								<h:outputText value="#{lista.exltipovalidacion}"></h:outputText>
+							</p:column>
+							<p:column headerText="Prueba">
+								<h:outputText value="#{lista.exlprueba}"></h:outputText>
+							</p:column>
+							<p:column headerText="Resultado esperado">
+								<h:outputText value="#{lista.exlresultadoesperado}"></h:outputText>
+							</p:column>
+							<p:column headerText="Solucion">
+								<h:outputText value="#{lista.exlsolucion}"></h:outputText>
+							</p:column>
+
+
+
+							<p:column headerText="Documento sector">
+								<h:outputText value="#{lista.documentosectoridprueba}"></h:outputText>
+							</p:column>
+							<p:column style="text-align: center; width: 5%;"
+								headerText="Porcentaje de avance">
+								<p:outputPanel rendered="#{lista.estadomatch==1}">
+									<f:facet name="header">
+										<h:outputText value="Porcentaje de avance"></h:outputText>
+									</f:facet>
+
+									<p:progressBar id="proEtapa2"
+										value="#{lista.porcentajecasoprueba}" displayOnly="true" />
+									<h:outputText value="#{lista.porcentajecasoprueba} %"></h:outputText>
+
+									<p:tooltip for="proEtapa2">
+										<i class="fa fa-check " />
+										<p:spacer width="5" height="5" />
+										<h:outputText
+											value="#{lista.totalpruebascorrectas} pruebas correctas" />
+										<br />
+										<i class="fa fa-close" />
+										<p:spacer width="7" height="7" />
+										<h:outputText
+											value="#{lista.totalpruebasincorrectas} pruebas incorrectas" />
+										<br />
+										<i class="fa fa-exclamation" />
+										<p:spacer width="12" height="12" />
+										<h:outputText
+											value="#{lista.totalpruebasesperadas} pruebas esperadas" />
+									</p:tooltip>
+								</p:outputPanel>
+							</p:column>
+
+							<p:column headerText="" style="text-align: center;">
+								<p:outputPanel id="opnOpcional" rendered="#{lista.opcional==1}">
+									<p:commandButton id="cmdRegistrarPrueba"
+										icon="#{lista.checado ? 'fa fa-lock':'fa fa-save'}"
+										disabled="#{lista.checado}" styleClass="text-blue"
+										type="button">
+										<p:ajax event="click" process="@this"
+											oncomplete="PF('dlgConfirmacion').show();"
+											listener="#{seguimientoCertificacionSistemasController.seleccionarCasoPrueba(lista)}"
+											update=":formConsultaSistemasAsociadosContribuyente:dlgConfirmacion" />
+									</p:commandButton>
+								</p:outputPanel>
+								<p:tooltip id="toolTipContent" for="opnOpcional" position="left">
+									<h:graphicImage value="/images/ico_alerta.png" />
+ 							 	 		Presione para registrar el caso de prueba declarada.        							
+    								</p:tooltip>
+
+							</p:column>
+						</p:dataTable>
+
+						<p:dialog header="Confirmación" id="dlgConfirmacion"
+							widgetVar="dlgConfirmacion" resizable="false" modal="true"
+							closable="false">
+							<h:outputLabel
+								value="¿Usted ACEPTA que realizó este caso de prueba?"></h:outputLabel>
+							<p:spacer height="50"></p:spacer>
+
+							<p:panelGrid columns="2"
+								columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+								styleClass="ui-fluid">
+								<p:commandButton value="Aceptar"
+									onclick="PF('dlgConfirmacion').hide();"
+									actionListener="#{seguimientoCertificacionSistemasController.registroCasoPruebaSugeridoEtapa2}"
+									update=":formConsultaSistemasAsociadosContribuyente:idConsultaSistemasAsociadosContribuyenteEtapa2"
+									styleClass="btn btn-primary btn-sm ui-confirmdialog-yes"
+									icon="fa fa-check" />
+
+								<p:commandButton value="Cancelar"
+									onclick="PF('dlgConfirmacion').hide();"
+									actionListener="#{seguimientoCertificacionSistemasController.cerrarDialogoCasoPruebaSugerida}"
+									update=":formConsultaSistemasAsociadosContribuyente:idConsultaSistemasAsociadosContribuyenteEtapa2"
+									styleClass="btn btn-warning btn-sm ui-confirmdialog-no"
+									icon="fa fa-times" />
+
+							</p:panelGrid>
+						</p:dialog>
+					</p:panel>
+
+
+					<p:panel
+						header="Listado de Pruebas #{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.descripcion_prueba}"
+						toggleable="true" styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle and seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.etapa_certificacion_sistemas_id==3069}"
+						style="width:100%">
+
+						<p:outputPanel>
+							<sre:ComponenteCasosConcluidosPendientes
+								ComponenteConcluidos="Caso de prueba concluida."
+								ComponentePendientes="Caso de prueba pendiente." />
+						</p:outputPanel>
+
+						<p:spacer height="50"></p:spacer>
+
+
+						<p:dataTable id="idConsultaSistemasAsociadosContribuyenteEtapa8"
+							widgetVar="idConsultaSistemasAsociadosContribuyenteEtapa8"
+							value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+							var="lista" emptyMessage="No se encontraron registros."
+							rowIndexVar="rowIndex" rows="20" paginator="true"
+							sortMode="multiple" paginatorPosition="bottom"
+							rowsPerPageTemplate="50,75,100"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+							styleClass="table table-striped table-bordered table-hover table-sm"
+							rowStyleClass="#{lista.satisfactorio eq true  ? 'old' : null}">
+
+							<p:column headerText="Nro">
+								<h:outputText value="#{lista.nro}"></h:outputText>
+							</p:column>
+							<p:column headerText="Tipo de prueba">
+								<h:outputText
+									value="#{lista.tipo_prueba=='SUGERIDA'?'DECLARADA':lista.tipo_prueba}"></h:outputText>
+							</p:column>
+							<p:column headerText="Código sistema">
+								<h:outputText value="#{lista.codigo_sistema}"></h:outputText>
+							</p:column>
+							<p:column headerText="Nit">
+								<h:outputText value="#{lista.nit_requerimiento}"></h:outputText>
+							</p:column>
+							<p:column headerText="Sucursal">
+								<h:outputText value="#{lista.sucursal_requerimiento}"></h:outputText>
+							</p:column>
+							<p:column headerText="Dirección">
+								<h:outputText value="#{lista.direccion}"></h:outputText>
+							</p:column>
+							<p:column headerText="Resultado esperado">
+								<h:outputText value="#{lista.resultado_esperado}"></h:outputText>
+							</p:column>
+							<p:column headerText="Solución">
+								<h:outputText value="#{lista.solucion}"></h:outputText>
+							</p:column>
+							<p:column style="text-align: center;" width="5%"
+								headerText="Porcentaje de avance">
+								<p:outputPanel rendered="#{lista.estado_match==1}">
+									<f:facet name="header">
+										<h:outputText value="Porcentaje de avance"></h:outputText>
+									</f:facet>
+
+									<p:progressBar id="proEtapa8"
+										value="#{lista.porcentaje_avance}" displayOnly="true" />
+									<h:outputText value="#{lista.porcentaje_avance} %"></h:outputText>
+
+									<p:tooltip for="proEtapa8">
+										<i class="fa fa-check " />
+										<p:spacer width="5" height="5" />
+										<h:outputText
+											value="#{lista.cantidad_casos_correctos} pruebas correctas" />
+										<br />
+										<i class="fa fa-close" />
+										<p:spacer width="7" height="7" />
+										<h:outputText
+											value="#{lista.cantidad_casos_incorrectos} pruebas incorrectas" />
+										<br />
+										<i class="fa fa-exclamation" />
+										<p:spacer width="12" height="12" />
+										<h:outputText
+											value="#{lista.cantidad_casos_esperados} pruebas esperadas" />
+									</p:tooltip>
+								</p:outputPanel>
+							</p:column>
+
+							<p:column headerText="" style="text-align: center;">
+								<p:commandButton id="opcional8"
+									icon="#{lista.satisfactorio ? 'fa fa-lock':'fa fa-save'}"
+									styleClass="text-blue" rendered="#{lista.opcional==1}"
+									disabled="#{lista.satisfactorio}"
+									update=":formConsultaSistemasAsociadosContribuyente:idConsultaSistemasAsociadosContribuyenteEtapa8"
+									actionListener="#{seguimientoCertificacionSistemasController.registroPruebaDetalleOpcional(lista)}">
+
+									<p:confirm header="Confirmación"
+										message="¿Usted ACEPTA que realizó este caso de prueba?"
+										icon="fa fa-exclamation-triangle">
+									</p:confirm>
+									<p:tooltip id="toolTipContent" for="opcional8" position="left">
+										<h:graphicImage value="/images/ico_alerta.png" />
+	 							 	 		Presione para registrar el caso de prueba declarada.   
+										</p:tooltip>
+								</p:commandButton>
+
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+
+					<p:panel
+						header="Listado de Pruebas #{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.descripcion_prueba}"
+						toggleable="true" styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle and seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.etapa_certificacion_sistemas_id==2853}">
+						<p:outputPanel>
+							<sre:ComponenteCasosConcluidosPendientes
+								ComponenteConcluidos="Caso de prueba concluida."
+								ComponentePendientes="Caso de prueba pendiente." />
+						</p:outputPanel>
+
+						<p:spacer height="50"></p:spacer>
+						<p:dataTable id="idConsultaSeguimientoCertificacionSistemas3"
+							widgetVar="idConsultaSeguimientoCertificacionSistemas3"
+							value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+							var="lista" emptyMessage="No se encontraron registros."
+							rowIndexVar="rowIndex" sortMode="multiple"
+							paginatorPosition="bottom" rowsPerPageTemplate="50,75,100"
+							rows="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.cantidadAgrupador}"
+							paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRe	cord} a {endRecord} de {totalRecords} registros"
+							styleClass="table table-striped table-bordered table-hover table-sm"
+							rowStyleClass="#{lista.satisfactorio eq true  ? 'old' : null}">
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Nro."></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.nro}"></h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Tipo de Prueba"></h:outputText>
+								</f:facet>
+								<h:outputText
+									value="#{lista.tipo_prueba=='SUGERIDA'?'DECLARADA':lista.tipo_prueba}">
+								</h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Código de Ambiente"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.codigo_ambiente}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Código de Sistema"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.codigo_sistema}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Nit"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.nit_requerimiento}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Cuis"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.cuis}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Sucursal"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.sucursal_requerimiento}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Código de Punto de Venta"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.codigo_punto_venta}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Código de Autorización"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.codigo_autorizacion}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Tipo de Validación"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.tipo_validacion}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Requisito para realizar la prueba"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.requisito_prueba}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Descripción Prueba"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.descripcion_prueba}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Resultado Esperado"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.resultado_esperado}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Solución"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.solucion}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Caso de Prueba"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.agrupador}"></h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Porcentaje de avance"></h:outputText>
+								</f:facet>
+								<p:progressBar rendered="#{lista.opcional!=1}"
+									id="idBarraEtapa1" value="#{lista.porcentaje_avance}"
+									displayOnly="true" />
+								<h:outputText rendered="#{lista.opcional!=1}"
+									value="#{lista.porcentaje_avance} %">
+								</h:outputText>
+								<p:tooltip for="idBarraEtapa1">
+									<h:outputText value="Fecha de prueba #{lista.fecha_registro}" />
+									<br />
+									<h:outputText value="Totales:" />
+									<br />
+									<i class="fa fa-check " />
+									<p:spacer width="5" height="5" />
+									<h:outputText
+										value="#{lista.cantidad_casos_correctos} pruebas correctas" />
+									<br />
+									<i class="fa fa-close" />
+									<p:spacer width="7" height="7" />
+									<h:outputText
+										value="#{lista.cantidad_casos_incorrectos} pruebas incorrectas" />
+									<br />
+									<i class="fa fa-exclamation" />
+									<p:spacer width="12" height="12" />
+									<h:outputText
+										value="#{lista.cantidad_casos_esperados} pruebas esperadas" />
+								</p:tooltip>
+							</p:column>
+							<p:column headerText="Registrar" width="8%"
+								style="text-align:center">
+								<p:commandButton id="opcional4"
+									icon="#{lista.satisfactorio ? 'fa fa-lock':'fa fa-save'}"
+									styleClass="text-blue" rendered="#{lista.opcional==1}"
+									disabled="#{lista.satisfactorio}" validateClient="false"
+									ajax="true" async="true" process="@this"
+									update="idConsultaSeguimientoCertificacionSistemas3"
+									actionListener="#{seguimientoCertificacionSistemasController.registroPruebaDetalleOpcional(lista)}">
+
+									<p:confirm header="Confirmación"
+										message="¿Usted ACEPTA que realizó este caso de prueba?"
+										icon="fa fa-exclamation-triangle">
+									</p:confirm>
+									<p:tooltip id="toolTipContent" for="opcional4" position="left">
+										<h:graphicImage value="/images/ico_alerta.png" />
+ 							 	 		Presione para registrar el caso de prueba declarada.   
+								</p:tooltip>
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+
+					<p:panel
+						header="Listado de Pruebas #{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.descripcion_prueba}"
+						toggleable="true" styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle and seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.etapa_certificacion_sistemas_id==2854}">
+						<p:outputPanel>
+							<sre:ComponenteCasosConcluidosPendientes
+								ComponenteConcluidos="Caso de prueba concluida."
+								ComponentePendientes="Caso de prueba pendiente." />
+						</p:outputPanel>
+
+						<p:spacer height="50"></p:spacer>
+						<p:dataTable id="idConsultaSeguimientoCertificacionSistemas4"
+							widgetVar="idConsultaSeguimientoCertificacionSistemas4"
+							value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+							var="lista" emptyMessage="No se encontraron registros."
+							rowIndexVar="rowIndex" rows="25" paginator="true"
+							sortMode="multiple" paginatorPosition="bottom"
+							rowsPerPageTemplate="50,75,100"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRe	cord} a {endRecord} de {totalRecords} registros"
+							styleClass="table table-striped table-bordered table-hover table-sm"
+							rowStyleClass="#{lista.satisfactorio eq true  ? 'old' : null}">
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Nro."></h:outputText>
+								</f:facet>
+								<h:outputText value="#{rowIndex+1}"></h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Tipo de Prueba"></h:outputText>
+								</f:facet>
+								<h:outputText
+									value="#{lista.tipo_prueba=='SUGERIDA'?'DECLARADA':lista.tipo_prueba}">
+								</h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Código de Ambiente"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.codigo_ambiente}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Código de Sistema"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.codigo_sistema}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Nit"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.nit_requerimiento}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Cuis"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.cuis}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Sucursal"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.sucursal_requerimiento}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Punto de Venta"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.codigo_punto_venta}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Tipo de Validación"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.tipo_validacion}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Resultado Esperado"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.resultado_esperado}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Solución"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.solucion}">
+								</h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Porcentaje de avance"></h:outputText>
+								</f:facet>
+								<p:progressBar rendered="#{lista.opcional!=1}"
+									id="idBarraEtapa1" value="#{lista.porcentaje_avance}"
+									displayOnly="true" />
+								<h:outputText rendered="#{lista.opcional!=1}"
+									value="#{lista.porcentaje_avance} %">
+								</h:outputText>
+								<p:tooltip for="idBarraEtapa1">
+									<h:outputText value="Fecha de prueba #{lista.fecha_registro}" />
+									<br />
+									<h:outputText value="Totales:" />
+									<br />
+									<i class="fa fa-check " />
+									<p:spacer width="5" height="5" />
+									<h:outputText
+										value="#{lista.cantidad_casos_correctos} pruebas correctas" />
+									<br />
+									<i class="fa fa-close" />
+									<p:spacer width="7" height="7" />
+									<h:outputText
+										value="#{lista.cantidad_casos_incorrectos} pruebas incorrectas" />
+									<br />
+									<i class="fa fa-exclamation" />
+									<p:spacer width="12" height="12" />
+									<h:outputText
+										value="#{lista.cantidad_casos_esperados} pruebas esperadas" />
+								</p:tooltip>
+							</p:column>
+							<p:column headerText="Registrar" width="8%"
+								style="text-align:center">
+								<p:commandButton id="opcional4"
+									icon="#{lista.satisfactorio ? 'fa fa-lock':'fa fa-save'}"
+									styleClass="text-blue" rendered="#{lista.opcional==1}"
+									disabled="#{lista.satisfactorio}" validateClient="false"
+									ajax="true" async="true" process="@this"
+									update="idConsultaSeguimientoCertificacionSistemas4"
+									actionListener="#{seguimientoCertificacionSistemasController.registroPruebaDetalleOpcional(lista)}">
+
+									<p:confirm header="Confirmación"
+										message="¿Usted ACEPTA que realizó este caso de prueba?"
+										icon="fa fa-exclamation-triangle">
+									</p:confirm>
+									<p:tooltip id="toolTipContent" for="opcional4" position="left">
+										<h:graphicImage value="/images/ico_alerta.png" />
+ 							 	 		Presione para registrar el caso de prueba declarada.   
+								</p:tooltip>
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+
+					<p:panel header="Detalle de la bateria de Pruebas Etapa 5"
+						toggleable="true" styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle and seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.etapa_certificacion_sistemas_id==2855}">
+
+						<p:outputPanel>
+							<sre:ComponenteCasosConcluidosPendientes
+								ComponenteConcluidos="Caso de prueba concluida."
+								ComponentePendientes="Caso de prueba pendiente." />
+						</p:outputPanel>
+
+						<p:spacer height="50"></p:spacer>
+
+						<p:dataTable id="idDetalleCasosDePruebaEtapa5"
+							widgetVar="idDetalleEtapa5"
+							value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+							var="listaDetalleEtapa5"
+							rowStyleClass="#{listaDetalleEtapa5.satisfactorio eq true ? 'old' : null}"
+							emptyMessage="No se encontraron registros."
+							rowIndexVar="rowIndex" rows="20" paginator="true"
+							sortMode="multiple" paginatorPosition="bottom"
+							rowsPerPageTemplate="50,75,100"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+							styleClass="table table-striped table-bordered table-hover table-sm">
+							<p:column headerText="Nro." style="text-align: center">
+								<h:outputText value="#{rowIndex+1}"></h:outputText>
+							</p:column>
+							<p:column headerText="Tipo de evento significativo"
+								style="text-align: center">
+								<h:outputText value="#{listaDetalleEtapa5.tipo_evento}">
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Nombre de evento">
+								<h:outputText value="#{listaDetalleEtapa5.motivo_evento}">
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Procedimiento para provocar Evento">
+								<h:outputText value="#{listaDetalleEtapa5.procedimiento_evento}">
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Descripcion de prueba">
+								<h:outputText
+									value="#{listaDetalleEtapa5.descripcion_prueba_evento}">
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Parametros">
+								<h:outputText value="#{listaDetalleEtapa5.parametro_evento}">
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Resultado esperado">
+								<h:outputText value="#{listaDetalleEtapa5.resultado_evento}">
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Accion en consecuencia">
+								<h:outputText value="#{listaDetalleEtapa5.accion_evento}">
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Fecha de prueba">
+								<h:outputText value="#{listaDetalleEtapa5.fecha_prueba}" />
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Porcentaje de avance"></h:outputText>
+								</f:facet>
+								<p:progressBar rendered="#{listaDetalleEtapa5.opcional!=1}"
+									id="idBarraEtapa5"
+									value="#{listaDetalleEtapa5.porcentaje_avance}"
+									displayOnly="true" />
+								<h:outputText rendered="#{listaDetalleEtapa5.opcional!=1}"
+									value="#{listaDetalleEtapa5.porcentaje_avance} %" />
+								<p:tooltip for="idBarraEtapa5">
+									<i class="fa fa-check " />
+									<p:spacer width="5" height="5" />
+									<h:outputText
+										value="#{listaDetalleEtapa5.cantidad_casos_correctos} pruebas correctas" />
+									<br />
+									<i class="fa fa-exclamation" />
+									<p:spacer width="12" height="12" />
+									<h:outputText
+										value="#{listaDetalleEtapa5.cantidad_casos_esperados} pruebas esperadas" />
+								</p:tooltip>
+							</p:column>
+							<p:column headerText="Registrar" width="8%"
+								style="text-align:center">
+								<p:commandButton id="opcional"
+									icon="#{listaDetalleEtapa5.satisfactorio ? 'fa fa-lock':'fa fa-save'}"
+									styleClass="text-blue"
+									rendered="#{listaDetalleEtapa5.opcional==1}"
+									disabled="#{listaDetalleEtapa5.satisfactorio}"
+									validateClient="false" ajax="true" async="true" process="@this"
+									update="idDetalleCasosDePruebaEtapa5"
+									actionListener="#{seguimientoCertificacionSistemasController.registroPruebaDetalleOpcional(listaDetalleEtapa5)}">
+
+									<p:confirm header="Confirmación"
+										message="¿Usted ACEPTA que realizó este caso de prueba?"
+										icon="fa fa-exclamation-triangle">
+									</p:confirm>
+									<p:tooltip id="toolTipContent" for="opcional" position="left">
+										<h:graphicImage value="/images/ico_alerta.png" />
+	 							 	 		Presione para registrar el caso de prueba declarada.   
+										</p:tooltip>
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+
+					<p:panel
+						header="Listado de Pruebas #{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.descripcion_prueba}"
+						toggleable="true" styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle and seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.etapa_certificacion_sistemas_id==2856}"
+						style="width:100%">
+
+						<p:outputPanel>
+							<div style="display: flex; flex-direction: row;">
+								<div>
+									<h:graphicImage value="/images/ico_concluido.png"></h:graphicImage>
+								</div>
+								<div
+									style="padding-left: 5px; padding-right: 60px; color: #084B8A;">
+									Caso de prueba concluida.</div>
+								<div>
+									<h:graphicImage value="/images/ico_pendiente.png"></h:graphicImage>
+								</div>
+								<div style="padding-left: 5px; color: #084B8A;">Caso de
+									prueba pendiente.</div>
+							</div>
+						</p:outputPanel>
+
+						<p:spacer height="50"></p:spacer>
+
+
+
+						<p:tabView>
+							<p:tab title="SOAP Parámetros">
+								<p:spacer height="10"></p:spacer>
+
+								<p:dataTable id="idConsultaSistemasAsociadosContribuyenteEtapa6"
+									widgetVar="idConsultaSistemasAsociadosContribuyenteEtapa6"
+									value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+									var="listaa" emptyMessage="No se encontraron registros."
+									rowIndexVar="rowIndex" rows="20" paginator="true"
+									sortMode="multiple" paginatorPosition="bottom"
+									rowsPerPageTemplate="50,75,100"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+									styleClass="table table-striped table-bordered table-hover table-sm"
+									rowStyleClass="#{listaa.satisfactorio eq true  ? 'old' : null} #{listaa.agrupador != 'CASOS DE PRUEBA'  ? '' : 'ui-helper-hidden' }">
+
+									<p:column headerText="Nro">
+										<h:outputText value="#{listaa.nro}"></h:outputText>
+									</p:column>
+									<p:column headerText="Tipo de prueba">
+										<h:outputText
+											value="#{listaa.tipo_prueba == 'SUGERIDA' ? 'DECLARADA' : listaa.tipo_prueba}"></h:outputText>
+									</p:column>
+									<p:column headerText="Código sistema">
+										<h:outputText value="#{listaa.codigo_sistema}"></h:outputText>
+									</p:column>
+									<p:column headerText="Código ambiente">
+										<h:outputText value="#{listaa.codigo_ambiente}"></h:outputText>
+									</p:column>
+									<p:column headerText="Código emision">
+										<h:outputText value="#{listaa.codigo_emision}"></h:outputText>
+									</p:column>
+									<p:column headerText="Código modalidad">
+										<h:outputText value="#{listaa.codigo_modalidad}"></h:outputText>
+									</p:column>
+									<p:column headerText="Nit">
+										<h:outputText value="#{listaa.nit_requerimiento}"></h:outputText>
+									</p:column>
+									<p:column headerText="Cuis">
+										<h:outputText value="#{listaa.cuis}"></h:outputText>
+									</p:column>
+									<p:column headerText="Cufd">
+										<h:outputText value="#{listaa.cufd}"></h:outputText>
+									</p:column>
+									<p:column headerText="Código documento fiscal">
+										<h:outputText value="#{listaa.documento_fiscal_paquete}"></h:outputText>
+									</p:column>
+									<p:column headerText="Código documento sector">
+										<h:outputText value="#{listaa.documento_sector}"></h:outputText>
+									</p:column>
+									<p:column headerText="Sucursal">
+										<h:outputText value="#{listaa.sucursal_requerimiento}"></h:outputText>
+									</p:column>
+									<p:column headerText="Codigo punto venta">
+										<h:outputText value="#{listaa.codigo_punto_venta}"></h:outputText>
+									</p:column>
+									<p:column headerText="Fecha envio">
+										<h:outputText value="#{listaa.fecha_envio}"></h:outputText>
+									</p:column>
+									<p:column headerText="Archivo">
+										<h:outputText value="#{listaa.archivo}"></h:outputText>
+									</p:column>
+									<p:column headerText="Resultado esperado">
+										<h:outputText value="#{listaa.resultado_esperado}"></h:outputText>
+									</p:column>
+									<p:column headerText="Solución">
+										<h:outputText value="#{listaa.solucion}"></h:outputText>
+									</p:column>
+									<p:column style="text-align: center;" width="5%"
+										headerText="Porcentaje de avance">
+										<p:outputPanel rendered="#{listaa.estado_match==1}">
+											<f:facet name="header">
+												<h:outputText value="Porcentaje de avance"></h:outputText>
+											</f:facet>
+
+											<p:progressBar id="proEtapa6"
+												value="#{listaa.porcentaje_avance}" displayOnly="true" />
+											<h:outputText value="#{listaa.porcentaje_avance} %"></h:outputText>
+
+											<p:tooltip for="proEtapa6">
+												<i class="fa fa-check " />
+												<p:spacer width="5" height="5" />
+												<h:outputText
+													value="#{listaa.cantidad_casos_correctos} pruebas correctas" />
+												<br />
+												<i class="fa fa-close" />
+												<p:spacer width="7" height="7" />
+												<h:outputText
+													value="#{listaa.cantidad_casos_incorrectos} pruebas incorrectas" />
+												<br />
+												<i class="fa fa-exclamation" />
+												<p:spacer width="12" height="12" />
+												<h:outputText
+													value="#{listaa.cantidad_casos_esperados} pruebas esperadas" />
+											</p:tooltip>
+										</p:outputPanel>
+									</p:column>
+
+									<p:column headerText="" style="text-align: center;">
+										<p:commandButton id="opcional6"
+											icon="#{listaa.satisfactorio ? 'fa fa-lock':'fa fa-save'}"
+											styleClass="text-blue" rendered="#{listaa.opcional==1}"
+											disabled="#{listaa.satisfactorio}"
+											actionListener="#{seguimientoCertificacionSistemasController.registroPruebaDetalleOpcional(listaa)}">
+
+											<p:confirm header="Confirmación"
+												message="¿Usted ACEPTA que realizó este caso de prueba?"
+												icon="fa fa-exclamation-triangle">
+											</p:confirm>
+											<p:tooltip id="toolTipContent" for="opcional6"
+												position="left">
+												<h:graphicImage value="/images/ico_alerta.png" />
+			 							 	 		Presione para registrar el caso de prueba sugerido.   
+												</p:tooltip>
+										</p:commandButton>
+										<!-- 								update=":formConsultaSistemasAsociadosContribuyente:idConsultaSistemasAsociadosContribuyenteEtapa6" -->
+									</p:column>
+
+
+								</p:dataTable>
+
+
+							</p:tab>
+
+							<p:tab title="Casos de prueba">
+								<p:spacer height="10"></p:spacer>
+								<p:dataTable
+									id="idConsultaSistemasAsociadosContribuyenteEtapa66"
+									widgetVar="idConsultaSistemasAsociadosContribuyenteEtapa66"
+									value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+									var="lista" emptyMessage="No se encontraron registros."
+									rowIndexVar="rowIndex" rows="20" paginator="false"
+									sortMode="multiple" paginatorPosition="bottom"
+									rowsPerPageTemplate="50,75,100"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+									styleClass="table table-striped table-bordered table-hover table-sm"
+									rowStyleClass="#{lista.satisfactorio eq true  ? 'old' : null} #{lista.agrupador eq 'CASOS DE PRUEBA'  ? '' : 'ui-helper-hidden' }">
+
+									<p:column headerText="Nro">
+										<h:outputText value="#{lista.nro}"></h:outputText>
+									</p:column>
+									<p:column headerText="Tipo de prueba">
+										<h:outputText
+											value="#{lista.tipo_prueba == 'SUGERIDA' ? 'DECLARADA' : lista.tipo_prueba}"></h:outputText>
+									</p:column>
+									<p:column headerText="Descripción prueba">
+										<h:outputText value="#{lista.descripcion_prueba}"></h:outputText>
+									</p:column>
+									<p:column headerText="Cantidad documentos fiscales">
+										<h:outputText value="#{lista.cantidad_documentos_fiscales}"></h:outputText>
+									</p:column>
+									<p:column headerText="Eventos significativos registrado">
+										<h:outputText value="#{lista.evento_significativo_registrado}"></h:outputText>
+									</p:column>
+									<p:column headerText="Resultado esperado">
+										<h:outputText value="#{lista.resultado_esperado_paquete}"></h:outputText>
+									</p:column>
+									<p:column style="text-align: center;" width="5%"
+										headerText="Porcentaje de avance">
+										<p:outputPanel rendered="#{lista.estado_match==1}">
+											<f:facet name="header">
+												<h:outputText value="Porcentaje de avance"></h:outputText>
+											</f:facet>
+
+											<p:progressBar id="proEtapa66"
+												value="#{lista.porcentaje_avance}" displayOnly="true" />
+											<h:outputText value="#{lista.porcentaje_avance} %"></h:outputText>
+
+											<p:tooltip for="proEtapa66">
+												<i class="fa fa-check " />
+												<p:spacer width="5" height="5" />
+												<h:outputText
+													value="#{lista.cantidad_casos_correctos} pruebas correctas" />
+												<br />
+												<i class="fa fa-close" />
+												<p:spacer width="7" height="7" />
+												<h:outputText
+													value="#{lista.cantidad_casos_incorrectos} pruebas incorrectas" />
+												<br />
+												<i class="fa fa-exclamation" />
+												<p:spacer width="12" height="12" />
+												<h:outputText
+													value="#{lista.cantidad_casos_esperados} pruebas esperadas" />
+											</p:tooltip>
+										</p:outputPanel>
+									</p:column>
+
+									<p:column headerText="" style="text-align: center;">
+										<p:commandButton id="opcional66"
+											icon="#{lista.satisfactorio ? 'fa fa-lock':'fa fa-save'}"
+											styleClass="text-blue" rendered="#{lista.opcional==1}"
+											disabled="#{lista.satisfactorio}"
+											actionListener="#{seguimientoCertificacionSistemasController.registroPruebaDetalleOpcional(lista)}">
+
+											<p:confirm header="Confirmación"
+												message="¿Usted ACEPTA que realizó este caso de prueba?"
+												icon="fa fa-exclamation-triangle">
+											</p:confirm>
+											<p:tooltip id="toolTipContent" for="opcional66"
+												position="left">
+												<h:graphicImage value="/images/ico_alerta.png" />
+			 							 	 		Presione para registrar el caso de prueba sugerido.   
+												</p:tooltip>
+										</p:commandButton>
+										<!-- 								update=":formConsultaSistemasAsociadosContribuyente:idConsultaSistemasAsociadosContribuyenteEtapa6" -->
+									</p:column>
+								</p:dataTable>
+
+							</p:tab>
+						</p:tabView>
+					</p:panel>
+
+					<p:panel header="Detalle de la bateria de Pruebas Etapa 7"
+						toggleable="true" styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle and seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.etapa_certificacion_sistemas_id==2857}">
+
+						<p:outputPanel>
+							<sre:ComponenteCasosConcluidosPendientes
+								ComponenteConcluidos="Caso de prueba concluida."
+								ComponentePendientes="Caso de prueba pendiente." />
+						</p:outputPanel>
+
+						<p:spacer height="50"></p:spacer>
+						<p:dataTable id="idConsultaSeguimientoCertificacionSistemas"
+							widgetVar="idConsultaSeguimientoCertificacionSistemas"
+							value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+							var="lista" emptyMessage="No se encontraron registros."
+							rowIndexVar="rowIndex" rows="20" paginator="true"
+							sortMode="multiple" paginatorPosition="bottom"
+							rowsPerPageTemplate="50,75,100"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+							styleClass="table table-striped table-bordered table-hover table-sm"
+							rowStyleClass="#{lista.satisfactorio eq 'true' ? 'old' : null}">
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Nro."></h:outputText>
+								</f:facet>
+								<h:outputText value="#{rowIndex+1}"></h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Tipo de Prueba"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.tipo_prueba}">
+								</h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Digest Value"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.hash}"></h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Nombre del archivo XML"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.nombre_archivo_xml}"></h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Nombre del archivo XML Firmado"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.nombre_archivo_xml_firmado}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Nombre del archivo XML Firmado Base 64"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.nombre_archivo_xml_firmado_base64}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText
+										value="Nombre del archivo XML Firmado Base 64 Envio"></h:outputText>
+								</f:facet>
+								<h:outputText
+									value="#{lista.nombre_archivo_xml_firmado_base64_envio}">
+								</h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Porcentaje de avance"></h:outputText>
+								</f:facet>
+								<p:progressBar rendered="#{lista.opcional!=1}"
+									id="idBarraEtapa1" value="#{lista.porcentaje_avance}"
+									displayOnly="true" />
+								<h:outputText rendered="#{lista.opcional!=1}"
+									value="#{lista.porcentaje_avance} %">
+								</h:outputText>
+								<p:tooltip for="idBarraEtapa1">
+									<i class="fa fa-calendar" />
+									<p:spacer width="5" height="5" />
+									<h:outputText value="Fecha de prueba #{lista.fecha_registro}" />
+									<br />
+								</p:tooltip>
+							</p:column>
+							<p:column headerText="Registrar" width="8%"
+								style="text-align:center">
+								<p:commandButton id="opcional"
+									icon="#{lista.satisfactorio ? 'fa fa-lock':'fa fa-save'}"
+									styleClass="text-blue" rendered="#{lista.opcional==1}"
+									disabled="#{lista.satisfactorio}" validateClient="false"
+									ajax="true" async="true" process="@this"
+									update="idConsultaSeguimientoCertificacionSistemas"
+									actionListener="#{seguimientoCertificacionSistemasController.registroPruebaDetalleOpcional(lista)}">
+
+									<p:confirm header="Confirmación"
+										message="¿Usted ACEPTA que realizó este caso de prueba?"
+										icon="fa fa-exclamation-triangle">
+									</p:confirm>
+									<p:tooltip id="toolTipContent" for="opcional" position="left">
+										<h:graphicImage value="/images/ico_alerta.png" />
+ 							 	 		Presione para registrar el caso de prueba declarada.   
+								</p:tooltip>
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel
+						header="Listado de Pruebas #{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.descripcion_prueba}"
+						toggleable="true" styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle and seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.etapa_certificacion_sistemas_id==3016}">
+						<p:outputPanel>
+							<sre:ComponenteCasosConcluidosPendientes
+								ComponenteConcluidos="Caso de prueba concluida."
+								ComponentePendientes="Caso de prueba pendiente." />
+						</p:outputPanel>
+						<p:spacer height="50"></p:spacer>
+						<p:dataTable id="idConsultaSeguimientoCertificacionSistemasCufd"
+							widgetVar="idConsultaSeguimientoCertificacionSistemasCufd"
+							value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+							var="lista" emptyMessage="No se encontraron registros."
+							rowIndexVar="rowIndex" rows="25" paginator="true"
+							sortMode="multiple" paginatorPosition="bottom"
+							rowsPerPageTemplate="50,75,100"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRe	cord} a {endRecord} de {totalRecords} registros"
+							styleClass="table table-striped table-bordered table-hover table-sm"
+							rowStyleClass="#{lista.satisfactorio eq true  ? 'old' : null}">
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Nro."></h:outputText>
+								</f:facet>
+								<h:outputText value="#{rowIndex+1}"></h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Tipo de Prueba"></h:outputText>
+								</f:facet>
+								<h:outputText
+									value="#{lista.tipo_prueba=='SUGERIDA'?'DECLARADA':lista.tipo_prueba}">
+								</h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Código de Sistema"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.codigo_sistema}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Modalidad"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.modalidad_requerimiento}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Nit"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.nit_requerimiento}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Cuis"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.cuis}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Sucursal"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.sucursal_requerimiento}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Punto de Venta"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.codigo_punto_venta}">
+								</h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Resultado Esperado"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.resultado_esperado}">
+								</h:outputText>
+							</p:column>
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Solución"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lista.solucion}">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="Porcentaje de avance"></h:outputText>
+								</f:facet>
+								<p:progressBar rendered="#{lista.opcional!=1}"
+									id="idBarraEtapa1" value="#{lista.porcentaje_avance}"
+									displayOnly="true" />
+								<h:outputText rendered="#{lista.opcional!=1}"
+									value="#{lista.porcentaje_avance} %">
+								</h:outputText>
+								<p:tooltip for="idBarraEtapa1">
+									<i class="fa fa-calendar" />
+									<p:spacer width="5" height="5" />
+									<h:outputText value="Fecha de prueba #{lista.fecha_registro}" />
+									<br />
+									<h:outputText value="Totales:" />
+									<br />
+									<i class="fa fa-check " />
+									<p:spacer width="5" height="5" />
+									<h:outputText
+										value="#{lista.cantidad_casos_correctos} pruebas correctas" />
+									<br />
+									<i class="fa fa-close" />
+									<p:spacer width="7" height="7" />
+									<h:outputText
+										value="#{lista.cantidad_casos_incorrectos} pruebas incorrectas" />
+									<br />
+									<i class="fa fa-exclamation" />
+									<p:spacer width="12" height="12" />
+									<h:outputText
+										value="#{lista.cantidad_casos_esperados} pruebas esperadas" />
+								</p:tooltip>
+							</p:column>
+							<p:column headerText="Registrar" width="8%"
+								style="text-align:center">
+								<p:commandButton id="opcional"
+									icon="#{lista.satisfactorio ? 'fa fa-lock':'fa fa-save'}"
+									styleClass="text-blue" rendered="#{lista.opcional==1}"
+									disabled="#{lista.satisfactorio}" validateClient="false"
+									ajax="true" async="true" process="@this"
+									update="idConsultaSeguimientoCertificacionSistemasCufd"
+									actionListener="#{seguimientoCertificacionSistemasController.registroPruebaDetalleOpcional(lista)}">
+
+									<p:confirm header="Confirmación"
+										message="¿Usted ACEPTA que realizó este caso de prueba?"
+										icon="fa fa-exclamation-triangle">
+									</p:confirm>
+									<p:tooltip id="toolTipContent" for="opcional" position="left">
+										<h:graphicImage value="/images/ico_alerta.png" />
+ 							 	 		Presione para registrar el caso de prueba declarada.   
+								</p:tooltip>
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel
+						header="Listado de Pruebas #{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.descripcion_prueba}"
+						toggleable="true" styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle and seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.etapa_certificacion_sistemas_id==3052}">
+						<p:outputPanel>
+							<p:panel style="border:none" styleClass="ui-fluid">
+								<sre:ComponenteCasosConcluidosPendientes
+									ComponenteConcluidos="Caso de prueba concluida."
+									ComponentePendientes="Caso de prueba pendiente." />
+							</p:panel>
+						</p:outputPanel>
+
+						<p:spacer height="10"></p:spacer>
+						<p:panel
+							header="Números de Identificación Tributaria (NIT) asignados como clientes"
+							toggleable="true" styleClass="card box-primary"
+							visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarTabla}">
+							<p:dataTable id="idConsultaSeguimientoCertificacionSistemas9"
+								widgetVar="idConsultaSeguimientoCertificacionSistemas9"
+								value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+								var="lista" emptyMessage="No se encontraron registros."
+								rowIndexVar="rowIndex" paginator="true" rows="25"
+								rendered="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarTabla}"
+								sortMode="multiple" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								currentPageReportTemplate="{startRe	cord} a {endRecord} de {totalRecords} registros"
+								styleClass="table table-striped table-bordered table-hover table-sm"
+								rowStyleClass="#{lista.satisfactorio eq true  ? 'old' : null}">
+								<f:facet name="header" style="text-align: center">
+
+								</f:facet>
+								<p:column style="text-align: center">
+									<f:facet name="header">
+										<h:outputText value="Nro."></h:outputText>
+									</f:facet>
+									<h:outputText value="#{rowIndex+1}"></h:outputText>
+								</p:column>
+								<p:column style="text-align: center">
+									<f:facet name="header">
+										<h:outputText value="NIT"></h:outputText>
+									</f:facet>
+									<h:outputText value="#{lista.nit}">
+									</h:outputText>
+								</p:column>
+								<p:column style="text-align: center">
+									<f:facet name="header">
+										<h:outputText value="Documento Sector"></h:outputText>
+									</f:facet>
+									<h:outputText value="#{lista.documento_sector}">
+									</h:outputText>
+								</p:column>
+								<p:column style="text-align: center">
+									<f:facet name="header">
+										<h:outputText value="Usuario"></h:outputText>
+									</f:facet>
+									<h:outputText value="#{lista.usuario}">
+									</h:outputText>
+								</p:column>
+								<p:column style="text-align: center">
+									<f:facet name="header">
+										<h:outputText value="Contraseña"></h:outputText>
+									</f:facet>
+									<h:outputText value="#{lista.contrasenia}">
+									</h:outputText>
+								</p:column>
+								<p:column style="text-align: center">
+									<f:facet name="header">
+										<h:outputText value="CUIS"></h:outputText>
+									</f:facet>
+									<h:outputText value="#{lista.cuis}">
+									</h:outputText>
+								</p:column>
+								<p:column style="text-align: center">
+									<f:facet name="header">
+										<h:outputText value="Porcentaje de avance"></h:outputText>
+									</f:facet>
+									<p:progressBar id="idBarraEtapa1"
+										value="#{lista.porcentaje_avance}" displayOnly="true" />
+									<h:outputText value="#{lista.porcentaje_avance} %">
+									</h:outputText>
+									<p:tooltip for="idBarraEtapa1">
+										<i class="fa fa-calendar" />
+										<p:spacer width="5" height="5" />
+										<h:outputText value="Fecha de prueba #{lista.fecha_registro}" />
+										<br />
+										<h:outputText value="Totales:" />
+										<br />
+										<i class="fa fa-check " />
+										<p:spacer width="5" height="5" />
+										<h:outputText
+											value="#{lista.cantidad_casos_correctos} pruebas correctas" />
+										<br />
+										<i class="fa fa-close" />
+										<p:spacer width="7" height="7" />
+										<h:outputText
+											value="#{lista.cantidad_casos_incorrectos} pruebas incorrectas" />
+										<br />
+										<i class="fa fa-exclamation" />
+										<p:spacer width="12" height="12" />
+										<h:outputText
+											value="#{lista.cantidad_casos_esperados} pruebas esperadas" />
+									</p:tooltip>
+								</p:column>
+								<p:column width="8%" style="text-align:center">
+									<f:facet name="header">
+										<br />
+										<h:outputText value="Ver Etapas de Certificación de Sistemas"></h:outputText>
+										<br />
+										<br />
+									</f:facet>
+									<p:commandButton id="idBotonAnular" styleClass="text-blue"
+										icon="fa fa-search" ajax="true" async="true" process="@this"
+										update="formConsultaSistemasAsociadosContribuyente"
+										title="Ver Detalle de Etapas"
+										actionListener="#{seguimientoCertificacionSistemasController.verDetalleSistemaProveedor(lista)}">
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+						</p:panel>
+						<p:spacer height="10"></p:spacer>
+						<p:panel header="Bateria de Pruebas" toggleable="true"
+							styleClass="card box-primary"
+							visible="#{!seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarTabla}">
+							<sre:ComponenteSistemaProveedor></sre:ComponenteSistemaProveedor>
+						</p:panel>
+					</p:panel>
+					<p:panel
+						header="Listado de Pruebas #{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.descripcion_prueba}"
+						toggleable="true" styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle and seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.dtoSeguimientoPruebasSistemas.etapa_certificacion_sistemas_id==3053}">
+						<p:outputPanel>
+							<p:panel style="border:none" styleClass="ui-fluid">
+								<sre:ComponenteCasosConcluidosPendientes
+									ComponenteConcluidos="Caso de prueba concluida."
+									ComponentePendientes="Caso de prueba pendiente." />
+							</p:panel>
+						</p:outputPanel>
+
+						<p:tabView>
+							<p:tab title="Soap Parámetros">
+								<p:spacer height="10"></p:spacer>
+								<p:dataTable id="idConsultaSeguimientoCertificacionSistemas10"
+									widgetVar="idConsultaSeguimientoCertificacionSistemas10"
+									value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+									var="lista" emptyMessage="No se encontraron registros."
+									rowIndexVar="rowIndex" paginator="true" rows="25"
+									sortMode="multiple" paginatorPosition="bottom"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									currentPageReportTemplate="{startRe	cord} a {endRecord} de {totalRecords} registros"
+									styleClass="table table-striped table-bordered table-hover table-sm"
+									rowStyleClass="#{lista.satisfactorio eq true  ? 'old' : null} #{lista.agrupador eq 'SOAP Parámetros'  ? '' : 'ui-helper-hidden' }">
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Nro."></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.nro}"></h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Tipo de Prueba"></h:outputText>
+										</f:facet>
+										<h:outputText
+											value="#{lista.tipo_prueba=='SUGERIDA'?'DECLARADA':lista.tipo_prueba}">
+										</h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Código de Sistema"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.codigo_sistema}">
+										</h:outputText>
+									</p:column>
+
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Código de Ambiente"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.codigo_ambiente}">
+										</h:outputText>
+									</p:column>
+
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="código de Emisión"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.codigo_emision}">
+										</h:outputText>
+									</p:column>
+
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Código de Modalidad"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.codigo_modalidad}">
+										</h:outputText>
+									</p:column>
+
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="nit"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.nit_requerimiento}">
+										</h:outputText>
+									</p:column>
+
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Cuis"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.cuis}">
+										</h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Cufd"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.cufd}">
+										</h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Documento Fiscal"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.documento_fiscal_paquete}">
+										</h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Código Documento Sector"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.documento_sector}">
+										</h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Sucursal"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.sucursal_requerimiento}">
+										</h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Código de Punto de Venta"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.codigo_punto_venta}">
+										</h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Fecha de Envío"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.fecha_envio}">
+										</h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Archivo"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.archivo}">
+										</h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Resultado Esperado"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.resultado_esperado}">
+										</h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Solución"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.solucion}">
+										</h:outputText>
+									</p:column>
+
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Porcentaje de avance"></h:outputText>
+										</f:facet>
+										<p:progressBar rendered="#{lista.opcional!=1}"
+											id="idBarraEtapa1" value="#{lista.porcentaje_avance}"
+											displayOnly="true" />
+										<h:outputText rendered="#{lista.opcional!=1}"
+											value="#{lista.porcentaje_avance} %">
+										</h:outputText>
+										<p:tooltip for="idBarraEtapa1">
+											<i class="fa fa-calendar" />
+											<p:spacer width="5" height="5" />
+											<h:outputText value="Fecha de prueba #{lista.fecha_registro}" />
+											<br />
+											<h:outputText value="Totales:" />
+											<br />
+											<i class="fa fa-check " />
+											<p:spacer width="5" height="5" />
+											<h:outputText
+												value="#{lista.cantidad_casos_correctos} pruebas correctas" />
+											<br />
+											<i class="fa fa-close" />
+											<p:spacer width="7" height="7" />
+											<h:outputText
+												value="#{lista.cantidad_casos_incorrectos} pruebas incorrectas" />
+											<br />
+											<i class="fa fa-exclamation" />
+											<p:spacer width="12" height="12" />
+											<h:outputText
+												value="#{lista.cantidad_casos_esperados} pruebas esperadas" />
+										</p:tooltip>
+									</p:column>
+									<p:column headerText="Registrar" width="8%"
+										style="text-align:center">
+										<p:commandButton id="opcional"
+											icon="#{lista.satisfactorio ? 'fa fa-lock':'fa fa-save'}"
+											styleClass="text-blue" rendered="#{lista.opcional==1}"
+											disabled="#{lista.satisfactorio}" validateClient="false"
+											ajax="true" async="true" process="@this"
+											update="idConsultaSeguimientoCertificacionSistemas10"
+											actionListener="#{seguimientoCertificacionSistemasController.registroPruebaDetalleOpcional(lista)}">
+
+											<p:confirm header="Confirmación"
+												message="¿Usted ACEPTA que realizó este caso de prueba?"
+												icon="fa fa-exclamation-triangle">
+											</p:confirm>
+											<p:tooltip id="toolTipContent" for="opcional" position="left">
+												<h:graphicImage value="/images/ico_alerta.png" />
+ 							 	 		Presione para registrar el caso de prueba declarada.   
+								</p:tooltip>
+										</p:commandButton>
+									</p:column>
+								</p:dataTable>
+							</p:tab>
+							<p:tab title="Caso de Prueba">
+								<p:dataTable
+									id="idConsultaSeguimientoCertificacionSistemasCasoP"
+									widgetVar="idConsultaSeguimientoCertificacionSistemasCasoP"
+									value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSeguimientoDetallePruebasSistemas}"
+									var="lista" emptyMessage="No se encontraron registros."
+									rowIndexVar="rowIndex" paginator="false" sortMode="multiple"
+									paginatorPosition="bottom"
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									currentPageReportTemplate="{startRe	cord} a {endRecord} de {totalRecords} registros"
+									styleClass="table table-striped table-bordered table-hover table-sm"
+									rowStyleClass="#{lista.satisfactorio eq true  ? 'old' : null} #{lista.agrupador eq 'Casos de Prueba'  ? '' : 'ui-helper-hidden' }">
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Nro."></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.nro}"></h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Tipo de Prueba"></h:outputText>
+										</f:facet>
+										<h:outputText
+											value="#{lista.tipo_prueba=='SUGERIDA'?'DECLARADA':lista.tipo_prueba}">
+										</h:outputText>
+									</p:column>
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Descripción de la Prueba"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.codigo_sistema}">
+										</h:outputText>
+									</p:column>
+
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Cantidad de Documentos Fiscales"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.codigo_ambiente}">
+										</h:outputText>
+									</p:column>
+
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Marca de Envío Masivo"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.codigo_emision}">
+										</h:outputText>
+									</p:column>
+
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Resultado Esperado"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lista.codigo_modalidad}">
+										</h:outputText>
+									</p:column>
+
+									<p:column style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="Porcentaje de avance"></h:outputText>
+										</f:facet>
+										<p:progressBar rendered="#{lista.opcional!=1}"
+											id="idBarraEtapa1" value="#{lista.porcentaje_avance}"
+											displayOnly="true" />
+										<h:outputText rendered="#{lista.opcional!=1}"
+											value="#{lista.porcentaje_avance} %">
+										</h:outputText>
+										<p:tooltip for="idBarraEtapa1">
+											<i class="fa fa-calendar" />
+											<p:spacer width="5" height="5" />
+											<h:outputText value="Fecha de prueba #{lista.fecha_registro}" />
+											<br />
+											<h:outputText value="Totales:" />
+											<br />
+											<i class="fa fa-check " />
+											<p:spacer width="5" height="5" />
+											<h:outputText
+												value="#{lista.cantidad_casos_correctos} pruebas correctas" />
+											<br />
+											<i class="fa fa-close" />
+											<p:spacer width="7" height="7" />
+											<h:outputText
+												value="#{lista.cantidad_casos_incorrectos} pruebas incorrectas" />
+											<br />
+											<i class="fa fa-exclamation" />
+											<p:spacer width="12" height="12" />
+											<h:outputText
+												value="#{lista.cantidad_casos_esperados} pruebas esperadas" />
+										</p:tooltip>
+									</p:column>
+									<p:column headerText="Registrar" width="8%"
+										style="text-align:center">
+										<p:commandButton id="opcional"
+											icon="#{lista.satisfactorio ? 'fa fa-lock':'fa fa-save'}"
+											styleClass="text-blue" rendered="#{lista.opcional==1}"
+											disabled="#{lista.satisfactorio}" validateClient="false"
+											ajax="true" async="true" process="@this"
+											update="idConsultaSeguimientoCertificacionSistemasCasoP"
+											actionListener="#{seguimientoCertificacionSistemasController.registroPruebaDetalleOpcional(lista)}">
+
+											<p:confirm header="Confirmación"
+												message="¿Usted ACEPTA que realizó este caso de prueba?"
+												icon="fa fa-exclamation-triangle">
+											</p:confirm>
+											<p:tooltip id="toolTipContent" for="opcional" position="left">
+												<h:graphicImage value="/images/ico_alerta.png" />
+ 							 	 		Presione para registrar el caso de prueba declarada.   
+								</p:tooltip>
+										</p:commandButton>
+									</p:column>
+								</p:dataTable>
+							</p:tab>
+						</p:tabView>
+					</p:panel>
+					<p:panel
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanelDetalle}">
+						<p:panelGrid columns="4"
+							columnClasses="ui-grid-col-6, ui-grid-col-2, ui-grid-col-2, ui-grid-col-2"
+							layout="grid" styleClass="ui-fluid">
+							<p:row></p:row>
+
+							<p:panelGrid style="border:none">
+								<p:commandButton id="idDescargarCsv" value="Imprimir"
+									styleClass="btn btn-success btn-sm pull-right" rendered="false"
+									oncomplete="PrimeFaces.monitorDownload(start, stop);"
+									ajax="false">
+									<p:fileDownload
+										value="#{seguimientoCertificacionSistemasController.ReporteSeguimientoSolicitudSistemas()}" />
+	                            </p:commandButton>
+							</p:panelGrid>
+
+							<p:commandButton id="idVolver" value="Volver"
+								rendered="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarTabla}"
+								styleClass="btn btn-success btn-sm pull-lefth" ajax="false">
+								<p:fileDownload
+									value="#{seguimientoCertificacionSistemasController.volver()}" />
+							</p:commandButton>
+
+							<p:commandButton id="idVolverProveedor" value="Volver"
+								rendered="#{!seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarTabla}"
+								styleClass="btn btn-success btn-sm pull-lefth" ajax="false">
+								<p:fileDownload
+									value="#{seguimientoCertificacionSistemasController.volverProveedor()}" />
+							</p:commandButton>
+
+							<p:commandButton id="idSalir" value="Salir"
+								styleClass="btn btn-danger btn-sm pull-right"
+								actionListener="#{seguimientoCertificacionSistemasController.Cancelar}">
+								<f:ajax render="nada"></f:ajax>
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panel>
+				</h:panelGroup>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+

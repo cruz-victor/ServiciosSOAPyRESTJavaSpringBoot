@@ -1,0 +1,32 @@
+package bo.gob.sin.sre.fac.service;
+
+import bo.gob.sin.sre.fac.dto.BitacoraObservacionComponentesInsituDto;
+import bo.gob.sin.sre.fac.dto.BitacorasObservacionesComponentesInsituDto;
+import bo.gob.sin.sre.fac.dto.RegistroObservacionesComponentesInsituDto;
+import bo.gob.sin.sre.fac.dto.RegistroObservacionesComponentesInsituListaDto;
+import bo.gob.sin.sre.fac.dto.RespuestaEstaRegistradoGenericoDto;
+
+public interface IRegistroVerificacionInsituService {
+
+	public RegistroObservacionesComponentesInsituListaDto obtenerObservacionesComponentesInsituPorCodigoCertificacion(
+			long pCodigoCertificacion);
+
+	public RespuestaEstaRegistradoGenericoDto verificarObservacionComponenteInSituAprobadas(long pCodigoCertificacion);
+
+	public RegistroObservacionesComponentesInsituDto modificarObservacionInSitu(
+			RegistroObservacionesComponentesInsituDto pObservacionInsitu);
+
+	public RegistroObservacionesComponentesInsituDto registrarObservacionInSitu(
+			RegistroObservacionesComponentesInsituDto pObservacionInsitu);
+
+	public BitacoraObservacionComponentesInsituDto registrarBitacoraObservacionInSitu(
+			BitacoraObservacionComponentesInsituDto pBitacoraObservacionesComponentesInsitu);
+
+	public BitacorasObservacionesComponentesInsituDto obtenerDetalleObservacionesComponentesInsituPorCodigoObservacion(
+			long pCodigoObservacionComponenteInSitu);
+
+	public RegistroObservacionesComponentesInsituListaDto registrarDatosInicioObservaciones(
+			RegistroObservacionesComponentesInsituDto pSolicitudRegistroObservaciones);
+
+	public RespuestaEstaRegistradoGenericoDto verificarContribuyenteRequiereVisitaInsitu(Long pNit);
+}

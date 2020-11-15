@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<!-- 		<f:viewAction action="#{logedBean.check}" /> -->
+		<f:viewAction action="#{asignacionEquipoCertificacionController.Load}" />
+	</f:metadata>
+
+	<ui:define name="title">
+      ASIGNACIÓN EQUIPO CERTIFICACIÓN
+    </ui:define>
+
+	<ui:define name="body">
+		<style>
+.cellStyleError {
+	background-color: #ef5350 !important;
+}
+
+.cellStyleWarning {
+	background-color: #ffa726 !important;
+}
+
+.cellStyleSuccess {
+	background-color: #9ccc65 !important;
+}
+
+.btn-round {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+}
+
+.btn-round.btn-lg {
+	width: 48px;
+	height: 48px;
+}
+
+.btn-round.btn-sm {
+	width: 34px;
+	height: 34px;
+}
+
+.btn-round.btn-xs {
+	width: 24px;
+	height: 24px;
+}
+</style>
+		<p:panel header="Datos Contribuyente" styleClass="box-primary"
+			toggleable="true">
+			<sre:ComponenteDatosBasicos></sre:ComponenteDatosBasicos>
+		</p:panel>
+
+		<p:panel header="Datos Solicitud" styleClass="box-primary"
+			toggleable="true">
+			<sre:ComponenteAsignacionEquipoCertificacion></sre:ComponenteAsignacionEquipoCertificacion>
+		</p:panel>
+
+
+
+		<p:panel id="idListadoEquipoTrabajo"
+			header="Detalle Equipo CertificaciÃ³n Disponible"
+			styleClass="box-primary" toggleable="true">
+			<h:form id="formAsignacionEquipoTrabajo">
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-md-3">
+							<p:selectBooleanCheckbox itemLabel="Asignarse a uno mismo"
+								value="#{asignacionEquipoCertificacionController.asignacionEquipoCertificacionModel.asignarseUnoMismo}">
+								<f:ajax event="valueChange" execute="@this" render="#{p:component('ddlFuncionarioResponsable')}"></f:ajax>
+							</p:selectBooleanCheckbox>
+						</div>
+					</div>
+				</div>
+
+				<p:dataTable id="listaFuncionarios" var="funcionario"
+					rowKey="#{funcionario.usuarioId}"
+					selection="#{asignacionEquipoCertificacionController.asignacionEquipoCertificacionModel.funcionariosAsignados.usuariosAsignacion}"
+					value="#{asignacionEquipoCertificacionController.asignacionEquipoCertificacionModel.funcionarios.usuariosAsignacion}"
+					rowIndexVar="rowIndex" rows="10" widgetVar="listaFuncionarios"
+					paginator="true" sortMode="multiple"
+					emptyMessage="Registros no encontrados." paginatorPosition="bottom"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+					styleClass="table table-striped table-bordered table-hover table-sm">
+					<p:column headerText="NÂ°" width="5%">
+						<p:outputLabel value="#{rowIndex+1}" style="font-weight:normal;" />
+					</p:column>
+					<p:column headerText="Servidor PÃºblico" width="80%"
+						sortBy="#{funcionario.nombre}"
+						filterBy="#{funcionario.nombre}"
+						filterMatchMode="contains" filterStyle="display:none">
+						<p:outputLabel value="#{funcionario.nombre}"
+							style="font-weight:normal;" />
+					</p:column>
+					<p:column headerText="En Proceso" width="10%"
+						style="text-align: right;"
+						sortBy="#{funcionario.cantidadProcesos} "
+						filterBy="#{funcionario.cantidadProcesos}"
+						filterMatchMode="contains" filterStyle="display:none">
+						<p:outputLabel value="#{funcionario.cantidadProcesos}"
+							style="font-weight:normal;" />
+					</p:column>
+
+					<p:column selectionMode="multiple" width="5%"
+						style="text-align:center"></p:column>
+					<p:ajax event="rowSelect"
+						update="#{p:component('ddlFuncionarioResponsable')}" />
+					<p:ajax event="rowUnselect"
+						update="#{p:component('ddlFuncionarioResponsable')}" />
+					<p:ajax event="toggleSelect"
+						update="#{p:component('ddlFuncionarioResponsable')}" />
+					<p:ajax event="rowSelectCheckbox"
+						update="#{p:component('ddlFuncionarioResponsable')}" />
+					<p:ajax event="rowUnselectCheckbox"
+						update="#{p:component('ddlFuncionarioResponsable')}" />
+						
+						
+				</p:dataTable>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-md-1">
+							<h:outputLabel value="Funcionaro Responsable"
+								style="font-weight:bold" />
+						</div>
+						<div class="col-md-1">
+							<div style="font-weight: bold; color: red; text-align: left">
+								<p:outputLabel value="(*)"></p:outputLabel>
+							</div>
+						</div>
+						<div class="col-md-10">
+							<p:selectOneMenu id="ddlFuncionarioResponsable" converter="funcionariosAsignacionConverter"
+								value="#{asignacionEquipoCertificacionController.asignacionEquipoCertificacionModel.funcionarioResponsable}"
+								validatorMessage="Seleccione funcionario responsable"
+								requiredMessage="Campo requerido" required="#{asignacionEquipoCertificacionController.asignacionEquipoCertificacionModel.funcionariosAsignados.usuariosAsignacion.size() > 0}">
+								<f:selectItem itemLabel="Seleccionar Funcionario"/>
+								<f:selectItems
+									value="#{asignacionEquipoCertificacionController.asignacionEquipoCertificacionModel.funcionariosAsignados.usuariosAsignacion}"
+									var="funcionario" itemLabel="#{funcionario.nombre}"
+									itemValue="#{funcionario}" />
+										<p:clientValidator event="change" />
+							</p:selectOneMenu>
+							<p:message for="ddlFuncionarioResponsable" display="text">
+							</p:message>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-md-1">
+							<h:outputLabel value="InstrucciÃ³n:" style="font-weight:bold" />
+							<br />
+						</div>
+						<div class="col-md-1">
+							<div style="font-weight: bold; color: red; text-align: left">
+								<p:outputLabel value="(*)"></p:outputLabel>
+							</div>
+						</div>
+						<div class="col-md-10">
+							<p:inputTextarea id="idIntruccion" rows="5"
+								style="text-transform: uppercase; width:100%"
+								value="#{asignacionEquipoCertificacionController.asignacionEquipoCertificacionModel.instruccion}"
+								required="true" requiredMessage="Campo Requerido"
+								counter="display" maxlength="250"
+								counterTemplate="{0} Caracteres Restantes." autoResize="false">
+									<p:clientValidator event="change" />
+								</p:inputTextarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-1"></div>
+						<div class="col-md-1"></div>
+						<div class="col-md-10">
+							<h:outputText id="display" />
+							<p:message for="idIntruccion" display="text">
+							</p:message>
+						</div>
+					</div>
+				</div>
+
+				<p:row>
+					<div style="font-weight: bold; color: red; text-align: left">
+						<p:outputLabel value="* Campos Obligatorios"></p:outputLabel>
+					</div>
+				</p:row>
+
+				<div class="modal-footer">
+					<p:commandButton id="btnCancelar" value="Cancelar"
+						styleClass="btn btn-error">
+					</p:commandButton>
+					<p:commandButton id="btnDerivar" value="Derivar"
+						validateClient="true" process="@this @form"
+						update="formAsignacionEquipoTrabajo"
+						actionListener="#{asignacionEquipoCertificacionController.onDerivar()}"
+						styleClass="btn btn-primary" ajax="true">
+						<p:confirm header="Advertencia"
+							message="Â¿EstÃ¡ seguro de asignar la lista de funcionarios?"
+							icon="ui-icon-alert" />
+					</p:commandButton>
+				</div>
+				<p:confirmDialog id="Advertencia" global="true"
+						widgetVar="ConfirmarAsignacionEquipoCertificacion"
+						showEffect="fade" hideEffect="fade">
+						<p:commandButton id="btnAceptar" value="Aceptar" type="button"
+							ajax="true" styleClass="ui-confirmdialog-yes"
+							icon="ui-icon-check" />
+						<p:commandButton value="Cancelar" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</h:form>
+		</p:panel>
+	</ui:define>
+</ui:composition>
+

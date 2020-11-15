@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	xmlns:workflow="http://java.sun.com/jsf/composite/workflow"
+	xmlns:correspondencia="http://java.sun.com/jsf/composite/DocumentoEmitido"
+	template="/common/templateNoAuth.xhtml">
+	<ui:define name="title">
+		ETAPA DE GESTION DE PRUEBAS, REGISTRO IN SITU Y REGISTRO COMPONENTES</ui:define>
+
+	<ui:define name="description">
+<!-- 		Revisar Pruebas iniciales, Registro IN SITU y Componentes -->
+	</ui:define>
+	
+	<ui:define name="body">
+		<p:tabView id="tabBasico" dynamic="true" cache="true">
+			<p:tab title="PRUEBAS AUTOMÁTICAS" id="tbEtapa">
+<!-- 				<workflow:condicional id="customCondicional" -->
+<!-- 					managedBean="#{condicionBean}" txtPregunta="¿Qué desea realizar?" /> -->
+			</p:tab>
+			<p:tab id="tbBitacora" title="PRUEBASMANUALES">
+<!-- 				<workflow:detalleBitacora id="detBitacora" /> -->
+			</p:tab>
+			<p:tab title="REGISTRO VERIFICACION IN SITU" id="tbDetalleProceso">
+<!-- 				<workflow:detalleProceso id="detProceso" /> -->
+			</p:tab>
+			<p:tab title="REGISTRAR INFORMACION DE COMMPONENTES" id="tbTramite">
+<!-- 				<workflow:detalleTramite id="detTramite" /> -->
+			</p:tab>
+			<p:tab title="REGISTRO BITACORA" id="tbAdjunto">
+<!-- 				<workflow:procesoAdjunto id="customAdjunto" -->
+<!-- 					direccionComponentePadre="tabBasico" managedBean="#{adjuntaBean}" /> -->
+			</p:tab>
+			
+		</p:tabView>
+		<workflow:botonera id="customBotonera"
+			linkRedireccion="#{contextoUsuarioModel.RutaBandeja()}" 
+			managedBean="#{etapaEmision.botoneraFacController}" />
+<!-- 		<workflow:etapaBasica></workflow:etapaBasica> -->
+	</ui:define>
+</ui:composition>

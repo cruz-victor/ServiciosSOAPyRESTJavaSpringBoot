@@ -1,0 +1,146 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<version>0.8.0.0-SNAPSHOT</version>
+	<name>sre.fac.csis.dto</name>
+	<description>sre.fac.csis.dto</description>
+	<groupId>bo.gob.sin.sre.fac.csis</groupId>
+	<artifactId>csis.dto</artifactId>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<org.hibernate.version>5.2.12.Final</org.hibernate.version>
+		<m2e.jpa.activation>false</m2e.jpa.activation>
+		<spring.version>4.2.3.RELEASE</spring.version>
+	</properties>
+
+	<parent>
+		<groupId>bo.gob.sin.sre.fac.csis</groupId>
+		<artifactId>csis</artifactId>
+		<version>0.8.0.0-SNAPSHOT</version>
+	</parent>
+	<build>
+		<finalName>${project.artifactId}</finalName>
+	</build>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>http://siatrepositorio.impuestos.gob.bo:8081/artifactory/SIAT-Snapshot</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-envers</artifactId>
+			<version>${org.hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+<!-- 		<dependency>
+			<groupId>Transversales.ConfiguracionSistema</groupId>
+			<artifactId>Transversales.ConfiguracionSistema.Utiles</artifactId>
+			<version>RELEASE</version>
+		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>Sre.Fac</groupId> -->
+		<!-- <artifactId> -->
+		<!-- Sre.Fac.Audit -->
+		<!-- </artifactId> -->
+		<!-- <version>1.0.0</version> -->
+		<!-- </dependency> -->
+
+<!-- 		<dependency>
+			<groupId>Transversales.ConfiguracionSistema</groupId>
+			<artifactId>Transversales.ConfiguracionSistema.Entities</artifactId>
+			<version>RELEASE</version>
+		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>Transversales.Autenticacion</groupId> -->
+		<!-- <artifactId> -->
+		<!-- Transversales.Autenticacion.Dto -->
+		<!-- </artifactId> -->
+		<!-- <version>0.1.0.0</version> -->
+		<!-- <exclusions> -->
+		<!-- <exclusion> -->
+		<!-- <groupId>Transversales.Comun</groupId> -->
+		<!-- <artifactId> -->
+		<!-- Transversales.Comun.Entities -->
+		<!-- </artifactId> -->
+		<!-- </exclusion> -->
+		<!-- </exclusions> -->
+		<!-- </dependency> -->
+<!-- 		<dependency>
+  		<groupId>bo.gob.sin.str.cmsj.mapl</groupId>
+  		<artifactId>mapl.dto</artifactId>
+  		<version>RELEASE</version>
+  	</dependency> -->
+	
+		<dependency>
+		    <groupId>bo.gob.sin.scn.empa.caco</groupId>
+		    <artifactId>caco.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+		<dependency>
+		    <groupId>bo.gob.sin.scn.empa.para</groupId>
+		    <artifactId>para.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>bo.gob.sin.scn.empa.capd.apnd</groupId>
+		    <artifactId>apnd.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+		<dependency>
+		    <groupId>bo.gob.sin.scn.empa.capd.aper</groupId>
+		    <artifactId>aper.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency> 
+		<dependency>
+		    <groupId>bo.gob.sin.scn.empa.capd.apjd</groupId>
+		    <artifactId>apjd.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency> 	
+		
+	
+	<dependency>
+			<groupId>bo.gob.sin.sre.fac.csis</groupId>
+			<artifactId>csis.entities</artifactId>
+			<version>0.8.0.0-SNAPSHOT</version>
+		</dependency>
+		
+				<dependency>
+		    <groupId>bo.gob.sin.scn.empa.casu</groupId>
+		    <artifactId>casu.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>bo.gob.sin.scn.empa.ccoc</groupId>
+			<artifactId>ccoc.dto</artifactId>
+			<version>0.16.0.0</version>
+		</dependency>  
+		
+		<dependency>
+		    <groupId>bo.gob.sin.str.cps.clas</groupId>
+		    <artifactId>clas.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>bo.gob.sin.sre.fac.csis</groupId>
+			<artifactId>csis.entities</artifactId>	
+			<version>0.8.0.0-SNAPSHOT</version>
+		</dependency>
+			
+	</dependencies>
+	
+
+</project>

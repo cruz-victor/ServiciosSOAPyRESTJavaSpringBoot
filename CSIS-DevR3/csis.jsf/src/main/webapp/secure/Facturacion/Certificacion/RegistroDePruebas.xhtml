@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<!-- <f:viewAction action="#{logedBean.check}" /> -->
+		<!-- 		<f:viewAction action="#{AprobacionCerttificacionController.Load}"/> -->
+	</f:metadata>
+
+	<ui:define name="title">
+        Revisar Pruebas iniciales, Registro IN SITU y Componentes
+    </ui:define>
+
+	<ui:define name="body">
+		<div class="box box-primary">
+			<h:form id="AprobacionRechazosistemasForm">
+				<div class="box-header with-border">
+					<h3 class="box-title ">DETALLE DE GESTION DE PRUEBAS</h3>
+					<div class="box-tools pull-left">
+						<button type="button" class="btn btn-box-tool"
+							data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="chart">
+						<div class="row"></div>
+
+						<p />
+						<br />
+						<h:panelGroup id="idListadoDetalles">
+							<h:panelGroup id="idListadoSistemas">
+								<!-- 								rendered="#{aprobacionCertificacion.comportamientoPaginaModel.esVisiblePanelGroup and registroSolicitudSistemasController.comportamientoPaginaModel.esVisiblePanel}"> -->
+								<p:tabView>
+									<p:tab title="PRUEBAS AUTOMATICAS">
+										<div class="row">
+											<div class="col-xs-12">
+												<p:dataTable id="listaPruebasAutomaticas" value=""
+													filteredValue="" var="ecs" rowIndexVar="rowIndex" rows="5"
+													widgetVar="listaPruebasAutomaticas" paginator="true"
+													sortMode="multiple" paginatorPosition="bottom"
+													paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+													currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} Registros"
+													styleClass="table table-striped table-bordered table-hover table-sm">
+													<f:facet name="header">
+														<p:outputPanel>
+															<div class="buscar" align="right">
+																<div class="ui-inputgroup">
+																	Filtrar por Prueba, Estado
+																	<p:inputText placeholder="Buscar" />
+																	<p:commandButton icon="pi pi-search"
+																		styleClass="white-button" />
+																	<p:commandButton icon="pi pi-eraser"
+																		styleClass="Orange-button" />
+																</div>
+															</div>
+
+														</p:outputPanel>
+													</f:facet>
+
+													<div class="ui-g-2 ui-md-2">
+														<p:column>
+															<f:facet name="header">
+																<h:outputText value="Codigo Prueba"></h:outputText>
+															</f:facet>
+															<h:outputText value="#{rowIndex+1}"></h:outputText>
+														</p:column>
+
+														<p:column sortBy="#{ecs.nombreSistema}"
+															filterBy="#{ecs.nombreSistema}"
+															filterMatchMode="contains" filterStyle="display:none">
+															<f:facet name="header">
+																<h:outputText value="Prueba"></h:outputText>
+															</f:facet>
+															<h:outputText value="Prueba envio XML"></h:outputText>
+														</p:column>
+
+														<p:column sortBy="#{ecs.cuis}" filterBy="#{ecs.cuis}"
+															filterMatchMode="contains" filterStyle="display:none">
+															<f:facet name="header">
+																<h:outputText value="Nro. Pruebas Realizadas"></h:outputText>
+															</f:facet>
+															<h:outputText value="11000"></h:outputText>
+														</p:column>
+
+														<p:column sortBy="#{ecs.version}"
+															filterBy="#{ecs.version}" filterMatchMode="contains"
+															filterStyle="display:none">
+															<f:facet name="header">
+																<h:outputText value="Nro. Pruebas Correctas Esperadas "></h:outputText>
+															</f:facet>
+															<h:outputText value="12000"></h:outputText>
+														</p:column>
+
+														<p:column sortBy="">
+															<f:facet name="header">
+																<h:outputText value="%"></h:outputText>
+															</f:facet>
+															<h:outputText value="10">
+															</h:outputText>
+														</p:column>
+
+
+														<p:column sortBy="#{ecs.descripcionEstadoPrueba}"
+															filterBy="#{ecs.descripcionEstadoPrueba}"
+															filterMatchMode="contains" filterStyle="display:none">
+															<f:facet name="header">
+																<h:outputText value="Estado"></h:outputText>
+															</f:facet>
+															<h:outputText value="Pendiente"></h:outputText>
+														</p:column>
+
+
+														<p:commandLink styleClass="text-green" update=""
+															value="Ver Detalles"
+															actionListener="#{aprobacionRechazoSistemasController.VerDetallesPruebas(ecs.sistemaId,ecs.solicitudCertificacionId,ecs.contribuyenteId,ecs.estadoSolicitudCertificacionId)}">
+															<f:ajax
+																update=":AprobacionRechazosistemasForm:idListadoDetalles :idRespuestaReporte"></f:ajax>
+														</p:commandLink>
+
+														<!-- <p:commandLink styleClass="text-red"  rendered="true" ajax="true" update=":AprobacionRechazosistemasForm:panelCuadroDialogo" value="Rechazar" oncomplete="PF('cuadroDialogo').show()"  title="Rechazar">								            								             		             	
+												                   <f:setPropertyActionListener value="#{ecs.solicitudCertificacionId}" target="#{aprobacionRechazoSistemasController.pasosCertificacionSeleccionableModel.pruebasSistemasSeleccionado.solicitudCertificacionId}" />								                	
+												                </p:commandLink > -->
+														<!--  -->
+
+													</div>
+												</p:dataTable>
+											</div>
+										</div>
+									</p:tab>
+									<p:tab title="PRUEBAS MANUALES">
+										<div class="row">
+											<div class="col-xs-12">
+
+												<p:dataTable id="listaPruebasManuales" value=""
+													filteredValue="" var="ecs" rowIndexVar="rowIndex" rows="5"
+													widgetVar="listaPruebasManuales" paginator="true"
+													sortMode="multiple" paginatorPosition="bottom"
+													paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+													currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} Registros"
+													styleClass="table table-striped table-bordered table-hover table-sm">
+
+													<f:facet name="header">
+														<p:outputPanel>
+															<div class="buscar" align="right">
+																<div class="ui-inputgroup">
+																	<p:inputText placeholder="Buscar" />
+																	<p:commandButton icon="pi pi-search"
+																		styleClass="red-button" />
+																</div>
+															</div>
+														</p:outputPanel>
+													</f:facet>
+
+													<p:column>
+														<f:facet name="header">
+															<h:outputText value="Codigo Prueba"></h:outputText>
+														</f:facet>
+														<h:outputText value="#{rowIndex+1}"></h:outputText>
+													</p:column>
+
+													<p:column sortBy="#{ecs.nombreSistema}"
+														filterBy="#{ecs.nombreSistema}" filterMatchMode="contains"
+														filterStyle="display:none">
+														<f:facet name="header">
+															<h:outputText value="Prueba"></h:outputText>
+														</f:facet>
+														<h:outputText value="Prueba envio XML"></h:outputText>
+													</p:column>
+
+													<p:column sortBy="#{ecs.descripcionEstadoPrueba}"
+														filterBy="#{ecs.descripcionEstadoPrueba}"
+														filterMatchMode="contains" filterStyle="display:none">
+														<f:facet name="header">
+															<h:outputText value="Estado"></h:outputText>
+														</f:facet>
+														<h:outputText value="Pendiente"></h:outputText>
+													</p:column>
+
+													<p:column sortBy="#{ecs.descripcionEstadoPrueba}"
+														filterBy="#{ecs.descripcionEstadoPrueba}"
+														filterMatchMode="contains" filterStyle="display:none">
+														<f:facet name="header">
+															<h:outputText value="Observaciones"></h:outputText>
+														</f:facet>
+														<h:outputText value="Pendiente"></h:outputText>
+													</p:column>
+												</p:dataTable>
+											</div>
+										</div>
+										<!-- <sre:ComponenteGestionPruebasManuales Editar="true"></sre:ComponenteGestionPruebasManuales> -->
+									</p:tab>
+									<p:tab title="Registro VERIFICACION IN SITU">
+										<div class="row">
+											<div class="col-xs-12">
+												<p:dataTable id="listaRegistroComponentes" value=""
+													filteredValue="" var="ecs" rowIndexVar="rowIndex" rows="5"
+													widgetVar="listaRegistroComponentes" paginator="true"
+													sortMode="multiple" paginatorPosition="bottom"
+													paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+													currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} Registros"
+													styleClass="table table-striped table-bordered table-hover table-sm">
+
+													<p:column sortBy="#{ecs.nombreSistema}"
+														filterBy="#{ecs.nombreSistema}" filterMatchMode="contains"
+														filterStyle="display:none">
+														<f:facet name="header">
+															<h:outputText value="Componente"></h:outputText>
+														</f:facet>
+														<h:outputText value="Conexion a base de datos"></h:outputText>
+													</p:column>
+
+													<p:column sortBy="#{ecs.nombreSistema}"
+														filterBy="#{ecs.nombreSistema}" filterMatchMode="contains"
+														filterStyle="display:none">
+														<f:facet name="header">
+															<h:outputText value="Nombre Archivo"></h:outputText>
+														</f:facet>
+														<h:outputText value="Conexion.gzip"></h:outputText>
+													</p:column>
+
+													<p:column sortBy="#{ecs.nombreSistema}"
+														filterBy="#{ecs.nombreSistema}" filterMatchMode="contains"
+														filterStyle="display:none">
+														<f:facet name="header">
+															<h:outputText value="Huella Digital"></h:outputText>
+														</f:facet>
+														<h:outputText value="dafs#$$#%DDDdf"></h:outputText>
+													</p:column>
+
+													<p:column sortBy="#{ecs.fechaEmisionCertificado}">
+														<f:facet name="header">
+															<h:outputText value="Fecha Registro"></h:outputText>
+														</f:facet>
+														<h:outputText value="01/01/2018">
+															<f:convertDateTime pattern="dd/MM/yyyy" />
+														</h:outputText>
+													</p:column>
+
+													<p:column sortBy="#{ecs.descripcionEstadoPrueba}"
+														filterBy="#{ecs.descripcionEstadoPrueba}"
+														filterMatchMode="contains" filterStyle="display:none">
+														<f:facet name="header">
+															<h:outputText value="Eliminar"></h:outputText>
+														</f:facet>
+														<h:outputText value="Eliminar"></h:outputText>
+													</p:column>
+												</p:dataTable>
+											</div>
+										</div>
+									</p:tab>
+									<p:tab title="REGISTRAR INFORMACION COMPONENTES"></p:tab>
+									<p:tab title="REGISTRO BITACORA"></p:tab>
+								</p:tabView>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+				</div>
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>
+

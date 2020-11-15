@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SolicitudCertificacionSistemasReport" pageWidth="612" pageHeight="792" columnWidth="556" leftMargin="28" rightMargin="28" topMargin="28" bottomMargin="28" uuid="c0e52203-f3d7-4f53-94d1-2dff1e21f0c2">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<subDataset name="listDoc" uuid="75ec2939-4633-4d3f-9c90-f1a8ef3bbcd1">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="modalidad" class="java.lang.String"/>
+		<field name="cuis" class="java.lang.String"/>
+		<field name="listaRutas" class="java.util.List"/>
+	</subDataset>
+	<subDataset name="listRutas" uuid="53a121cc-a94f-400b-930f-a28a95d0f265">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="ruta" class="java.lang.String"/>
+		<field name="tipoDocumento" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="DataSource" class="bo.gob.sin.sre.fac.dto.ReporteDatosSolicitudCertificacionDto"/>
+	<parameter name="Image" class="java.awt.Image"/>
+	<parameter name="direccionEspecificacion" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="modalidad" class="java.lang.String"/>
+	<field name="modalidadId" class="java.lang.Integer"/>
+	<field name="cuis" class="java.lang.String"/>
+	<field name="listaRutas" class="java.util.List"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="117">
+			<textField>
+				<reportElement x="7" y="80" width="543" height="36" uuid="3b03100c-d876-4687-8659-816f2bdf750a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Datos Solicitud Certificación de Sistema"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="133" y="0" width="295" height="52" forecolor="#000000" backcolor="#FFFFFF" uuid="12e0306a-24d9-4fef-ba95-6ac88894dc74"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="12" isBold="true"/>
+					<paragraph rightIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["SOLICITUD DE CERTIFICACIÓN DE SISTEMAS"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="428" y="0" width="128" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="0c28e7ea-6c11-448a-9a34-7f1d571096fd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Código:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="428" y="13" width="128" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="09f5e6fd-c613-4b04-a77f-1b94abb527c0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["R-1153-01"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="428" y="26" width="128" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="d771977d-9094-4e76-a34b-676cb15d7704">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Versión:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="428" y="39" width="128" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="5691762b-bb6f-44b5-8471-7dec2d1c7989">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["0"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="133" height="52" forecolor="#000000" backcolor="#FFFFFF" uuid="7cf66edb-de6c-4f6b-afe2-fad137f84901"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="12" isBold="true"/>
+					<paragraph rightIndent="50"/>
+				</textElement>
+			</textField>
+			<image>
+				<reportElement x="2" y="3" width="127" height="49" forecolor="#000000" backcolor="#FFFFFF" uuid="4e8bd207-a68c-4fd6-856f-dd04ff02acc9"/>
+				<box>
+					<pen lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{Image}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="277" splitType="Stretch">
+			<componentElement>
+				<reportElement stretchType="RelativeToTallestObject" x="20" y="190" width="534" height="82" uuid="3d5eb367-1562-4e00-9e76-8e66a975a8c4"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="listDoc" uuid="635d0ce1-2f3f-41eb-b22d-5af3c9a27bb1">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{DataSource}.getDocumentos())]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="82" width="534">
+						<textField>
+							<reportElement x="0" y="0" width="250" height="20" uuid="0ca78f42-8740-43ef-95ea-38d7e8bd1a40"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Tahoma"/>
+							</textElement>
+							<textFieldExpression><![CDATA["MODALIDAD: "+ $F{modalidad}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="250" y="0" width="284" height="20" uuid="f7c69739-1b20-4283-99ff-b4d48f371620"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Tahoma"/>
+							</textElement>
+							<textFieldExpression><![CDATA["CUIS:  "+$F{cuis}]]></textFieldExpression>
+						</textField>
+						<componentElement>
+							<reportElement x="0" y="42" width="534" height="40" uuid="fbde184a-2b67-40c4-ab8e-58d5627add82"/>
+							<jr:list printOrder="Vertical">
+								<datasetRun subDataset="listRutas" uuid="7af47b57-0330-4a8d-ba69-f77ccc743e0a">
+									<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{listaRutas})]]></dataSourceExpression>
+								</datasetRun>
+								<jr:listContents height="40" width="534">
+									<textField isStretchWithOverflow="true">
+										<reportElement stretchType="ContainerHeight" x="40" y="0" width="210" height="40" uuid="bd9adf05-3a4f-43c6-9ca8-4c35dbcc03df"/>
+										<box>
+											<pen lineWidth="1.0" lineStyle="Solid"/>
+										</box>
+										<textElement textAlignment="Left" verticalAlignment="Middle">
+											<font fontName="Tahoma" size="9"/>
+											<paragraph leftIndent="2" rightIndent="2"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{tipoDocumento}]]></textFieldExpression>
+									</textField>
+									<textField isStretchWithOverflow="true">
+										<reportElement stretchType="ContainerHeight" x="250" y="0" width="284" height="40" uuid="8bffe060-5cad-4239-9f4b-b3ce1aafe18c"/>
+										<box padding="0">
+											<pen lineWidth="1.0" lineStyle="Solid"/>
+										</box>
+										<textElement textAlignment="Left" verticalAlignment="Middle">
+											<font fontName="Tahoma"/>
+											<paragraph leftIndent="2" rightIndent="2"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$F{ruta}]]></textFieldExpression>
+									</textField>
+									<textField>
+										<reportElement x="0" y="0" width="40" height="40" uuid="3af5c8b7-5e24-4626-814e-c6011989081e">
+											<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+										</reportElement>
+										<box>
+											<pen lineWidth="1.0" lineStyle="Solid"/>
+										</box>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font fontName="Tahoma"/>
+											<paragraph leftIndent="2"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+									</textField>
+								</jr:listContents>
+							</jr:list>
+						</componentElement>
+						<textField>
+							<reportElement mode="Opaque" x="40" y="22" width="210" height="20" forecolor="#FFFFFF" backcolor="#002C5A" uuid="2067ee60-9b39-47e0-b9d5-d181ae216687"/>
+							<box padding="0">
+								<pen lineWidth="1.0" lineStyle="Solid" lineColor="#002C5A"/>
+								<leftPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Tahoma"/>
+							</textElement>
+							<textFieldExpression><![CDATA["Tipo Documento A Emitir"]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement mode="Opaque" x="0" y="22" width="40" height="20" forecolor="#FFFFFF" backcolor="#002C5A" uuid="d5d3b48e-79b6-4759-a666-508cdc69e8e8"/>
+							<box padding="0">
+								<pen lineWidth="1.0" lineStyle="Solid" lineColor="#002C5A"/>
+								<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Tahoma"/>
+							</textElement>
+							<textFieldExpression><![CDATA["N°"]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement mode="Opaque" x="250" y="22" width="284" height="20" forecolor="#FFFFFF" backcolor="#002C5A" uuid="59e12c55-fee2-4639-a5fe-9b7a667c75fb"/>
+							<box padding="0">
+								<pen lineWidth="1.0" lineStyle="Solid" lineColor="#002C5A"/>
+								<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Tahoma"/>
+							</textElement>
+							<textFieldExpression><![CDATA["Ruta Servicio"]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField>
+				<reportElement x="20" y="146" width="534" height="20" uuid="a9dbba3b-0073-44b4-be67-1090ed95a72b"/>
+				<textElement>
+					<font fontName="Tahoma"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Puede descargar la lista de pruebas y las especificaciones técnicas de: "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="21" width="395" height="20" uuid="5bf35bd6-4e4e-4b47-a433-d7464bcd80fa"/>
+				<textElement>
+					<font fontName="Tahoma"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{DataSource}.getSistema().getNit()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="42" width="394" height="20" uuid="4d9dfe63-8ab1-4d66-bc86-c3124435f316"/>
+				<textElement>
+					<font fontName="Tahoma"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{DataSource}.getSistema().getRazonSocial()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="62" width="395" height="20" uuid="18924220-a71e-4d0c-b61e-bdd35fe153ba"/>
+				<textElement>
+					<font fontName="Tahoma"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{DataSource}.getSistema().getNombreSistema()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="122" width="395" height="20" uuid="41bbc07d-0181-42e5-95b1-49d88708c9e9"/>
+				<textElement>
+					<font fontName="Tahoma"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{DataSource}.getSistema().getCodigoSistema()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="102" width="395" height="20" uuid="b5f74c2e-c8c0-4987-b553-a57a2c7bf067"/>
+				<textElement>
+					<font fontName="Tahoma"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{DataSource}.getSistema().getVersion()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="160" y="2" width="395" height="20" uuid="bb70ad6a-6a84-4fd3-b773-3e3fadb32e46"/>
+				<textElement>
+					<font fontName="Tahoma"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+new SimpleDateFormat("dd-MM-yyyy").format($P{DataSource}.getSistema().getFechaSolicitud()) + " "+new SimpleDateFormat("HH:mm").format($P{DataSource}.getSistema().getFechaSolicitud())]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="21" y="2" width="138" height="20" forecolor="#002C5A" uuid="6b5594b4-6403-4dca-a1bf-5e7cc82bff18"/>
+				<textElement textAlignment="Left">
+					<font fontName="Tahoma" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha de Solicitud"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="21" y="21" width="138" height="20" forecolor="#002C5A" uuid="8150a946-e69f-4406-8b4b-141fea21852a"/>
+				<textElement textAlignment="Left">
+					<font fontName="Tahoma" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nit"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="21" y="62" width="138" height="20" forecolor="#002C5A" uuid="da30df72-0668-4a6e-8401-62e3f221e8e3"/>
+				<textElement textAlignment="Left">
+					<font fontName="Tahoma" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Sistema"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="21" y="42" width="138" height="20" forecolor="#002C5A" uuid="8549aed6-50b0-4f3a-af65-469c678add5d"/>
+				<textElement textAlignment="Left">
+					<font fontName="Tahoma" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Razón Social"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="21" y="122" width="138" height="20" forecolor="#002C5A" uuid="989c9ba1-5ce7-4035-aaf4-ad8019da3864"/>
+				<textElement textAlignment="Left">
+					<font fontName="Tahoma" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Código de Sistema"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="21" y="102" width="138" height="20" forecolor="#002C5A" uuid="f3a037b0-064f-45ea-bb96-07341a4cbec5"/>
+				<textElement textAlignment="Left">
+					<font fontName="Tahoma" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Versión"]]></textFieldExpression>
+			</textField>
+			<textField hyperlinkTarget="None">
+				<reportElement x="20" y="160" width="534" height="20" uuid="7acc476f-f72b-4f19-b2f3-80322be95896"/>
+				<textElement>
+					<font fontName="Tahoma" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{direccionEspecificacion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="21" y="82" width="138" height="20" forecolor="#002C5A" uuid="5444bd00-4121-424d-9629-84502e58c65e"/>
+				<textElement textAlignment="Left">
+					<font fontName="Tahoma" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tipo de Sistema"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="82" width="395" height="20" uuid="e26c1222-a0f3-4b0e-9314-d34ef0544024"/>
+				<textElement>
+					<font fontName="Tahoma"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{DataSource}.getSistema().getTipoSistema()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="41" splitType="Stretch">
+			<textField>
+				<reportElement x="410" y="11" width="100" height="30" uuid="d85a3736-6d95-46fe-b3b8-9e08a551318a"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="512" y="11" width="45" height="30" uuid="630b3127-cb27-46b5-86c2-2ec38606c32b"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

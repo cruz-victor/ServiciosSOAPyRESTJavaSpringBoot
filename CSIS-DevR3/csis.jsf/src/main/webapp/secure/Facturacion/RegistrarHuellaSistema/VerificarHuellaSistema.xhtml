@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre"> 
+
+	<f:metadata> 
+		<f:viewAction action="#{logedBean.check}" />
+		<f:viewAction action="#{verificacionHuellaSistemaController.Load}" />
+	</f:metadata>
+
+
+	<ui:define name="title">
+       FACTURACION
+    </ui:define>
+
+	<ui:define name="body">
+			<h:form id="formHuellaSistemas">
+				<p:panel header="Verificación de Huella de Sistema" styleClass="box-primary" toggleable="true">
+										
+						<div class="chart">
+							<div class="row">
+								<div class="col-md-12">
+									<p:fieldset legend="Datos Contribuyente" toggleable="true" toggleSpeed="500">
+										<sre:ComponenteBusquedaDatosBasicos
+													ComponenteLabelNit="NIT"
+													ComponenteInputTextNit="#{busquedaDatosBasicosComponent.nitDatosBasicosDto.nit}"													
+													ComponenteLabelDependencia="DEPENDENCIA"
+													ComponenteLabelRazonSocial="NOMBRE O RAZON SOCIAL"
+													ComponenteButtonNit="#{verificacionHuellaSistemaController.BuscarContribuyente}"
+													ComponenteTextButtonNit="Buscar"
+													ComponenteEsVisibleLimpiar="false"
+													ComponenteTextButtonLimpiar="Limpiar"
+													ComponenteButtonLimpiar="#{verificacionHuellaSistemaController.LimpiarBusqueda}"
+													ComponenteNombreFormPrincipal="formHuellaSistemas">
+											</sre:ComponenteBusquedaDatosBasicos>
+											
+									</p:fieldset>
+								</div>
+							</div>
+
+							<p />
+
+							<p />
+							
+							<p:fieldset legend="Listado de Sistemas y Huellas Asociadas" toggleable="true" toggleSpeed="500">
+							
+								<div class="row">
+									<div class="col-xs-12">
+									
+										<div class="row">
+											<div class="col-md-3">
+												<h:outputLabel value="NOMBRE SISTEMA:" style="font-weight:bold"/>
+												<br />
+											</div>
+											
+											<div class="col-md-5">												
+												<p:selectOneMenu 
+													id="idSistema"
+													readonly="false"
+													value="#{verificacionHuellaSistemaController.recuperaHuellaSistemaModel.sistemaId}"
+													required="false">
+													<f:selectItem itemValue="#{null}" itemLabel="Seleccione Sistema" noSelectionOption="true"/>
+													<f:selectItems value="#{verificacionHuellaSistemaController.recuperaSistemasContribuyenteList.recuperaListaSistemasContribuyente}" var="lti" itemLabel="#{lti.nombreSistema}" itemValue="#{lti.sistemaId}"/>
+													<p:ajax listener="#{verificacionHuellaSistemaController.BuscarDetalleHuellasSistema}" update="@widgetVar(listaHuellasSistema)"></p:ajax> 
+												</p:selectOneMenu>
+												
+												<p:message for="idSistema" display="text" class="width:100px"></p:message>
+											</div>
+										</div>
+										<hr />
+										<div class="row">
+											<div class="col-xs-12">												
+												<p:dataTable id="listaHuellasSistema"
+			
+											        value="#{verificacionHuellaSistemaController.recuperaSistemasContribuyenteList.recuperarHuellaSistema}"
+													var="lsa"
+													emptyMessage="Noy registros que mostrar"
+													rowIndexVar="rowIndex"
+													widgetVar="listaHuellasSistema"
+													styleClass="table table-striped table-bordered table-hover table-sm">
+													
+													<f:facet name="header">
+															<h:outputText value="Descripción del sistema"></h:outputText>
+													</f:facet>
+													<p:column>
+														<f:facet name="header">
+															<h:outputText value="Nro."></h:outputText>
+														</f:facet>
+														<h:outputText value="#{rowIndex+1}"></h:outputText>
+													</p:column>
+													
+													<p:column>
+														<f:facet name="header">
+															<h:outputText value="Componente"></h:outputText>
+														</f:facet>
+														<h:outputText value="#{lsa.tipoComponente}"></h:outputText>
+													</p:column>
+													
+												    <p:column>
+														<f:facet name="header">
+															<h:outputText value="CRC"></h:outputText>
+														</f:facet>
+														<h:outputText value="#{lsa.crc}"></h:outputText>
+													</p:column>
+													
+												    <p:column>
+														<f:facet name="header">
+															<h:outputText value="SHA"></h:outputText>
+														</f:facet>
+														<h:outputText value="#{lsa.sha2}"></h:outputText>
+													</p:column>
+													
+												    <p:column>
+														<f:facet name="header">
+															<h:outputText value="MD5"></h:outputText>
+														</f:facet>
+														<h:outputText value="#{lsa.md5}"></h:outputText>
+													</p:column>
+													
+												</p:dataTable>
+											</div>
+										</div>
+										<br />
+										<div class="box-footer">											
+											<p:commandButton id="idLimpiar" styleClass="btn btn-warning btn-sm pull-right" async="true" process="@this" value="Limpiar" update=":formHuellaSistemas" actionListener="#{verificacionHuellaSistemaController.Limpiar}">
+												<f:ajax render=":formHuellaSistemas:idLimpiar"></f:ajax>								            							             		             									                  
+									        </p:commandButton>
+										</div>
+	
+									</div>
+								</div>
+							</p:fieldset>
+						</div>
+				
+				</p:panel>
+			</h:form>
+
+	</ui:define>
+</ui:composition>
+

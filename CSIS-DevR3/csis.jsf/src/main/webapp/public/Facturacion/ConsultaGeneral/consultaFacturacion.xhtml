@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor">
+
+	<ui:define name="title" class="text-center" >
+
+    </ui:define>
+	<ui:define name="body">
+	
+	 <script type="text/javascript">
+	function controlClick(id) {
+		$("button[id$='"+id+"']").click();
+	} 
+	</script>
+	
+		<h:form id="formPerfil" prependId="false">	
+		<p:panel header="Consulta Modalidad Destino" id="panel" styleClass="box-primary" >
+	
+			   <p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid">
+				  <h:panelGroup style="text-align: right;float:right;">
+				   <p:graphicImage url="/images/logo1.png" /><br/>
+				   
+			       </h:panelGroup>
+			   </p:panelGrid>                     
+			   <p:spacer height="80"/>	
+			   <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid">
+			   <p:outputLabel for="nit" value="Introduzca Nit:" style="float:right;padding-top:5px;" />
+			   <h:panelGroup  styleClass="ui-inputgroup">
+			  					
+	                            <p:inputText id="nit" placeholder="NIT" value="#{consultaFacturacion.consultaFacturacionM.nit}" >
+	                             
+                    				
+	                            </p:inputText>
+	                            <p:commandButton icon="fa fa-search" styleClass="btn-info"
+	                            actionListener="#{consultaFacturacion.buscar()}" value="Buscar"
+	                            update=":formPerfil:consultaNit"/>
+                    </h:panelGroup> 
+                    </p:panelGrid>
+			   <p:separator></p:separator>
+			   
+			 <h:panelGroup id="consultaNit" >  
+				 <p:panelGrid columns="2" rendered="#{consultaFacturacion.consultaFacturacionM.buscadoExito}"
+				 columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid">
+				    <f:facet name="header">
+				     	 <p:row>
+				            <p:column colspan="2">Resultado de la Consulta</p:column>
+				        </p:row>
+				    </f:facet>
+				 
+				    <h:outputText value="Nit" style="font-weight: bold;"/>
+				    <h:outputText value="#{consultaFacturacion.consultaFacturacionM.nit}" />
+				 
+				    <h:outputText value="Grupo" style="font-weight: bold;"/>
+				    <h:outputText value="#{consultaFacturacion.consultaFacturacionM.grupo}" />
+				 
+				    <h:outputText value="Modalidad Destino" style="font-weight: bold;"/>
+				    <h:outputText value="#{consultaFacturacion.consultaFacturacionM.modalidadDestino}" />
+				 
+				    <h:outputText value="Fecha Adecuación" style="font-weight: bold;"/>
+				    <h:outputText value="#{consultaFacturacion.consultaFacturacionM.fechaAdecuacion}" />
+				    <f:facet name="footer" style="text-align:center;">
+	           
+									<p:commandButton styleClass="btn-primary btn-sm" value="Ver Reporte" style="float:right"
+                 				  actionListener="#{consultaFacturacion.consultaFacturacionM.reporteVoucherCpt()}"	
+								  oncomplete="PF('idReportePreliminarDlg').show()" ></p:commandButton>
+			  </f:facet>
+			  	
+				</p:panelGrid>
+				<p:spacer height="40"/>
+			</h:panelGroup>
+			<br /> 
+
+            </p:panel>
+						
+			<p:panelGrid columns="2" columnClasses="ui-grid-col-10, ui-grid-col-2" layout="grid" styleClass="ui-fluid">
+						        	
+						        	<p:row></p:row>
+						        	
+						        	<visor:visorPdf nombreWidgetVar="idReportePreliminarDlg" 
+									esVisibleBoton="false" 
+									txtButtonAccion="Reporte"
+									styleClass="btn btn-default btn-sm btn-block"
+									icon="fa fa-eye"
+									archivoB64="#{consultaFacturacion.consultaFacturacionM.reporteBase64}" />
+			</p:panelGrid>
+		
+		
+			
+			
+		
+		</h:form>
+		
+	</ui:define>
+
+</ui:composition>

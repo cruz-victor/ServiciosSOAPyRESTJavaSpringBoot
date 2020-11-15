@@ -1,0 +1,36 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+<composite:interface>
+	<composite:attribute name="esVisibleBoton" type="java.lang.Boolean"/>
+	<composite:attribute name="nombreWidgetVar" type="java.lang.String"/>
+	<composite:attribute name="txtButtonAccion" type="java.lang.String" />
+	<composite:attribute name="icon" type="java.lang.String" />
+	<composite:attribute name="styleClass" type="java.lang.String" />
+	<composite:attribute name="archivoB64" type="java.lang.String" required="true" />
+</composite:interface>
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+			<p:commandButton value="#{cc.attrs.txtButtonAccion}"
+				id="btnVisorPdf"
+				icon="#{cc.attrs.icon}"
+				styleClass="#{cc.attrs.styleClass}"
+				rendered="#{cc.attrs.esVisibleBoton}"
+				oncomplete="PF('#{cc.attrs.nombreWidgetVar}').show()"
+				title="#{cc.attrs.txtButtonAccion}">
+			</p:commandButton>
+			
+			<p:dialog header="Documento preliminar" modal="true" id="#{cc.attrs.nombreWidgetVar}" widgetVar="#{cc.attrs.nombreWidgetVar}" appendTo="@(body)" width="80%" height='600px' resizable="false">
+						<p:outputPanel autoUpdate="true" style="border:none"  class="text-right">							    
+					    	<object data='#{visorImpresionComponent.getPath(cc.attrs.archivoB64)}/visor.pdf'
+								type='application/pdf' width="100%" height='500px'/>		   									
+						</p:outputPanel>
+						<p:separator />
+						<p:commandButton value="Cerrar" oncomplete="PF('#{cc.attrs.nombreWidgetVar}').hide();" />
+			</p:dialog>
+</composite:implementation>
+</html>

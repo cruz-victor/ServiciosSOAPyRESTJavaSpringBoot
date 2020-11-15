@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<!-- <f:viewAction action="#{logedBean.check}" /> -->
+		<f:viewAction action="#{sistemasParaCertificacionController.Load}"/>
+	</f:metadata>
+
+	<ui:define name="title">
+       APROBACION O RECHAZO DE SISTEMA
+    </ui:define>
+
+	<ui:define name="body">		
+	<p:panel header="Solicitudes pendientes de aprobación" styleClass="box-primary" toggleable="true">
+		<h:form id = "AprobacionRechazosistemasForm">
+			<p:fieldset legend="Datos Básicos" toggleable="true" toggleSpeed="500" styleClass="ui-fluid">
+				<sre:ComponenteBusquedaDatosBasicos
+							ComponenteLabelNit="NIT"
+							ComponenteInputTextNit="#{busquedaDatosBasicosComponent.nitDatosBasicosDto.nit}"													
+							ComponenteLabelDependencia="DEPENDENCIA"
+							ComponenteLabelRazonSocial="NOMBRE O RAZON SOCIAL"
+							ComponenteButtonNit="#{sistemasParaCertificacionController.buscarContribuyente}"
+							ComponenteTextButtonNit="Buscar"
+							ComponenteEsVisibleLimpiar="true"
+							ComponenteTextButtonLimpiar="Limpiar"
+							ComponenteButtonLimpiar="#{sistemasParaCertificacionController.LimpiarBusqueda}"
+							ComponenteNombreFormPrincipal="AprobacionRechazosistemasForm">
+				</sre:ComponenteBusquedaDatosBasicos>
+			</p:fieldset>
+			<p:separator/>
+			<p:fieldset legend = "Lista de sistemas" toggleable = "true" toggleSpeed = "500" styleClass="ui-fluid" rendered="#{sistemasParaCertificacionController.comportamientoPaginaModel.esVisiblePanel}">
+				<p:dataTable id="listaSistemas" 
+							 widgetVar="listaSistemas"
+							 value=""
+							 var="lsa" rowIndexVar="rowIndex"
+							 styleClass="table table-striped table-bordered table-hover table-sm">
+								 			 
+					    <p:column headerText="NRO.">
+							<h:outputText value="#{rowIndex+1}"></h:outputText>
+						</p:column>
+						
+					    <p:column headerText="SISTEMA">
+							<p:outputLabel value="" style = "font-weight:normal"/>
+					    </p:column>
+					    
+					    <p:column headerText="VERSION">
+							<p:outputLabel value="" style = "font-weight:normal"/>
+					    </p:column>
+					   
+						<p:column headerText = "FECHA INICIO">
+							<p:outputLabel value="" style = "font-weight:normal"/>
+						</p:column>
+					    
+					    <p:column headerText = "ESTADO CERTIFICACION">
+					    	<p:outputLabel value = "" style = "font-weight:normal"/>
+					    </p:column>
+					    
+					    <p:column headerText = "OPERACIONES">
+					    	<p:commandLink value = "Revisar" action="AprobacionRechazoSistemas2"/>
+					    </p:column>
+				</p:dataTable>
+			</p:fieldset>
+		</h:form>	
+	 </p:panel>
+	</ui:define>
+</ui:composition>

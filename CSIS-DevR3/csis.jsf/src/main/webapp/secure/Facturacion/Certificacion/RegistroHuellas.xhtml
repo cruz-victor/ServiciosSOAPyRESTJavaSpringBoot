@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<!-- 		<f:viewAction action="#{logedBean.check}" /> -->
+		<f:viewAction action="#{asignacionEquipoCertificacionController.Load}" />
+	</f:metadata>
+
+	<ui:define name="title">
+      GESTION PRUEBAS SISTEMAS
+    </ui:define>
+
+	<ui:define name="body">
+
+		<!-- 		<p:panel header="Datos Contribuyente" styleClass="box-primary" -->
+		<!-- 			toggleable="true"> -->
+		<!-- 		</p:panel> -->
+
+		<!-- 		<p:panel header="Datos Solicitud" styleClass="box-primary" -->
+		<!-- 			toggleable="true"> -->
+		<!-- 		</p:panel> -->
+
+		<p:panel id="idListadoEquipoTrabajo" header="Registro Huellas"
+			styleClass="box-primary" toggleable="true">
+			<h:form id="formAsignacionEquipoTrabajo">
+				<div class="row">
+
+					<div class="col-xs-12">
+						<p:dataTable id="listaDetalleReporteConsulta"
+							value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.listaRegistroHuellasDigitalesDto}"
+							var="lrc" rowIndexVar="rowIndex" widgetVar="listaReporteConsulta"
+							styleClass="table table-striped table-bordered table-hover table-sm">
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="NOMBRE DEL ARCHIVO"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lrc.nombreArchivo}"></h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="NOMBRE DEL COMPONENTE"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lrc.componenteMinimo}"></h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="RUTA DEL ARCHIVO"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lrc.rutaArchivo}"></h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="SHA"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lrc.sha2}"></h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="CRC"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lrc.crc}"></h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="MD5"></h:outputText>
+								</f:facet>
+								<h:outputText value="#{lrc.md5}"></h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="OPERACIONES"></h:outputText>
+								</f:facet>
+								<p:commandButton icon="ui-icon-circle-minus" title="Eliminar"
+									ajax="true" process="@this"
+									actionListener="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.eliminarFila(lrc)}"
+									update="listaDetalleReporteConsulta" />
+							</p:column>
+
+						</p:dataTable>
+					</div>
+				</div>
+			</h:form>
+
+
+			<div class="row">
+				<div class="col-md-11" />
+				<div class="col-md-1">
+					<p:commandButton id="btnAdicionarArchivo"
+						onclick="PF('dlgComponenteHuellasGestionPruebas').show();"
+						value="Adicionar Archivo" styleClass="btn btn-primary" ajax="true">
+					</p:commandButton>
+				</div>
+			</div>
+			<p:confirmDialog id="Advertencia" global="true"
+				widgetVar="ConfirmarAsignacionEquipoCertificacion" showEffect="fade"
+				hideEffect="fade">
+				<p:commandButton id="btnAceptar" value="Aceptar" type="button"
+					ajax="true" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Cancelar" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+
+			<p:dialog id="dlgComponenteHuellasGestionPruebas" header=""
+				appendToBody="true" widgetVar="dlgComponenteHuellasGestionPruebas"
+				modal="true" showEffect="size" hideEffect="fade" resizable="false"
+				dynamic="true">
+				<p:outputPanel id="pnlComponenteHuellas">
+					
+				</p:outputPanel>
+			</p:dialog>
+
+		</p:panel>
+	</ui:define>
+</ui:composition>
+

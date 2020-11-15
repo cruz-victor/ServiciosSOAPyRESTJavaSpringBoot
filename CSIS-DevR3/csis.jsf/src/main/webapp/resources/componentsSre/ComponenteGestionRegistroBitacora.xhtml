@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+
+<composite:interface>
+	<composite:attribute name="componenteGestionRegistroBitacora" />
+</composite:interface>
+
+<composite:implementation>
+	<p:panel>
+		<p:panelGrid columns="3" styleClass="ui-noborder">
+			<p:column>
+				<h:outputText value="Observación:" />
+			</p:column>
+			<p:column>
+				<p:inputTextarea rows="6" cols="100" maxlength="250">
+					<p:keyFilter regEx="/[a-zA-Z áéíóúñÁÉÍÓÚÑ0-9_-]/i" />
+					<p:clientValidator event="blur" />
+					<p:clientValidator event="keyup" />
+				</p:inputTextarea>
+			</p:column>
+			<p:column>
+				<div class="modal-footer">
+					<div style="float: right;">
+						<p:commandButton value="Limpiar" id="idLimpiar" ajax="true"
+							styleClass="btn btn-warning btn-sm btn-block" />
+					</div>
+					<div style="float: right;">
+						<p:commandButton value="Guardar" id="idGuardar" ajax="true"
+							styleClass="btn btn-success btn-sm btn-block">
+								<p:confirm header="Advertencia"
+									message="¿Está seguro de guardar el registro de bitácora?"
+									icon="ui-icon-alert" />
+							</p:commandButton>
+					</div>
+				</div>
+			</p:column>
+		</p:panelGrid>
+	</p:panel>
+
+	<h:panelGroup>
+		<p:dataTable id="listaBitacorasRegistradas" rowIndexVar="rowIndex"
+			value="" var="fila" rows="10" paginator="true" sortMode="multiple"
+			emptyMessage="No hay registros." paginatorPosition="bottom"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+			styleClass="table table-striped table-bordered table-hover table-sm">
+
+			<p:column width="15%" headerText="Usuario">
+				<h:outputText value="Usuario" />
+			</p:column>
+			<p:column width="40%" headerText="Dependencia">
+				<h:outputText value="Dependencia" />
+			</p:column>
+			<p:column width="10%" headerText="Fecha Registro">
+				<h:outputText value="01/12/2018" />
+			</p:column>
+			<p:column width="35%" headerText="Observación">
+				<h:outputText value="ninguna" />
+			</p:column>
+		</p:dataTable>
+	</h:panelGroup>
+</composite:implementation>
+</html>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:workflowcder="http://java.sun.com/jsf/composite/workflow/cder"
+	xmlns:workflowcbot="http://java.sun.com/jsf/composite/workflow/cbot"
+	xmlns:workflowcead="http://java.sun.com/jsf/composite/workflow/cead"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+	<f:metadata>
+		<f:viewAction action="#{etapaEmisionGestionPruebasController.Load()}" />
+	</f:metadata>
+	<ui:define name="title">
+      Firma y Notificacion de Certificado de Aprobación o Rechazo
+    </ui:define>
+	<ui:define name="body">
+		<script type="text/javascript">
+			function start() {
+				PF('statusDialog').show();
+			}
+
+			function stop() {
+				PF('statusDialog').hide();
+			}
+
+			function controlClick(id) {
+				$("button[id$='" + id + "']").click();
+			}
+		</script>
+		<p:panel header="Datos Contribuyente" styleClass="box-primary"
+			toggleable="true">
+			<sre:ComponenteDatosBasicos></sre:ComponenteDatosBasicos>
+		</p:panel>
+		<p:panel
+			header="Emitir Certificado de Cumplimiento de Sistemas Computacionales (CCSC)"
+			styleClass="box-primary" toggleable="true">
+			<p:tabView id="tabPantalla">
+				<p:tab title="Consulta de Verificación InSitu">
+					<sre:ComponenteRegistroVerificacionInsitu editable="false"></sre:ComponenteRegistroVerificacionInsitu>
+				</p:tab>
+				<p:tab title="Documentos Emitidos" id="tabEmitidos">
+						<workflowcead:ComLisDocumentosEmitidos managedBean="#{gestionDocumentoEmitidoController}" />
+				</p:tab>
+				<p:tab title="Documentos Adjuntos" id="tabAdjuntos">
+					<workflowcead:ComLisDocumentosAdjuntos
+						managedBean="#{gestionDocumentoAdjuntoController}"
+						adicionarDocumento="true" firmarDocumentoDelegada="true" modificar="true" verDetalle="true"						
+						verDocumentoFirmado="true" verFirmantes="true" />
+				</p:tab>
+				<p:tab title="Documentos para Notificar" id="tabNotificaciones">
+					<workflowcead:ComLisNotificacion
+						managedBean="#{emisionDocumentoAdjuntoNotificacionController}" />
+				</p:tab>
+			</p:tabView>
+		</p:panel>
+		<div class="modal-footer">
+		<p:commandButton onclick="window.open('#{contextoUsuarioModel.RedireccionarBitacoraPagina()}','bitácora','menubar=1,resizable=1,width=700px,height=390px,top=100,left=100')"
+							immediate="true" class="btn-sm btn-primary" value="Bitácora">
+		</p:commandButton>
+		<workflowcder:botonDerivacion id="customBotonDeriva" class="btn-sm btn-primary" linkRedireccion="" managedBean="#{derivacionEtapaCertificadoBean}" />
+
+</div>
+	</ui:define>
+</ui:composition>
+

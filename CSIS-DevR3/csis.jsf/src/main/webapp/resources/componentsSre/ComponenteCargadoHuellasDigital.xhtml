@@ -1,0 +1,173 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+<composite:interface>
+	<composite:attribute name="ComponenteRegistroHuellasDigitales"
+		required="false" />
+</composite:interface>
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+	<!-- <f:event type="postAddToView" listener="#{registroHuellasDigitalesController.Load}" /> -->
+	<f:event type="preRenderView" listener="#{registroHuellasDigitalesController.Load}" />
+	
+		<p:remoteCommand name="rc" update="#{p:component('idTextoModulos')} #{p:component('idMensajeEstadosFacturas')} #{p:component('idNombreArchivoSubido')} #{p:component('idRutaArchivoMensaje')} #{p:component('idNombreArchivoSubidoMensaje')} #{p:component('idNombreArchivoSubido')}" />
+		<!-- <p:remoteCommand name="rc2" update="#{p:component('idlistaSistemasAutorizadosMensajes')} #{p:component('idlistaSistemasAutorizados')}" /> -->
+	
+		<p:panel>
+			<p:panelGrid>
+		
+			</p:panelGrid>
+			
+			<p:panelGrid>
+					
+					
+			
+			</p:panelGrid>
+			
+			<p:panelGrid>
+					<!-- onclick="rc2()" -->
+					<p:commandButton id="idAdicionar" validateClient="true"
+							inmediate="false" process="@this" async="true" value="Adicionar"
+							styleClass="btn btn-primary pull-right" 
+							actionListener="#{registroHuellasDigitalesController.adicionarComponenteDialogo}">
+					</p:commandButton>
+					
+			</p:panelGrid>
+		</p:panel>		
+		
+		<p:dialog header="Cargado de huellas digitales de Sistema"
+			closable="false" width="700"
+			widgetVar="cuadroDialogoCorregirFacturaCompraManual" position="center center center centers"
+			modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+			
+			<p:panelGrid  columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-fluid">
+			
+				<p:outputLabel for="idArchivoRecibido" value="NOMBRE ARCHIVOS:" style="font-weight:bold" />							
+				<p:row>
+					<p:inputText id="idArchivoRecibido"
+						w:placeholder="RUTA DEL ARCHIVO"
+						readonly="false"
+						value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.rutaArchivo}"
+						validatorMessage="RUTA DEL ARCHIVO Incorrecto"
+						requiredMessage="Campo requerido" required="true">
+						<p:clientValidator event="click" />
+						<p:clientValidator event="blur" />
+						<p:clientValidator event="keyup" />
+					</p:inputText>
+					<p:message for="idArchivoRecibido" display="text">
+					</p:message>
+				</p:row>
+				
+				<p:outputLabel for="idRutaArchivo" value="RUTA DEL ARCHIVO:" style="font-weight:bold" />
+				<p:row>
+					<p:inputText id="idRutaArchivo"
+						w:placeholder="RUTA DEL ARCHIVO"
+						readonly="false"
+						value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.rutaArchivo}"
+						validatorMessage="RUTA DEL ARCHIVO Incorrecto"
+						requiredMessage="Campo requerido" required="true"
+						styleClass="form-control pull-left">
+						<p:clientValidator event="click" />
+						<p:clientValidator event="blur" />
+						<p:clientValidator event="keyup" />
+					</p:inputText>
+					<p:message for="idRutaArchivo" id="idRutaArchivoMensaje">
+					</p:message>
+				</p:row>
+				
+				<p:outputLabel id="idTextoModulos" for="idComponentesMinimos" value="COMPONENTES MINIMOS:" style="font-weight:bold"/>
+				<p:row>						
+					<p:selectCheckboxMenu id="idComponentesMinimos" layout="responsive"
+						columns="10" widgetVar="idComponentesMinimos"
+						value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.componentesMinimosId}"
+						multiple="true" filter="true" filterMatchMode="startsWith" appendTo="@(body)"
+						validatorMessage="Seleccione un valor"
+						requiredMessage="Campo requerido" required="true">
+						<f:selectItems
+							value="#{certificacionParametrics.listaComponentesMinimos}"
+							var="c" itemLabel="#{c.descripcion}"
+							itemValue="#{c.clasificadorId}" />
+						<p:ajax event="toggleSelect" update="#{p:component('idTextoModulos')} #{p:component('idMensajeEstadosFacturas')}" global="false" />
+						<p:ajax event="change" update="#{p:component('idTextoModulos')} #{p:component('idMensajeEstadosFacturas')}" global="false" />
+					</p:selectCheckboxMenu>
+					<p:message for="idComponentesMinimos" id="idMensajeEstadosFacturas">
+					</p:message>
+				</p:row>
+				
+				<p:outputLabel for="idCargarArchivo" value="ARCHIVO:"
+					style="font-weight:bold" />
+				<p:row>
+
+					<p:fileUpload id="idCargarArchivo"
+						value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.file}"
+						mode="advanced" auto="true" showButtons="true" skinSimple="true"
+						uploadLabel="Subir Archivo" cancelLabel="Cancelar"
+						allowTypes="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.tipoArchivoPermitido}"
+						label="Examinar"
+						invalidSizeMessage="El archivo que esta cargando excede los 4 megas!"
+						invalidFileMessage="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.mensajeArchivoInvalido}"
+						style="width:100% !important;margin-bottom: -25px;" fileLimit="1"
+						fileLimitMessage="Solo se puede subir una archivo."
+						sizeLimit="5000000" required="true" validateClient="true"
+						fileUploadListener="#{registroHuellasDigitalesController.handleFileUpload}"
+						update="#{p:component('idNombreArchivoSubido')} #{p:component('idNombreArchivoSubidoMensaje')}">
+					</p:fileUpload>
+					<p:message for="idCargarArchivo">
+					</p:message>
+					
+					<br />
+					<br />
+					<p:message for="idNombreArchivoSubido" id="idNombreArchivoSubidoMensaje">
+					</p:message>
+
+					 <!-- style="visibility: hidden" -->
+				
+					<p:inputText id="idNombreArchivoSubido"
+						value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.nombreArchivoSubido}" style="visibility: hidden"
+						widgetVar="idArchivoRecibido" w:placeholder="" readonly="false"
+						validatorMessage="Nombre Incorrecto" 
+						requiredMessage="Campo requerido" required="true"
+						styleClass="form-control pull-left">
+						<p:clientValidator event="click" />
+						<p:clientValidator event="blur" />
+						<p:clientValidator event="keyup" />
+					</p:inputText>
+				</p:row>
+				
+				
+			</p:panelGrid>
+			
+			<p:panelGrid columns="3" columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4" layout="grid" styleClass="ui-fluid">
+				<p:row></p:row>
+				<p:commandButton id="idCancelar" value="Cancelar"
+					actionListener="#{registroHuellasDigitalesController.cancelar}"
+					styleClass="btn btn-warning btn-sm btn-block" global="false"
+					oncomplete="PF('cuadroDialogoCorregirFacturaCompraManual').hide()">
+				</p:commandButton>
+	
+				<!-- actionListener="#{registroHuellasDigitalesController.adicionarComponente}" process="@parent:@parent"-->
+				
+				<!-- update="#{p:component('listaDetalleReporteConsulta')}" -->
+	
+				<p:commandButton id="idGuardar" value="Guardar" process="@parent:@parent"						
+					styleClass="btn btn-primary btn-sm btn-block" validateClient="true" async="true" ajax="true" onclick="rc();" actionListener="#{registroHuellasDigitalesController.adicionarComponente}"
+					oncomplete="if(PF('idComponentesMinimos').inputs.filter(':checked').length==0)
+								{
+									toastr.error('Debe agregar al menos un componente.', 'Advertencia');									
+								}
+								else
+								{
+									PF('cuadroDialogoCorregirFacturaCompraManual').hide();
+								}">
+				</p:commandButton>
+			</p:panelGrid>
+			
+			
+			
+		</p:dialog>
+</composite:implementation>
+</html>

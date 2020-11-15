@@ -1,0 +1,9 @@
+17:11:14.983 [RMI TCP Connection(2)-127.0.0.1] INFO  o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin - Application shutdown requested.
+17:11:14.983 [RMI TCP Connection(2)-127.0.0.1] INFO  o.s.b.c.e.AnnotationConfigEmbeddedWebApplicationContext - Closing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@71480c26: startup date [Mon Mar 25 17:06:21 BOT 2019]; root of context hierarchy
+17:11:14.985 [RMI TCP Connection(2)-127.0.0.1] INFO  o.s.c.s.DefaultLifecycleProcessor - Stopping beans in phase 2147483647
+17:11:14.986 [RMI TCP Connection(2)-127.0.0.1] INFO  o.s.j.e.a.AnnotationMBeanExporter - Unregistering JMX-exposed beans on shutdown
+17:11:14.987 [RMI TCP Connection(2)-127.0.0.1] INFO  o.s.j.e.a.AnnotationMBeanExporter - Unregistering JMX-exposed beans
+17:11:14.987 [RMI TCP Connection(2)-127.0.0.1] INFO  o.s.s.c.ThreadPoolTaskExecutor - Shutting down ExecutorService 'taskExecutor'
+17:11:14.990 [RMI TCP Connection(2)-127.0.0.1] INFO  org.ehcache.core.EhcacheManager - Cache 'clasificadoresPorId' removed from Eh107InternalCacheManager.
+17:11:14.991 [RMI TCP Connection(2)-127.0.0.1] INFO  org.ehcache.core.EhcacheManager - Cache 'alcaldiasPorProvincia' removed from Eh107InternalCacheManager.
+17:11:14.993 [RMI TCP Connection(2)-127.0.0.1] INFO  org.ehcache.core.EhcacheManager - Cache 'clasificadoresTipo' removed from Eh107InternalCacheManager.

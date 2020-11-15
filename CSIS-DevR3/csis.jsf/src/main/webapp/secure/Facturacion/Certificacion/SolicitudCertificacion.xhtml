@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+        <f:viewAction action="#{logedBean.check}" />
+		<f:viewAction action="#{solicitudCertificacionController.Load}"
+			onPostBack="true" />
+
+	</f:metadata>
+
+	<ui:define name="title">
+       <!-- Solicitud Certificación Sistemas ui-g-12 ui-md-2-->
+    </ui:define>
+
+
+	<ui:define name="body">
+		<h:form id="SolicitudCertificacionForm">
+										
+			<p:remoteCommand name="rc2" update="idDatodsBasicosPanel" />
+
+			<p:panel id="idDatodsBasicosPanel" header=" Solicitud Certificación Sistemas">
+				<p:remoteCommand name="rc"
+					update="idTextoModalidad messagesidModalidad idTextoModulos messages idTextoModulosEmitir messagesEmitir messagesIdNombreSistema messagesIdVersion messagesIdTipoSistema" />
+
+				<p:panel header="Datos Básicos" toggleable="true"
+					styleClass="card box-primary">
+					<p:panel style="border:none" styleClass="ui-fluid">
+						<sre:ComponenteDatosBasicos></sre:ComponenteDatosBasicos>
+					</p:panel>
+				</p:panel>
+
+				<p:panel header="Ingresar Datos Sistema Facturación"
+					toggleable="true" styleClass="card box-primary"
+					rendered="#{!solicitudCertificacionController.comportamientoPaginaModel.esDisableControl}">
+
+					<p:panel style="border:none" styleClass="ui-fluid"
+						id="idSolictudFormulario">
+
+						<p:panelGrid columns="6"
+							columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-3,ui-grid-col-2,ui-grid-col-1,ui-grid-col-3"
+							layout="grid">
+
+							<p:row>
+								<p:outputLabel for="idNombreSistema" value="Nombre Comercial"
+									style="font-weight:bold" />
+							</p:row>
+							<p:row>
+								<div style="font-weight: bold; color: red; text-align: left">
+									<p:outputLabel value="(*)"></p:outputLabel>
+								</div>
+							</p:row>
+							<p:row>
+								<p:inputText id="idNombreSistema"
+									value="#{solicitudCertificacionController.certificacionSolicitudCertificacionModel.solicitud.nombreSistema}"
+									w:placeholder="Nombre Comercial" maxlength="100"
+									readonly="false"
+									validatorMessage="Nombre de Sistema Incorrecto"
+									requiredMessage="Campo requerido" required="true">
+									<p:keyFilter regEx="/[a-zA-Z áéíóúñÁÉÍÓÚÑ0-9_-]/i" />
+									<p:clientValidator event="blur" />
+									<p:clientValidator event="keyup" />
+								</p:inputText>
+								<p:message for="idNombreSistema" id="messagesIdNombreSistema" />
+							</p:row>
+
+							<p:outputLabel for="idVersion" value="Versión"
+								style="font-weight:bold" />
+							<p:row>
+								<div style="font-weight: bold; color: red; text-align: left">
+									<p:outputLabel value="(*)"></p:outputLabel>
+								</div>
+							</p:row>
+							<p:row>
+								<p:inputText id="idVersion"
+									value="#{solicitudCertificacionController.certificacionSolicitudCertificacionModel.solicitud.version}"
+									readonly="false" validatorMessage="Version Incorrecta"
+									requiredMessage="Campo requerido" required="true"
+									w:placeholder="Version" maxlength="20">
+									<p:clientValidator event="blur" />
+									<p:clientValidator event="keyup" />
+								</p:inputText>
+								<p:message for="idVersion" id="messagesIdVersion" />
+							</p:row>
+
+							<p:outputLabel for="idTipoSistema" value="Tipo"
+								style="font-weight:bold" />
+							<p:row>
+								<div style="font-weight: bold; color: red; text-align: left">
+									<p:outputLabel value="(*)"></p:outputLabel>
+								</div>
+							</p:row>
+							<p:row>
+								<p:selectOneMenu id="idTipoSistema"
+									value="#{solicitudCertificacionController.certificacionSolicitudCertificacionModel.solicitud.tipoSistemaId}"
+									readonly="false" validatorMessage="Debe seleccionar un valor"
+									requiredMessage="Campo requerido" required="true">
+									<f:selectItem itemValue="#{null}" itemLabel="Tipo Sistema" />
+									<f:selectItems
+										value="#{solicitudCertificacionController.certificacionParametrics.listaTipoSistema}"
+										var="c" itemLabel="#{c.descripcion}"
+										itemValue="#{c.clasificadorId}" />
+									<p:clientValidator event="change" />
+									<p:clientValidator event="focus" />
+									<p:ajax event="change"
+										listener="#{solicitudCertificacionController.SeleccionCombo}"
+										global="false" />
+								</p:selectOneMenu>
+								<p:message for="idTipoSistema" id="messagesIdTipoSistema" />
+							</p:row>
+
+							<p:outputLabel id="idTextoModalidad" for="idModalidad"
+								value="Modalidad Facturación" style="font-weight:bold" />
+							<p:row>
+								<div style="font-weight: bold; color: red; text-align: left">
+									<p:outputLabel value="(*)"></p:outputLabel>
+								</div>
+							</p:row>
+							<p:row>
+
+
+								<p:selectCheckboxMenu id="idModalidad" widgetVar="idModalidad"
+									value="#{solicitudCertificacionController.certificacionSolicitudCertificacionModel.solicitud.listaModalidad}"
+									multiple="true" filter="true" filterMatchMode="startsWith"
+									validatorMessage="Seleccione un valor"
+									requiredMessage="Campo requerido" required="true">
+									<f:selectItems
+										value="#{solicitudCertificacionController.certificacionParametrics.listaCertificacionModalidadFacturacionGrupo}"
+										var="c" itemLabel="#{c.descripcion}"
+										itemValue="#{c.clasificadorId}" />
+									<p:ajax event="toggleSelect" global="false"
+										update="messagesidModalidad idTextoModalidad" />
+									<p:ajax event="change" global="false"
+										update="messagesidModalidad idTextoModalidad" />
+								</p:selectCheckboxMenu>
+								<p:message for="idModalidad" id="messagesidModalidad" />
+							</p:row>
+
+							<p:outputLabel id="idTextoModulos" for="idModulos"
+								value="Componente(s) Adicional(es)" style="font-weight:bold" />
+							<p:row></p:row>
+							<p:row>
+								<p:selectCheckboxMenu id="idModulos" layout="responsive"
+									columns="10" widgetVar="idModulos"
+									value="#{solicitudCertificacionController.certificacionSolicitudCertificacionModel.solicitud.tiposModulos}"
+									multiple="true" filter="true" filterMatchMode="startsWith"
+									validatorMessage="Seleccione un valor"
+									requiredMessage="Campo requerido" required="false">
+									<f:selectItems
+										value="#{solicitudCertificacionController.certificacionParametrics.listaTipoModulos}"
+										var="c" itemLabel="#{c.descripcion}"
+										itemValue="#{c.clasificadorId}" />
+									<p:ajax event="toggleSelect" update="messages idTextoModulos"
+										global="false" />
+									<p:ajax event="change" update="messages idTextoModulos"
+										global="false" />
+								</p:selectCheckboxMenu>
+								<p:message for="idModulos" id="messages" />
+							</p:row>
+
+							<p:outputLabel id="idTextoModulosEmitir" for="idModulosEmitir"
+								value="Tipo(s) Documento Sector" style="font-weight:bold" />
+							<p:row>
+								<div style="font-weight: bold; color: red; text-align: left">
+									<p:outputLabel value="(*)"></p:outputLabel>
+								</div>
+							</p:row>
+							<p:row>
+								<p:selectCheckboxMenu id="idModulosEmitir" layout="responsive"
+									columns="10" widgetVar="idModulosEmitir"
+									value="#{solicitudCertificacionController.certificacionSolicitudCertificacionModel.solicitud.listaDocumentos}"
+									multiple="true" filter="true" filterMatchMode="startsWith"
+									validatorMessage="Seleccione un valor"
+									requiredMessage="Campo requerido" required="true">
+									<f:selectItems
+										value="#{solicitudCertificacionController.certificacionParametrics.listaTipoDocumentoFactura}"
+										var="c" itemLabel="#{c.descripcion}"
+										itemValue="#{c.clasificadorId}" />
+									<p:ajax event="toggleSelect"
+										update="messagesEmitir idTextoModulosEmitir" global="false" />
+									<p:ajax event="change"
+										update="messagesEmitir idTextoModulosEmitir" global="false" />
+								</p:selectCheckboxMenu>
+								<p:message for="idModulosEmitir" id="messagesEmitir" />
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+
+					<p:row>
+						<div style="font-weight: bold; color: red; text-align: left">
+							<p:outputLabel value="* Campos Obligatorios"></p:outputLabel>
+						</div>
+					</p:row>
+				</p:panel>
+				<p:panel header="Ingresar Datos Persona Contacto" toggleable="true"
+					styleClass="card box-primary"
+					rendered="#{!solicitudCertificacionController.comportamientoPaginaModel.esDisableControl}">
+					<p:panel style="border:none" styleClass="ui-fluid">
+						<sre:ComponenteGrillaContactos
+							ComponenteIdTrasActualizar="idSolicitar"
+							ComponenteIdTrasEliminar="idSolicitar"
+							ComponenteIdTrasEditar="idSolicitar"
+							ComponenteIdTrasCancelarEdicion="idSolicitar"
+							EsVisibleOperaciones="true" />
+
+					</p:panel>
+				</p:panel>
+			</p:panel>
+		</h:form>
+
+
+		<p:panel style="border:none" id="idBotonCancelarSolictar">
+			<p:panelGrid columns="3"
+				columnClasses="ui-g-8 ui-md-8, ui-g-2 ui-md-2, ui-g-2 ui-md-2"
+				layout="grid" styleClass="ui-fluid">
+
+				<p:spacer></p:spacer>
+
+				<p:commandButton id="idCancelar" value="Limpiar"
+					styleClass="btn btn-warning btn-sm btn-block" async="true"
+					ajax="true" process="@this"
+					update=":SolicitudCertificacionForm:idDatodsBasicosPanel :idBotonCancelarSolictar"
+					actionListener="#{solicitudCertificacionController.CancelarFormulario}"
+					resetValues="true">
+				</p:commandButton>
+
+				<p:commandButton id="idSolicitar" value="Solicitar"
+					rendered="#{solicitudCertificacionController.reportesController.respuestaBase64 == ''?true:false}"
+					styleClass="btn btn-primary btn-sm btn-block"
+					process=":SolicitudCertificacionForm:idDatodsBasicosPanel"
+					update="idSolicitar" ajax="true" validateClient="true"
+					onclick="rc()"
+					oncomplete="if(PF('idModalidad').inputs.filter(':checked').length!=0)
+																					 {
+																							if(PF('idModulosEmitir').inputs.filter(':checked').length!=0)
+																							{
+																								var b = Boolean(#{solicitudCertificacionController.certificacionSolicitudCertificacionList.numeroRegistroEditados==0});																								
+																								
+																								if(b==true)
+																								{
+																									var a =Boolean(#{solicitudCertificacionController.certificacionSolicitudCertificacionList.listaContactos.size()>0});																									
+																																																		
+																									if(a==true)
+																									{
+																										PF('cuadroDialogo').show();	
+																									}
+																									else
+																									{
+																										toastr.info('Debe agregar al menos un contacto.', 'Advertencia');
+																									}	
+																								}
+																								else
+																								{
+																									toastr.info('Debe guardar las ediciones pendientes.', 'Advertencia');
+																								}																								
+																							}
+																					   }">
+				</p:commandButton>
+
+				<p:panelGrid
+					rendered="#{solicitudCertificacionController.reportesController.respuestaBase64 == ''?false:true}"
+					style="border:none">
+					<sre:ComponenteVisorImpresion
+                                                            esVisibleBoton="true"
+                                                            nombreWidgetVar="repPreliminar"
+                                                            txtButtonAccion="Reporte"
+                                                            icon="fa fa-eye"
+                                                            styleClass="btn btn-danger btn-sm btn-block pull-right"
+                                                            archivoB64="#{solicitudCertificacionController.GenerarReporteDeCertificacion()}">
+                    </sre:ComponenteVisorImpresion>
+				</p:panelGrid>
+			</p:panelGrid>
+		</p:panel>
+
+		<p:dialog header="Advertencia" widgetVar="cuadroDialogo"
+			closable="false" position="top center" modal="true" showEffect="fade"
+			hideEffect="fade" resizable="false">
+
+			<p:outputPanel id="panelCuadroDialogo" style="text-align:center;">
+
+				<h4>¿Está seguro de Realizar la Solicitud?</h4>
+
+				<div class="box-footer">
+					<p:panelGrid columns="2"
+						columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid">
+						
+						<p:commandButton id="idSolicitaDialogr" value="Solicitar"
+							styleClass="btn btn-success btn-sm btn-block"
+							process="@this :SolicitudCertificacionForm:idNombreSistema :SolicitudCertificacionForm:idVersion"
+							actionListener="#{solicitudCertificacionController.GuardarSolicitud}"
+							oncomplete="PF('cuadroDialogo').hide(); "
+							update=":idBotonCancelarSolictar">
+						</p:commandButton>
+
+						<p:commandButton id="idCancelarRechazar" value="Cancelar"
+							styleClass="btn btn-danger btn-sm btn-block"
+							onclick="PF('cuadroDialogo').hide();">
+						</p:commandButton>
+					</p:panelGrid>
+
+				</div>
+				<!-- #{solicitudCertificacionController.certificacionSolicitudCertificacionList.listaContactos.size()>0}			    	 -->
+			</p:outputPanel>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

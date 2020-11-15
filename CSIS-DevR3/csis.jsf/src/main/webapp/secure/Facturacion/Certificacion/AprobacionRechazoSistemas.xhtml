@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<!-- <f:viewAction action="#{logedBean.check}" /> -->
+		<f:viewAction action="#{aprobacionRechazoSistemasController.Load}"/>
+	</f:metadata>
+
+	<ui:define name="title">
+       FACTURACION
+    </ui:define>
+
+	<ui:define name="body">			
+
+		<div class="box box-primary">
+			<h:form id="AprobacionRechazosistemasForm">
+				<div class="box-header with-border">
+					<h3 class="box-title">Aprobación o Rechazo de Certificación de Sistemas</h3>
+
+					<div class="box-tools pull-left">
+						<button type="button" class="btn btn-box-tool"
+							data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+
+				<div class="box-body">
+						<div class="chart">
+							<div class="row">
+								<div class="col-xs-12">
+									<p:fieldset legend="Datos Básicos" toggleable="true" toggleSpeed="500">
+										<sre:ComponenteBusquedaDatosBasicos
+													ComponenteLabelNit="NIT"
+													ComponenteInputTextNit="#{busquedaDatosBasicosComponent.nitDatosBasicosDto.nit}"													
+													ComponenteLabelDependencia="DEPENDENCIA"
+													ComponenteLabelRazonSocial="NOMBRE O RAZON SOCIAL"
+													ComponenteButtonNit="#{aprobacionRechazoSistemasController.buscarContribuyente}"
+													ComponenteTextButtonNit="Buscar"
+													ComponenteEsVisibleLimpiar="true"
+													ComponenteTextButtonLimpiar="Limpiar"
+													ComponenteButtonLimpiar="#{aprobacionRechazoSistemasController.LimpiarBusqueda}"
+													ComponenteNombreFormPrincipal="AprobacionRechazosistemasForm  :idRespuestaReporte">
+											</sre:ComponenteBusquedaDatosBasicos>
+									</p:fieldset>
+								</div>
+							</div>
+							
+							<p/>
+							<br />
+							
+							<h:panelGroup id="idListadoDetalles">
+								<h:panelGroup id="idListadoSistemas" rendered="#{aprobacionRechazoSistemasController.comportamientoPaginaModel.esVisiblePanelGroup and registroSolicitudSistemasController.comportamientoPaginaModel.esVisiblePanel}">
+									<div class="row">
+										<div class="col-xs-12">
+											<p:fieldset legend="Listado de Sistemas" toggleable="true" toggleSpeed="500"
+												style="margin-bottom:20px">
+		
+												<div class="row">
+													<div class="col-xs-12">
+											
+														<p:dataTable id="listaDatoContribuyentes"
+															value="#{aprobacionRechazoSistemasController.sistemasCertificadosList.listaEstadoCertificacion}"
+															filteredValue="#{aprobacionRechazoSistemasController.sistemasCertificadosList.listaSistemasCertificadosFiltrar}"
+															var="ecs"
+															rowIndexVar="rowIndex"
+															rows="5"
+															widgetVar="listaDatoContribuyentes"
+															paginator="true"
+															sortMode="multiple"
+							            		 			paginatorPosition="bottom"
+							            		 			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							            		 			currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"													
+															styleClass="table table-striped table-bordered table-hover table-sm">
+		
+															<f:facet name="header">													
+														            <p:outputPanel>
+														                <h:outputText value="Filtrar:"/>
+														        		<div>        
+														                	<p:inputText id="globalFilter" onkeyup="PF('listaDatoContribuyentes').filter()" placeholder="Digite la búsqueda"/>
+														                </div>											                
+														            </p:outputPanel>											            
+													        </f:facet>
+		
+															<p:column>
+																<f:facet name="header">
+																	<h:outputText value="Nro."></h:outputText>
+																</f:facet>
+																<h:outputText value="#{rowIndex+1}"></h:outputText>
+															</p:column>
+															<p:column sortBy="#{ecs.nombreSistema}" filterBy="#{ecs.nombreSistema}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="SISTEMA"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.nombreSistema}"></h:outputText>
+															</p:column>
+															<p:column sortBy="#{ecs.cuis}" filterBy="#{ecs.cuis}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="CUIS"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.cuis}"></h:outputText>
+															</p:column>
+															<p:column sortBy="#{ecs.version}" filterBy="#{ecs.version}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="VERSION"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.version}"></h:outputText>
+															</p:column>
+															<p:column sortBy="#{ecs.fechaEmisionCertificado}">
+																<f:facet name="header">
+																	<h:outputText value="FECHA INICIO"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.fechaEmisionCertificado}">
+																	<f:convertDateTime pattern="dd/MM/yyyy" />
+																</h:outputText>
+															</p:column>
+															
+															<p:column sortBy="#{ecs.descripcionEstadoPrueba}" filterBy="#{ecs.descripcionEstadoPrueba}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="ESTADO CERTIFICACION"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.descripcionEstadoPrueba}"></h:outputText>
+															</p:column>
+															
+															<p:column>
+																<f:facet name="header">
+																	<h:outputText value="OPERACIONES"></h:outputText>
+																	<br/>
+																	<p:commandLink value="Limpiar Filtros" styleClass="text-blue" onclick="PF('listaDatoContribuyentes').clearFilters();">
+																	</p:commandLink>
+																	<!-- <f:ajax  update=":AprobacionRechazosistemasForm:listaDatoContribuyentes"></f:ajax> --> 
+																</f:facet>	
+																
+																		
+																<p:commandLink styleClass="text-green" update=":AprobacionRechazosistemasForm:idListadoDetalles  :idRespuestaReporte" value="Ver Detalles" actionListener="#{aprobacionRechazoSistemasController.VerDetallesPruebas(ecs.sistemaId,ecs.solicitudCertificacionId,ecs.contribuyenteId,ecs.estadoSolicitudCertificacionId)}">								      
+																 	<f:ajax update=":AprobacionRechazosistemasForm:idListadoDetalles :idRespuestaReporte"></f:ajax>																 									                	
+												                </p:commandLink >		
+																															
+																<!-- <p:commandLink styleClass="text-red"  rendered="true" ajax="true" update=":AprobacionRechazosistemasForm:panelCuadroDialogo" value="Rechazar" oncomplete="PF('cuadroDialogo').show()"  title="Rechazar">								            								             		             	
+												                   <f:setPropertyActionListener value="#{ecs.solicitudCertificacionId}" target="#{aprobacionRechazoSistemasController.pasosCertificacionSeleccionableModel.pruebasSistemasSeleccionado.solicitudCertificacionId}" />								                	
+												                </p:commandLink > -->														
+														
+																
+																 <!--  -->
+																
+															</p:column>
+		
+														</p:dataTable>
+																			
+													</div>
+												</div>
+											</p:fieldset>
+											
+											
+											
+										</div>
+									</div>
+								</h:panelGroup>
+								
+								
+								<h:panelGroup id="idListadoPruebas" rendered="#{!aprobacionRechazoSistemasController.comportamientoPaginaModel.esVisiblePanelGroup}">
+									
+									<div class="row">
+										<div class="col-xs-12">
+											<p:fieldset legend="Listado de Sistemas" toggleable="true" toggleSpeed="500"
+												style="margin-bottom:20px">
+												
+												<div class="row">
+														<div class="col-md-5" style="text-align: right">
+															<label class="box-tools pull-right"><b>Fecha de Solicitud</b></label>
+														</div>
+														
+														<div class="col-md-1">
+															<label class="box-tools pull"><b>:</b></label>
+														</div>
+														
+														<div class="col-md-6">
+															<h:outputLabel value="#{aprobacionRechazoSistemasController.certificacionSolicitudCertificacionModel.datosSistemasDto.fechaSolicitud}">
+																<f:convertDateTime pattern="dd/MM/yyyy" />
+															</h:outputLabel>
+														</div>
+												</div>
+												<div class="row">
+														<div class="col-md-5" style="text-align: right">
+															<label class="box-tools pull-right"><b>Sistema</b></label>
+														</div>
+														
+														<div class="col-md-1">
+															<label class="box-tools pull"><b>:</b></label>
+														</div>
+														
+														<div class="col-md-6">
+															<h:outputLabel value="#{aprobacionRechazoSistemasController.certificacionSolicitudCertificacionModel.datosSistemasDto.nombreSistema}"/>
+														</div>
+												</div>
+												<div class="row">
+														<div class="col-md-5" style="text-align: right">
+															<label class="box-tools pull-right"><b>Modalidad</b></label>
+														</div>
+														
+														<div class="col-md-1">
+															<label class="box-tools pull"><b>:</b></label>
+														</div>
+														
+														<div class="col-md-6">
+															<h:outputLabel value="#{aprobacionRechazoSistemasController.certificacionSolicitudCertificacionModel.datosSistemasDto.modalidad}"/>
+														</div>
+												</div>
+												<div class="row">
+														<div class="col-md-5" style="text-align: right">
+															<label class="box-tools pull-right"><b>Fecha Fin Pruebas</b></label>
+														</div>
+														
+														<div class="col-md-1">
+															<label class="box-tools pull"><b>:</b></label>
+														</div>
+														
+														<div class="col-md-6">
+															<h:outputLabel value="#{aprobacionRechazoSistemasController.certificacionSolicitudCertificacionModel.datosSistemasDto.fechaSolicitud}">
+																<f:convertDateTime pattern="dd/MM/yyyy" />
+															</h:outputLabel>
+														</div>
+												</div>
+												<div class="row">
+														<div class="col-md-5" style="text-align: right">
+															<label class="box-tools pull-right"><b>Resultado</b></label>
+														</div>
+														
+														<div class="col-md-1">
+															<label class="box-tools pull"><b>:</b></label>
+														</div>
+														
+														<div class="col-md-6">
+															<h:outputLabel value="#{aprobacionRechazoSistemasController.certificacionSolicitudCertificacionModel.datosSistemasDto.ok?'Sin Observaciones':'Error'}"/>
+														</div>
+												</div>	
+												
+												
+												<div class="row">										
+													<div class="col-xs-12">												
+														
+														<p:dataTable id="listaAprobacionRechazo"
+															widgetVar="listaAprobacionRechazo"
+															value="#{aprobacionRechazoSistemasController.pruebasSistemaList.listaPruebasSistemas}"
+															var="ep"
+															rowIndexVar="rowIndex"
+															rows="5"
+															filteredValue="#{aprobacionRechazoSistemasController.pruebasSistemaList.listaPasosFiltrada}"
+															emptyMessage="No hay datos para mostrar" 
+															lazy="false"
+															paginator="true"
+															sortMode="multiple"
+							            		 			paginatorPosition="bottom"
+							            		 			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							            		 			currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"			            		 							            		 			
+															styleClass="table table-striped table-bordered table-hover table-sm">
+																													 																
+															<p:column>
+																<f:facet name="header">
+																	<h:outputText value="Nro."></h:outputText>
+																</f:facet>
+																<h:outputText value="#{rowIndex+1}"></h:outputText>
+															</p:column>
+															
+															<p:column  sortBy="#{ep.nombrePrueba}" filterBy="#{ep.nombrePrueba}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="Descripción de la prueba"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ep.nombrePrueba}"></h:outputText>
+															</p:column>
+		
+															<p:column  sortBy="#{ep.descripcionEstadoPrueba}" filterBy="#{ep.descripcionEstadoPrueba}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="Estado"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ep.descripcionEstadoPrueba}"></h:outputText>
+															</p:column>
+															
+															<p:column sortBy="#{ep.fechaFin}" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="Fecha Aprobación"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ep.fechaFin}">
+																	<f:convertDateTime pattern="dd/MM/yyyy" />
+																</h:outputText>
+															</p:column>
+															
+															<p:column  sortBy="#{ep.observaciones}" filterBy="#{ep.observaciones}" filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="Observaciones"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ep.observaciones}"></h:outputText>
+															</p:column>												
+															
+														</p:dataTable>
+														
+														<div class="box-footer">
+	
+															<p:commandButton id="idSolicitarRechazo" value="Rechazar" rendered="#{aprobacionRechazoSistemasController.comportamientoPaginaModel.esVisibleBoton}" styleClass="btn btn-danger btn-sm pull-right" update="idSolicitarAprobacion" oncomplete="PF('cuadroDialogoRechazar').show()">
+															
+															</p:commandButton>
+															
+															<p:commandButton id="idSolicitarAprobacion" value="Aprobar" rendered="#{aprobacionRechazoSistemasController.comportamientoPaginaModel.esVisibleBoton}" styleClass="btn btn-primary btn-sm pull-right" update="idSolicitarRechazo" oncomplete="PF('cuadroDialogo').show()">
+															
+															</p:commandButton>												
+												
+														</div>
+													</div>
+												</div>													
+											</p:fieldset>
+										</div>
+									</div>			
+									
+									<p:dialog header="¿Está seguro de Realizar la Aprobación?" widgetVar="cuadroDialogo" closable="false" position="top center" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+						
+								        <p:outputPanel id="panelCuadroDialogo" style="text-align:center;">
+								           
+									    	<h4>Por favor introduzca el motivo de la aprobación. El mismo</h4>
+									    	<h4>será comunicado al contribuyente. Gracias</h4>
+										    <p:inputTextarea id="idTextoAprobar" value="#{aprobacionRechazoSistemasController.certificacionSolicitudCertificacionModel.motivoAprovacion}" rows="5" cols="50" counter="display" maxlength="100" counterTemplate="{0} Caracteres Restantes." autoResize="false" />
+										    <br/>
+										    <h:outputText id="display" />
+									    	<br/>
+									    	<div class="box-footer">
+
+										    	<p:commandButton id="idCancelarAprobar" value="Cancelar" onclick="PF('cuadroDialogo').hide();" styleClass="btn btn-danger btn-sm pull-right">	     
+										    	</p:commandButton>
+										    	
+										    	<p:commandButton id="idAceptarAprobar" value="Aceptar" actionListener="#{aprobacionRechazoSistemasController.SolicitarAprobacion}" styleClass="btn btn-success btn-sm pull-right"
+										    	                 oncomplete="PF('cuadroDialogo').hide();" update=":AprobacionRechazosistemasForm:idListadoDetalles  :idRespuestaReporte">													    	
+										    	</p:commandButton>
+									    	</div>
+									    	
+								        </p:outputPanel>
+								  	</p:dialog>
+								  	
+								  	
+								  	<p:dialog header="¿Está seguro de Realizar el Rechazo?" widgetVar="cuadroDialogoRechazar" closable="false" position="top center" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+								
+								        <p:outputPanel id="panelCuadroDialogoRechazar" style="text-align:center;">
+								           
+									    	<h4>Por favor introduzca el motivo del rechazo. El mismo</h4>
+									    	<h4>será comunicado al contribuyente. Gracias</h4>
+										    <p:inputTextarea id="idTextoRechazar" value="#{aprobacionRechazoSistemasController.certificacionSolicitudCertificacionModel.motivoRechazo}" rows="5" cols="50" counter="displayRechazo" maxlength="100" counterTemplate="{0} Caracteres Restantes." autoResize="false" />
+										    <br/>
+										    <h:outputText id="displayRechazo" />
+									    	<br/>
+									    	<div class="box-footer">
+									    	
+										    	<p:commandButton id="idCancelarRechazar" value="Cancelar" styleClass="btn btn-danger btn-sm" onclick="PF('cuadroDialogoRechazar').hide();">   
+										    	</p:commandButton>
+										    	<p:commandButton id="idAceptarRechazar" value="Aceptar" styleClass="btn btn-success btn-sm" actionListener="#{aprobacionRechazoSistemasController.SolicitarRechazo}"
+										    	                 oncomplete="PF('cuadroDialogoRechazar').hide();" update=":AprobacionRechazosistemasForm:idListadoDetalles  :idRespuestaReporte">													    	
+										    	</p:commandButton>
+										    	
+										    	
+									    	</div>
+									    	
+								        </p:outputPanel>
+								  	</p:dialog>																							
+									
+									<div class="box-footer">												
+										<p:commandButton id="idVolver" value="Volver"
+												actionListener="#{aprobacionRechazoSistemasController.VolverPaginaEstadoCertificacionSistemas}" 												
+												styleClass="btn btn-default btn-sm pull-right" update=":AprobacionRechazosistemasForm:idListadoDetalles :idRespuestaReporte">
+										</p:commandButton>																				
+									</div>
+								</h:panelGroup>															
+							</h:panelGroup>							
+						</div>
+
+				</div>
+			
+			</h:form>
+			<div class="box-body">
+				<div class='col-md-12'>
+					<h:panelGroup id="idRespuestaReporte">
+							<h:panelGroup rendered="#{aprobacionRechazoSistemasController.reportesController.respuestaBase64==''?false:true}">
+							 <div class="row">
+							    <div class="col-md-10 text-right">
+							    </div>
+							     <div class="col-md-1 text-right">
+							    	<visor:descarga id="repPreliminar" txtButtonAccion="Reporte"
+												icon="fa fa-eye"
+												archivoB64="#{aprobacionRechazoSistemasController.reportesController.respuestaBase64}"/>
+							     </div>
+							    <div class="col-md-1">
+							    </div>
+							 </div>
+							 </h:panelGroup>
+					</h:panelGroup>
+				</div>
+			</div>
+			<p:separator />		
+		</div>
+	</ui:define>
+</ui:composition>

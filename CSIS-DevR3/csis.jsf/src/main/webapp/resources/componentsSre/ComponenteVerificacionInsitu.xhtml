@@ -1,0 +1,77 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+
+<composite:interface>
+	<composite:attribute name="paginador" />
+	<composite:attribute name="Editar" type="java.lang.String" />
+</composite:interface>
+
+<!-- 	<f:event type="postAddToView" listener="#{gestionInsituController.initVista()}" /> -->
+<!-- 	<f:viewAction action="#{gestionInsituController.initVista}" /> -->
+<!-- <p:remoteCommand name="GuardarObs" action="#{gestionInsituController.guardarNuevaObservacion()}"/> -->
+
+<composite:implementation>
+
+	<!-- 	<f:event type="postAddToView" -->
+	<!-- 		listener="#{gestionInsituController.initVista()}" /> -->
+
+	<p:panel id="idPanelVerificacionInSitu"
+		header="Búsqueda de Componentes Registrados por el Contribuyente"
+		styleClass="box-primary">
+
+		<p:row>
+			<p:outputPanel style="float: lefth;" id="idPanelNit">
+				<h:outputText value="NIT: " />
+				<p:inputText id="globalBuscar" placeholder="Nit a buscar" />
+				<p:commandButton id="btnEjecutarBusqueda" icon="fa fa-search"
+					ajax="true" async="true" process="@this"			
+					styleClass="btn btn-xs"
+					actionListener="#{verificacionInsituComponentesController.buscarSistemasPorNit()}"
+					oncomplete="" />
+				<p:commandButton id="btnLimpiarBusqueda" icon="fa fa-eraser"
+					ajax="true" async="true" process="@this" styleClass="btn btn-xs"
+					update="#{p:component('idPanelNit')}"
+					actionListener="#{verificacionInsituComponentesController.borrarNit()}" />
+			</p:outputPanel>
+			<br />
+		</p:row>
+
+		<p:row>
+			<p:outputPanel style="float: lefth;">
+				<h:outputText value="Sistemas: " />
+				<p:selectCheckboxMenu id="idSistemas" layout="responsive"
+					columns="10" widgetVar="idSistemas"
+					value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.componentesMinimosId}"
+					multiple="true" filter="true" filterMatchMode="startsWith"
+					appendTo="@(body)" validatorMessage="Seleccione un valor"
+					requiredMessage="Campo requerido" required="true">
+					<f:selectItems
+						value="#{certificacionParametrics.listaComponentesMinimos}"
+						var="c" itemLabel="#{c.descripcion}"
+						itemValue="#{c.clasificadorId}" />
+				</p:selectCheckboxMenu>
+			</p:outputPanel>
+			<br />
+		</p:row>
+
+		<p:row>
+			<p:outputPanel style="float: lefth;">
+				<h:outputText value="Login: " />
+				<p:inputText value="#{gc.numeroDocumento}"
+					requiredMessage="Campo requerido" required="true" maxlength="20">
+					<p:keyFilter regEx="/[0-9a-zA-Z]/i" />
+				</p:inputText>
+			</p:outputPanel>
+			<br />
+		</p:row>
+
+	</p:panel>
+
+</composite:implementation>
+
+</html>
+

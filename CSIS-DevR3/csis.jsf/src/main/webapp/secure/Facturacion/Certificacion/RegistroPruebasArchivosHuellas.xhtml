@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<f:viewAction action="#{consultaRegistroHuellasDigitalesController.LoadComponente(contextoSolicitudCertificacionSistemaModel.solicitud.contribuyenteId, contextoSolicitudCertificacionSistemaModel.solicitud.sistemaId)}" />
+	</f:metadata>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<h:form id="registroPruebasArchivosHuellasForm">
+
+			<p:panel header="Gestión de Registro de Digitales" styleClass="ui-fluid">
+				
+				<p:panel header="Listado de Huellas Digitales" toggleable="true" styleClass="card box-primary">
+					<p:panel style="border:none">
+						<sre:ComponenteConsultaRegistroHuella></sre:ComponenteConsultaRegistroHuella>			
+					</p:panel>
+				</p:panel>				
+			</p:panel>	
+		</h:form>
+	</ui:define>
+</ui:composition>

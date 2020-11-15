@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+<composite:interface>
+	<composite:attribute name="componenteDatosBasicos" required="false" />
+</composite:interface>
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+
+	<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-2,ui-g-12 ui-md-5,ui-g-12 ui-md-2,ui-g-12 ui-md-2" layout="grid" styleClass="ui-fluid">
+		<h:outputLabel style="fontWeight=bold" value="Nit"/>
+		<h:outputLabel value="#{componenteDatosBasicos.datosBasicosContribuyente.nit}"/>
+		<label class="form-group"><b>Dependencia</b></label>	
+		<h:outputLabel value="#{componenteDatosBasicos.datosBasicosContribuyente.jurisdiccionDescripcion}"/>		
+	</p:panelGrid>
+	
+	<p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-fluid">
+		<label class="box-tools pull-left"><b>Nombre o Razón Social</b></label>
+		<h:outputLabel value="#{componenteDatosBasicos.datosBasicosContribuyente.nombreRazonSocial}"/>
+	</p:panelGrid>
+</composite:implementation>
+</html>

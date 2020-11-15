@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor" 
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<!-- <f:viewAction action="#{logedBean.check}" /> -->
+		<f:viewAction action="#{registroComponentesHuellasSistemaCtbteController.load}" />
+	</f:metadata>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+	<h:form id="RegistroResultadoVerificacionSituForm">
+		<p:panel header="Registro de datos de componentes certificados" styleClass="box-primary" toggleable="true">
+		
+			<p:panel styleClass="no-border">		
+				<p:fieldset legend="Datos Contribuyente" toggleable="true" toggleSpeed="500" styleClass="ui-fluid">
+						<sre:ComponenteDatosBasicos></sre:ComponenteDatosBasicos>
+				</p:fieldset>	
+				<br />
+				<h:panelGroup >
+					<h:panelGroup id="idSistema">
+					<p:fieldset legend="Datos del Sistema">
+						<p:outputLabel value="Por favor seleccione el Sistema:"></p:outputLabel>
+						<p:panelGrid columns="5"
+							columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2"
+							layout="grid">
+							<p:outputLabel for="idSistema" value="* SISTEMA"
+								style="font-weight:bold"></p:outputLabel>
+							<p:selectOneMenu 
+								value="#{registroComponentesHuellasSistemaCtbteController.registrarHuellaSistemaContribuyenteModel.sistemaId}"
+								valueChangeListener="#{registroComponentesHuellasSistemaCtbteController.cambiarDatosSistema}"
+								validatorMessage="Debe seleccionar un valor"
+								requiredMessage="Campo requerido" required="true" update="idModalidad idTipoSistema ">
+								<f:selectItem itemValue="#{null}"
+											itemLabel="-- Seleccione el Sistema --" />
+								<f:selectItems
+									value="#{registroComponentesHuellasSistemaCtbteController.registroHuellaSistemaList.listaSistemasEnProcesoContribuyente}"
+									var="lista" itemLabel="#{lista.nombreSistema}"
+									itemValue="#{lista.sistemaId}" />
+								<p:ajax event="change" update="idModalidad idTipoSistema " />
+							</p:selectOneMenu>
+							<br />
+						</p:panelGrid>
+						<p:panelGrid columns="4"
+							columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+							layout="grid">
+							<p:outputLabel value="TIPO SISTEMA" style="font-weight:bold"></p:outputLabel>
+							<p:outputLabel id="idTipoSistema" style="font-weight:normal"
+								value="#{registroComponentesHuellasSistemaCtbteController.registroHuellaSistemaModel.descripcionTipoSistema}"></p:outputLabel>
+							<p:outputLabel value="MODALIDAD" style="font-weight:bold"></p:outputLabel>
+							<p:outputLabel id="idModalidad" style="font-weight:normal"
+								value="#{registroComponentesHuellasSistemaCtbteController.registroHuellaSistemaModel.descripcionModalidad}"></p:outputLabel>
+						</p:panelGrid>
+					</p:fieldset>
+					</h:panelGroup>
+					<br />
+					<h:panelGroup id="idPanelComponente">
+						<h:panelGroup>
+							<p:fieldset legend="Cargue los archivos solicitados"
+								toggleable="true" toggleSpeed="500">
+								<sre:ComponenteCargadoHuellasDigital></sre:ComponenteCargadoHuellasDigital>						
+								<p:dataTable id="listaDetalleReporteConsulta"
+									value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.listaRegistroHuellasDigitalesDto}"
+									var="lrc" 
+									rowIndexVar="rowIndex"
+									widgetVar="listaReporteConsulta"
+									styleClass="table table-striped table-bordered table-hover table-sm">
+									
+									<f:facet name="header">													
+								            <p:outputPanel>
+								            	<p:outputLabel value="Archivos de Sistema Cargados" />
+								            </p:outputPanel>											            
+							        </f:facet>
+							        
+							        <p:column headerText="Nro.">
+										<p:outputLabel value="#{rowIndex+1}" />
+									</p:column>
+
+									<p:column headerText="NOMBRE DEL ARCHIVO">
+										<f:facet name="header">
+											<h:outputText value="NOMBRE DEL ARCHIVO"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lrc.nombre}"></h:outputText>
+									</p:column>
+
+									<p:column headerText="NOMBRE DEL COMPONENTE">
+										<h:outputText value="#{lrc.componenteMinimo}"></h:outputText>
+									</p:column>
+
+									<p:column headerText="RUTA DEL ARCHIVO">
+										<f:facet name="header">
+											<h:outputText value="RUTA DEL ARCHIVO"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lrc.rutaArchivo}"></h:outputText>
+									</p:column>
+
+									<p:column headerText="SHA">
+										<h:outputText value="#{lrc.sha2}"></h:outputText>
+									</p:column>
+
+									<p:column headerText="CRC">
+										<h:outputText value="#{lrc.crc}"></h:outputText>
+									</p:column>
+
+									<p:column headerText="MD5">
+										<h:outputText value="#{lrc.md5}"></h:outputText>
+									</p:column>
+
+									<p:column headerText="OPERACIONES">
+										<p:commandButton icon="ui-icon-circle-minus"
+											title="Eliminar" ajax="true" process="@this"
+											actionListener="#{registroHuellasDigitalesController.eliminarFilaComponente(lrc)}"
+											update="#{p:component('idPanelComponente')}">
+											<p:confirm header="Confirmation"
+												message="¿Está seguro de eliminar el registro?"
+												icon="pi pi-exclamation-triangle" />
+										</p:commandButton>
+										<p:confirmDialog global="true" showEffect="fade"
+											appendTo="@(body)" hideEffect="fade">
+											<p:commandButton value="Yes" type="button"
+												process="@this" styleClass="ui-confirmdialog-yes"
+												icon="pi pi-check" />
+											<p:commandButton value="No" type="button"
+												styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+										</p:confirmDialog>
+									</p:column>
+								</p:dataTable>
+							</p:fieldset>
+						</h:panelGroup>
+					</h:panelGroup>
+					<p:panelGrid columns="4"
+						columnClasses="ui-grid-col-3,ui-grid-col-3,ui-grid-col-3,ui-grid-col-3"
+						layout="grid" styleClass="ui-panelgrid-blank">
+						<p:spacer/>
+						<p:spacer/>
+						<p:commandButton id="idGuardar" value="Guardar"
+							styleClass="btn btn-primary btn-sm btn-block" resetValues="true"
+							validateClient="false" async="true" process="@this"
+							inmediate="true"
+							actionListener="#{registroComponentesHuellasSistemaCtbteController.guardarComponentesHuellas}"
+							update="idPanelComponente">
+						</p:commandButton>						
+						<p:commandButton id="idNuevo" value="Nuevo" resetValues="true"
+							 styleClass="btn btn-warning btn-sm btn-block" actionListener="#{registroComponentesHuellasSistemaCtbteController.nuevoFormulario}"
+							 ajax="true" process="@this" update=":RegistroResultadoVerificacionSituForm:idPanelComponente :RegistroResultadoVerificacionSituForm:idSistema" >
+						</p:commandButton>
+					</p:panelGrid>	
+				</h:panelGroup>
+			</p:panel>
+		</p:panel>
+		</h:form>
+<!-- 		<visor:descarga id="repPreliminar" txtButtonAccion="Generar" -->
+<!-- 		icon="fa fa-eye" -->
+<!-- 		archivoB64="#{registroComponentesHuellasSistemaCtbteController.reportesController.respuestaBase64}"/> -->
+		
+	</ui:define>
+</ui:composition>

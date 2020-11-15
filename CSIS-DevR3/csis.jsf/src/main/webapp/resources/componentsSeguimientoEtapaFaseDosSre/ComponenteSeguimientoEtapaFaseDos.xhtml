@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+
+<composite:interface>
+	<composite:attribute name="EsVisibleOperaciones" />
+	<composite:attribute name="idActualizarTrasVerDetalle" />
+</composite:interface>
+
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+
+	<h:form id="idComponentGrillaContactosForm">
+				
+				<p:dataTable id="listaSeguimientoPruebas"
+					value="#{listadoEtapasCertificadosFase2List.listaEtapaFaseDos.listaSeguimientoEtapasComponentes}"
+					var="ecs" rowIndexVar="rowIndex" rows="20"
+					widgetVar="listaSeguimientoPruebas" paginator="false"
+					styleClass="table table-striped table-bordered table-hover table-sm"
+					rowStyleClass="#{ecs.es_prueba_concluida eq 'true' ? 'old' : null}">
+					<f:facet name="header">
+
+					</f:facet>
+					<div class="ui-g-2 ui-md-2">
+
+						<p:column headerText="N°" width="5%">
+							<p:outputLabel value="#{rowIndex+1}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Etapa de certificación"></h:outputText>
+							</f:facet>
+							<h:outputText value="#{ecs.descripcion_prueba}"></h:outputText>
+						</p:column>
+
+						<p:column style="height: 55px;width: 250px;text-align: center" >
+							<f:facet name="header">
+								<h:outputText value="Porcentaje Cubierto"></h:outputText>
+							</f:facet>
+							<p:progressBar id="idBarraEtapa1"
+									value="#{ecs.porcentaje}" displayOnly="true" />
+								<h:outputText value="#{ecs.porcentaje} %">
+								</h:outputText>
+						</p:column>
+
+						<p:column width="12%" style="text-align:center" rendered="#{cc.attrs.EsVisibleOperaciones}">
+							<f:facet name="header">
+								<br />
+								<h:outputText value="Ver casos de pruebas"></h:outputText>
+								<br />
+								<br />
+							</f:facet>
+							
+							<!-- update="formConsultaSistemasAsociadosContribuyente" -->
+							
+							<!-- disabled="#{ecs.prueba_certificacion_sistema_id eq null ? 'true' : 'false'}" -->
+							<p:commandButton id="idBotonAnular" styleClass="text-blue"
+								validateClient="false" icon="fa fa-search" ajax="true"
+								async="true" process="@this" update=":#{p:component(cc.attrs.idActualizarTrasVerDetalle)}"						
+								title="Ver el detalle de la Etapa"
+								actionListener="#{seguimientoCertificacionSistemasComponentesController.verDetalleEtapa(ecs)}">
+							</p:commandButton>
+						</p:column>
+					</div>
+				</p:dataTable>
+	</h:form>
+</composite:implementation>
+
+<!-- EJEMPLO -->
+
+<!-- <sre:ComponenteGrillaContactos ComponenteIdTrasActualizar="" 
+	                               						   ComponenteIdTrasEliminar=""
+	                               				           EsVisibleOperaciones="true"/> -->
+
+</html>
+

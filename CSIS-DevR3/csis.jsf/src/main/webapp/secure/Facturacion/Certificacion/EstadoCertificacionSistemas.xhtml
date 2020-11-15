@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<!-- <f:viewAction action="#{estadoCertificacionSistemasController.Load}" /> -->
+	</f:metadata>
+
+	<ui:define name="title">
+		Estado Certificación Sistemas
+    </ui:define>
+	<ui:define name="body">
+
+
+		<p:panel header="Datos Básicos" toggleable="true"
+			styleClass="card box-primary">
+			<p:panel style="border:none" styleClass="ui-fluid">
+				<sre:ComponenteDatosBasicos></sre:ComponenteDatosBasicos>
+			</p:panel>
+		</p:panel>
+	
+
+
+		<h:panelGroup id="idListadoPruebas">
+			
+				<p:panel header="Pruebas Realizadas" styleClass="box-primary"
+					toggleable="true">
+
+					<p:tabView id="tabPantallas" onTabChange="handleTab(index)" dynamic="true" cache="true">
+						<p:tab title="Visita In Situ" id="tabVisitaInSitu">
+							<sre:ComponenteGestionVerificacionInsitu2 Editar="true"></sre:ComponenteGestionVerificacionInsitu2>
+						</p:tab>
+					</p:tabView>
+				</p:panel>
+		</h:panelGroup>
+
+
+	</ui:define>
+</ui:composition>

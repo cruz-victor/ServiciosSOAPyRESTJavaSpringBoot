@@ -1,0 +1,3 @@
+default.configuration=sre.fac.giec.entities
+eclipse.preferences.version=1
+hibernate3.enabled=true

@@ -1,0 +1,43 @@
+<configuration scan="true" scanPeriod="30 seconds">
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+	<springProperty scope="context" name="LOGSTASH" source="logstash.servers" />
+	<springProperty scope="context" name="APP_NAME" source="info.artifact"/>
+    <springProperty scope="context" name="APP_VERSION" source="info.version"/>
+    <springProperty scope="context" name="LOG_FOLDER" source="logfolder"/>
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+		<!-- by default -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_FOLDER}app_${APP_NAME}_v_${APP_VERSION}_%d{dd-MM-yyyy}.log</fileNamePattern>
+			<maxHistory>2</maxHistory>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>5MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n%ex{full}
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="STASH"
+		class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+		<destination>${LOGSTASH}</destination>
+		<!-- encoder is required -->
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+	</appender>
+	<springProfile name="dev">
+		<root level="INFO">
+			<appender-ref ref="STDOUT" />
+			<appender-ref ref="STASH" />
+		</root>
+	</springProfile>
+	<springProfile name="prod">
+		<root level="WARN">
+			<appender-ref ref="STDOUT" />
+			<appender-ref ref="STASH" />
+		</root>
+	</springProfile>
+</configuration>

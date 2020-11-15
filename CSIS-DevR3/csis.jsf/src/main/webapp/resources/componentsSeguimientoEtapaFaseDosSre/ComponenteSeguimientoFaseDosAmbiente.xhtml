@@ -1,0 +1,291 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+<composite:interface>
+	<composite:attribute name="EsVisibleOperaciones" />
+	<composite:attribute name="idActualizarTrasGuardarArchivo" />
+</composite:interface>
+
+<composite:implementation>
+
+	<p:remoteCommand name="rc"
+		update="#{p:component('idTextoModulos')} #{p:component('idMensajeEstadosFacturas')}" />
+	<p:panel style="border:none">
+
+		<p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid">
+
+			<p:dataTable id="listaDetalleReporteConsulta"
+				value="#{seguimientoCertificacionSistemasComponentesController.listadoRegistroAmbienteList.listaDetallesCertificacionesSistemas}"
+				var="lista" rowIndexVar="rowIndex"
+				widgetVar="listaDetalleReporteConsulta"
+				emptyMessage="No se encontraron registros."
+				styleClass="table table-striped table-bordered table-hover table-sm">
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Nro."></h:outputText>
+					</f:facet>
+					<h:outputText value="#{rowIndex+1}"></h:outputText>
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Tipo Esquema"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lista.tipoEsquemaDescripcion}"></h:outputText>
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Base de Datos"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lista.otroBaseDatos}"></h:outputText>
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Lenguaje de Programacion"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lista.otroLenguajeProgramacion}"></h:outputText>
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Sistema Operativo"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lista.otroSistemaOperativo}"></h:outputText>
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Servidor de Aplicación"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lista.otroServidorAplicacion}">
+					</h:outputText>
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Versión del Lenguaje de Programación"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lista.versionLenguajeProgramacion}">
+					</h:outputText>
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Versión del Sistema Operativo"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lista.versionSistemaOperativo}">
+					</h:outputText>
+				</p:column>
+
+				<p:column width="8%" style="text-align:center"
+					rendered="#{cc.attrs.EsVisibleOperaciones}">
+					<f:facet name="header">
+						<br />
+						<h:outputText value="Anular Registro"></h:outputText>
+						<br />
+						<br />
+					</f:facet>
+					<p:commandButton id="idBotonAnularRegistro" styleClass="text-red"
+						icon="fa fa-sign-out" ajax="true" async="true" process="@this"
+						actionListener="#{seguimientoCertificacionSistemasComponentesController.anularAmbiente(lista.detalleCertificacionSistemaId)}"
+						title="Anulación del ambiente"
+						update=":#{p:component(cc.attrs.idActualizarTrasGuardarArchivo)}">
+						<p:confirm header="Confirmación"
+							message="¿Está seguro de Anular el Ambiente?"
+							icon="fa fa-exclamation-triangle" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:panelGrid columns="2"
+					columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+					styleClass="ui-fluid">
+					<p:commandButton value="Aceptar" type="button"
+						styleClass="btn btn-primary btn-sm ui-confirmdialog-yes"
+						icon="fa fa-check" />
+					<p:commandButton value="Cancelar" type="button"
+						styleClass="btn btn-warning btn-sm ui-confirmdialog-no"
+						icon="fa fa-times" />
+				</p:panelGrid>
+			</p:confirmDialog>
+
+		</p:panelGrid>
+
+
+		<p:commandButton id="idAdicionar" validateClient="true"
+			rendered="#{cc.attrs.EsVisibleOperaciones}" inmediate="false"
+			process="@parent" async="true" value="Adicionar"
+			styleClass="btn btn-primary pull-right"
+			update="#{p:component('idContenidocuadroDialogoCargadoHuellaArchivo')}"
+			actionListener="#{seguimientoCertificacionSistemasComponentesController.adicionarComponenteHuellaDialogo}">
+		</p:commandButton>
+
+
+
+	</p:panel>
+
+	<p:dialog header="Registro del Ambiente" closable="false" width="1000"
+		id="cuadroDialogoCargadoHuellaArchivo"
+		widgetVar="cuadroDialogoCargadoHuellaArchivo"
+		position="center center center centers" modal="true" showEffect="fade"
+		hideEffect="fade" resizable="false">
+
+		<p:panel id="idContenidocuadroDialogoCargadoHuellaArchivo">
+
+			<p:panelGrid  columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-fluid">
+									
+ 				<p:outputLabel id="idTipoEsquemaLabel" for="idTipoEsquema" value="Tipo Esquema" style="font-weight:bold"/>
+				<p:row>						
+					<p:selectOneMenu id="idTipoEsquema"
+						value="#{seguimientoCertificacionSistemasComponentesController.registroAmbienteModel.registroCertificacionesSistemas.tipoEsquemaId}"
+						readonly="false" validatorMessage="Debe seleccionar un valor"
+						requiredMessage="Campo requerido" required="true">
+						<f:selectItem itemValue="#{null}" itemLabel="Tipo Esquema" noSelectionOption="true"/>
+						<f:selectItems
+							value="#{seguimientoCertificacionSistemasComponentesController.seguimientoCertificacionParametrics.listaTipoEsquema}"
+							var="c" itemLabel="#{c.descripcion}"
+							itemValue="#{c.clasificadorId}" />
+						<p:clientValidator event="change" />
+						<p:clientValidator event="focus" />
+					</p:selectOneMenu>
+					<p:message for="idTipoEsquema" id="idTipoEsquemaMensaje" />
+				</p:row>
+			</p:panelGrid>
+
+			<p:panelGrid columns="4"
+				columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+				layout="grid" styleClass="ui-fluid">
+				<p:outputLabel for="idOtroSistemaOperativo"
+					value="Sistema Operativo" style="font-weight:bold" />
+				<p:row>
+					<p:inputText id="idOtroSistemaOperativo"
+						w:placeholder="Sistema Operativo" readonly="false"
+						value="#{seguimientoCertificacionSistemasComponentesController.registroAmbienteModel.registroCertificacionesSistemas.otroSistemaOperativo}"						
+						requiredMessage="Campo requerido" required="true">
+						<p:clientValidator event="click" />
+						<p:clientValidator event="blur" />
+						<p:clientValidator event="keyup" />
+						<p:keyFilter regEx="/[a-zA-Z 0-9+#./_-]/i" />
+					</p:inputText>
+					<p:message for="idOtroSistemaOperativo"
+						id="idOtroSistemaOperativoM">
+					</p:message>
+				</p:row>
+				<p:outputLabel for="idOtroServidorAplicacion"
+					value="Servidor de Aplicación" style="font-weight:bold" />
+				<p:row>
+					<p:inputText id="idOtroServidorAplicacion"
+						w:placeholder="Servidor de Aplicación" readonly="false"
+						value="#{seguimientoCertificacionSistemasComponentesController.registroAmbienteModel.registroCertificacionesSistemas.otroServidorAplicacion}"						
+						requiredMessage="Campo requerido" required="true"
+						styleClass="form-control pull-left">
+						<p:clientValidator event="click" />
+						<p:clientValidator event="blur" />
+						<p:clientValidator event="keyup" />
+						<p:keyFilter regEx="/[a-zA-Z 0-9+#./_-]/i" />
+					</p:inputText>
+					<p:message for="idOtroServidorAplicacion"
+						id="idOtroServidorAplicacionM">
+					</p:message>
+				</p:row>
+				<p:outputLabel for="idOtroBaseDatos" value="Base de Datos"
+					style="font-weight:bold" />
+				<p:row>
+					<p:inputText id="idOtroBaseDatos" w:placeholder="Base de Datos"
+						readonly="false"
+						value="#{seguimientoCertificacionSistemasComponentesController.registroAmbienteModel.registroCertificacionesSistemas.otroBaseDatos}"						
+						requiredMessage="Campo requerido" required="true"
+						styleClass="form-control pull-left">
+						<p:clientValidator event="click" />
+						<p:clientValidator event="blur" />
+						<p:clientValidator event="keyup" />
+						<p:keyFilter regEx="/[a-zA-Z 0-9+#./_-]/i" />
+					</p:inputText>
+					<p:message for="idOtroBaseDatos" id="idOtroBaseDatosM">
+					</p:message>
+				</p:row>
+				<p:outputLabel for="idOtroLenguajeProgramacion"
+					value="Lenguaje de Programación" style="font-weight:bold" />
+				<p:row>
+					<p:inputText id="idOtroLenguajeProgramacion"
+						w:placeholder="Lenguaje de Programación" readonly="false"
+						value="#{seguimientoCertificacionSistemasComponentesController.registroAmbienteModel.registroCertificacionesSistemas.otroLenguajeProgramacion}"						
+						requiredMessage="Campo requerido" required="true"
+						styleClass="form-control pull-left">
+						<p:clientValidator event="click" />
+						<p:clientValidator event="blur" />
+						<p:clientValidator event="keyup" />
+						<p:keyFilter regEx="/[a-zA-Z 0-9+#./_-]/i" />
+					</p:inputText>
+					<p:message for="idOtroLenguajeProgramacion"
+						id="idOtroLenguajeProgramacionM">
+					</p:message>
+				</p:row>
+
+				<p:outputLabel for="idVersionSistemaOperativo"
+					value="Versión Sistema Operativo" style="font-weight:bold" />
+				<p:row>
+					<p:inputText id="idVersionSistemaOperativo"
+						w:placeholder="Versión Sistema Operativo" readonly="false"
+						value="#{seguimientoCertificacionSistemasComponentesController.registroAmbienteModel.registroCertificacionesSistemas.versionSistemaOperativo}"						
+						requiredMessage="Campo requerido" required="true"
+						styleClass="form-control pull-left">
+						<p:clientValidator event="click" />
+						<p:clientValidator event="blur" />
+						<p:clientValidator event="keyup" />
+						<p:keyFilter regEx="/[a-zA-Z 0-9+#./_-]/i" />
+					</p:inputText>
+					<p:message for="idVersionSistemaOperativo"
+						id="idVersionSistemaOperativoM">
+					</p:message>
+				</p:row>
+
+				<p:outputLabel for="idVersionLenguajeProgramacion"
+					value="Versión Lenguaje de Programación" style="font-weight:bold" />
+				<p:row>
+					<p:inputText id="idVersionLenguajeProgramacion"
+						w:placeholder="Versión Lenguaje de Programación" readonly="false"
+						value="#{seguimientoCertificacionSistemasComponentesController.registroAmbienteModel.registroCertificacionesSistemas.versionLenguajeProgramacion}"
+						requiredMessage="Campo requerido" required="true"
+						styleClass="form-control pull-left">
+						<p:clientValidator event="click" />
+						<p:clientValidator event="blur" />
+						<p:clientValidator event="keyup" />
+						<p:keyFilter regEx="/[a-zA-Z 0-9+#./_-]/i" />
+					</p:inputText>
+					<p:message for="idVersionLenguajeProgramacion"
+						id="idVersionLenguajeProgramacionM">
+					</p:message>
+				</p:row>
+			</p:panelGrid>
+			<p:panelGrid columns="3"
+				columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
+				layout="grid" styleClass="ui-fluid">
+				<p:row></p:row>
+				<p:commandButton id="idCancelar" value="Cancelar"
+					styleClass="btn btn-warning btn-sm btn-block" global="false"
+					oncomplete="PF('cuadroDialogoCargadoHuellaArchivo').hide()">
+				</p:commandButton>
+				<p:commandButton id="idGuardar" value="Guardar"
+					process="@parent:@parent"
+					update=":#{p:component(cc.attrs.idActualizarTrasGuardarArchivo)}"
+					styleClass="btn btn-primary btn-sm btn-block" validateClient="true"
+					async="true" ajax="true"
+					actionListener="#{seguimientoCertificacionSistemasComponentesController.registrarAmbiente}">
+				</p:commandButton>
+			</p:panelGrid>
+		</p:panel>
+	</p:dialog>
+
+</composite:implementation>
+</html>
+

@@ -1,0 +1,127 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+<!-- INTERFACE -->
+
+<composite:interface>
+	<composite:attribute name="Editar" type="java.lang.String" />
+	<composite:attribute name="modoConsulta" type="java.lang.Boolean"
+		required="true" />
+</composite:interface>
+
+<!-- IMPLEMENTATION -->
+
+
+<composite:implementation>
+	<f:event type="postAddToView"
+		listener="#{gestionPruebasListaHuellasDigitalesController.Load()}" />
+
+
+		<p:dataTable id="listaDetalleReporteConsultaRecuperaados" rendered="#{cc.attrs.modoConsulta eq true}"
+			value="#{gestionPruebasListaHuellasDigitalesController.listaHuellasDigitales}"
+			var="lrc" rowIndexVar="rowIndex"
+			emptyMessage="No hay componentes cargados."
+			styleClass="table table-striped table-bordered table-hover table-sm">
+			<p:column width="10%">
+				<f:facet name="header">
+					<h:outputText value="Nombre Archivo"></h:outputText>
+				</f:facet>
+				<h:outputText value="#{lrc.nombre}"></h:outputText>
+			</p:column>
+			<p:column width="25%">
+				<f:facet name="header">
+					<h:outputText value="Nombre Componente"></h:outputText>
+				</f:facet>
+				<h:outputText value="#{lrc.componenteMinimo}"></h:outputText>
+			</p:column>
+			<p:column width="30%">
+				<f:facet name="header">
+					<h:outputText value="SHA"></h:outputText>
+				</f:facet>
+				<h:outputText value="#{lrc.sha2}"></h:outputText>
+			</p:column>
+			<p:column width="10%">
+				<f:facet name="header">
+					<h:outputText value="CRC"></h:outputText>
+				</f:facet>
+				<h:outputText value="#{lrc.crc}"></h:outputText>
+			</p:column>
+			<p:column width="20%">
+				<f:facet name="header">
+					<h:outputText value="MD5"></h:outputText>
+				</f:facet>
+				<h:outputText value="#{lrc.md5}"></h:outputText>
+			</p:column>
+			<p:column width="5%" style="text-align: center">
+				<p:commandLink id="btnEliminar" title="Eliminar" value="Eliminar"
+					rendered="#{cc.attrs.modoConsulta ne true}">
+					<p:confirm header="Confirmación"
+						message="Se quitará de la lista el registro seleccionado "
+						icon="fa glyphicon glyphicon-trash text-danger" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+	
+		<h:form id="componenteListadoHuellasForm"
+			rendered="#{cc.attrs.modoConsulta ne true}">
+			<p:dataTable id="listaDetalleReporteConsulta"
+				value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.listaRegistroHuellasDigitalesDto}"
+				var="lrc" rowIndexVar="rowIndex" widgetVar="listaReporteConsulta"
+				emptyMessage="No hay componentes cargados."
+				styleClass="table table-striped table-bordered table-hover table-sm">
+				<p:column width="10%">
+					<f:facet name="header">
+						<h:outputText value="Nombre Archivo"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lrc.nombre}"></h:outputText>
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+						<h:outputText value="Nombre Componente"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lrc.componenteMinimo}"></h:outputText>
+				</p:column>
+				<p:column width="10%">
+					<f:facet name="header">
+						<h:outputText value="Ruta Archivo"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lrc.rutaArchivo}"></h:outputText>
+				</p:column>
+				<p:column width="30%">
+					<f:facet name="header">
+						<h:outputText value="SHA"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lrc.sha2}"></h:outputText>
+				</p:column>
+				<p:column width="10%">
+					<f:facet name="header">
+						<h:outputText value="CRC"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lrc.crc}"></h:outputText>
+				</p:column>
+				<p:column width="20%">
+					<f:facet name="header">
+						<h:outputText value="MD5"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{lrc.md5}"></h:outputText>
+				</p:column>
+				<p:column width="5%" style="text-align: center">
+					<p:commandLink id="btnEliminar" process="@form" title="Eliminar"
+						value="Eliminar"
+						actionListener="#{gestionPruebasListaHuellasDigitalesController.eliminarRegistro}">
+						<p:confirm header="Confirmación"
+							message="Se quitará de la lista el registro seleccionado "
+							icon="fa glyphicon glyphicon-trash text-danger" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	
+
+</composite:implementation>
+</html>
+

@@ -1,0 +1,827 @@
+package bo.gob.sin.sre.fac.service.impl;
+
+import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.apache.commons.codec.binary.Base64;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionInterceptor;
+
+import bo.gob.sin.scn.empa.ccoc.dto.NitDatosBasicosDto;
+import bo.gob.sin.sre.fac.domain.INotificacionElectronicaDomain;
+import bo.gob.sin.sre.fac.domain.IPruebasAutomaticasDomain;
+import bo.gob.sin.sre.fac.domain.IPruebasManualesDomain;
+import bo.gob.sin.sre.fac.domain.IRegistrarHuellaSistemaDomain;
+import bo.gob.sin.sre.fac.domain.IRegistrarSolicitudCertificacionDomain;
+import bo.gob.sin.sre.fac.domain.ISistemasDomain;
+import bo.gob.sin.sre.fac.domain.ISolicitudCertificacionConsultaDomain;
+import bo.gob.sin.sre.fac.dto.NotificacionElectronicaDto;
+import bo.gob.sin.sre.fac.dto.NotificacionElectronicaListaDto;
+import bo.gob.sin.sre.fac.dto.RegistrosPruebasAutomaticasDto;
+import bo.gob.sin.sre.fac.dto.RespuestaCertificadoAprobacionDto;
+import bo.gob.sin.sre.fac.dto.RespuestaDatosSistemasSolCertificacionDto;
+import bo.gob.sin.sre.fac.dto.RespuestaListaRegistroPruebasAutomaticasDto;
+import bo.gob.sin.sre.fac.dto.RespuestaSolicitudCertificacionParaAutorizarDto;
+import bo.gob.sin.sre.fac.dto.SolicitudCertificacionDto;
+import bo.gob.sin.sre.fac.dto.SolicitudCertificadoAprobacionDto;
+import bo.gob.sin.sre.fac.dto.SolicitudSistemasEnProcesoDto;
+import bo.gob.sin.sre.fac.model.SadEntNotificacionElectronica;
+import bo.gob.sin.sre.fac.model.SreComponentesArchivos;
+import bo.gob.sin.sre.fac.model.SreDetalleSolicitudesCertificaciones;
+import bo.gob.sin.sre.fac.model.SreFacRegistrosPruebasManuDetalle;
+import bo.gob.sin.sre.fac.model.SreSolicitudCertificacion;
+import bo.gob.sin.sre.fac.service.IAprobacionRechazoCertificacionService;
+import bo.gob.sin.sre.fac.service.IEmpadronamientoService;
+import bo.gob.sin.sre.fac.service.IParametricasDomain;
+import bo.gob.sin.sre.fac.service.IRecuperarDatosSistemasService;
+import bo.gob.sin.sre.fac.service.IRegistroPruebasAutomaticasConsultaService;
+import bo.gob.sin.stm.tra.dto.ArchivoDto;
+import bo.gob.sin.stm.tra.dto.DocumentoAdjuntoArchivoDto;
+import bo.gob.sin.stm.tra.dto.DocumentoAdjuntoDto;
+import bo.gob.sin.stm.tra.dto.FirmaDocumentoDto;
+import bo.gob.sin.stm.tra.dto.ResGenerarHashDto;
+import bo.gob.sin.stm.tra.dto.ResIncrustarFirmaDto;
+import bo.gob.sin.stm.tra.dto.SolGenerarHashDto;
+import bo.gob.sin.stm.tra.dto.SolIncrustarFirmaDto;
+import bo.gob.sin.str.ccs.cale.domain.ICalendarioDomain;
+import bo.gob.sin.str.cexc.LogExcepcion;
+import bo.gob.sin.str.cexc.MethodSign;
+import bo.gob.sin.str.cmsj.mapl.domain.IMensajeAplicacionDomain;
+import bo.gob.sin.str.constantes.correspondencia.ConstCorrespondencia;
+import bo.gob.sin.str.constantes.estado.ConstEstado;
+import bo.gob.sin.str.constantes.recaudaciones.ConstFacturacion;
+import bo.gob.sin.str.cps.clas.model.StrCpsClasificador;
+import bo.gob.sin.str.enumeradores.entorno.EnumSubsistema;
+import bo.gob.sin.str.enumeradores.recaudaciones.EnumFacturacionTipoMensaje;
+import bo.gob.sin.str.enumeradores.transversales.EnumFirmaDigital;
+import bo.gob.sin.str.util.firmadordig.IFirmaPdf;
+
+@Service
+@Transactional
+public class AprobacionRechazoCertificacionServiceImpl implements IAprobacionRechazoCertificacionService {
+
+	private static final Logger LOG = LoggerFactory.getLogger(AprobacionRechazoCertificacionServiceImpl.class);
+
+	@Autowired
+	private IMensajeAplicacionDomain mensajesDomain;
+
+	@Autowired
+	private ISistemasDomain iSistemasEstados;
+
+	@Autowired
+	private IParametricasDomain iClasificadorDomain;
+
+	@Autowired
+	private ISolicitudCertificacionConsultaDomain iSolicitudCertificacionConsultaDomain;
+
+	@Autowired
+	private IPlantillaDomain domainPlantilla;
+
+	@Autowired
+	private IDocumentoEmitidoService iDocumentoEmitidoService;
+
+	@Autowired
+	private IArchivoAdjuntoDomain domainArchivoAdjunto;
+
+	@Autowired
+	private IArchivoDomain domainArchivo;
+
+	@Autowired
+	private ICalendarioDomain domainCalendario;
+
+	@Autowired
+	private IRegistrarHuellaSistemaDomain iRegistroHuellaSistemaDomain;
+
+	@Autowired
+	private IPruebasAutomaticasDomain iPruebasAutomaticasDomain;
+
+	@Autowired
+	private IPruebasManualesDomain iPruebasManualesDomain;
+
+	@Autowired
+	private IRecuperarDatosSistemasService iRecuperarDatosSistemasService;
+
+	@Autowired
+	private IRegistroPruebasAutomaticasConsultaService iRegistroPruebasAutomaticasConsultaService;
+
+	@Autowired
+	private IDocumentoAdjuntoDomain domainDocumentoAdjunto;
+
+	@Autowired
+	private IDocumentoAdjuntoService iDocumentoAdjuntoService;
+
+	@Autowired
+	private IEmpadronamientoService iEmpadronamientoInterfacesService;
+
+	@Autowired
+	private IPersonaInterfacesPdrService iPersonaInterfacesPdrService;
+
+	@Autowired
+	private ISaiServidorPublicoPersonaDomain domainServidorPublicoPersona;
+
+	@Autowired
+	private ISaiServidorPublicoOficinaDomain domainServidorPublicoOficina;
+
+	@Autowired
+	private INotificacionElectronicaDomain iNotificacionElectronicaDomain;
+	
+	@Autowired
+	private IRegistrarSolicitudCertificacionDomain iRegistrarSolicitudCertificacionDomain;
+
+	@Autowired
+	private IFirmaPdf iFirmaPdf;
+
+	static final String RESOLUCION_NUMERO = "101800000026";
+	static final String RESOLUCION_FECHA = "20 de noviembre de 2018";
+	static final long PLANTILLA_ID_CERTIFICACION = 1317L;
+	static final long PLANTILLA_ID_CERTIFICACION_RECHAZO = 4L;
+	static final long LUGAR = 61;
+	static final long RAZON_SOCIAL = 17;
+	static final long DOMICILIO_FISCAL = 19;
+	static final long FECHA_CONCLUSION = 80;
+	static final long NOMBRE_GERENCIA = 14;
+	static final long SISTEMA_ID = 81;
+	static final long VERSION_SISTEMA = 82;
+	static final long CODIGO_SISTEMA = 83;
+	static final long NUMERO_RND = 75;
+	static final long FECHA_RND = 76;
+	static final long NOMBRE_SISTEMA = 77;
+	static final long FECHA_SOLICITUD = 78;
+	static final long MODALIDADES = 79;
+	static final long FECHA_EMISION_CERTIFICADO = 84;
+	static final long NIT = 18;
+	static final String REFERENCIA = "EMISION CCSC";
+
+	static final String CAMPO_DESCRIPCION = "descripcion";
+	static final String CAMPO_FECHA = "fecha";
+	static final String CAMPO_TIPO = "tipo";
+	static final String CAMPO_ESTADO = "estado";
+	static final String CAMPO_FILA = "fila";
+
+	// CODIGO
+	static final int CODIGO_TIPO_DESTINO = 241;
+	static final int CODIGO_ESTADO = 805;
+
+	List<StrCpsClasificador> vClasificadores = new ArrayList<>();
+
+	/**
+	 * Obtener Solicitud de certificacion que estan en proceso para aprobar de
+	 * acuerdo al ID del contribuyente
+	 * 
+	 * @author: Carmen Rosa Silva
+	 * @Fecha: 22/06/20118
+	 * @param pSolicitud,objeto de tipo solicitud
+	 * @return Devuelve objeto respuesta Dto de tipo Respuesta Sistemas solicitud de
+	 *         Certificacion.
+	 */
+	@Override
+	public RespuestaSolicitudCertificacionParaAutorizarDto obtenerListaSolicitudCertificacionParaAutorizar(
+			SolicitudSistemasEnProcesoDto pSolicitud) {
+		LOG.info("Ingresando recuperarListaPruebasSistemasDeCertificacionFuncionario ");
+		List<SreDetalleSolicitudesCertificaciones> vSreListaSolCertificacionEntidad = new ArrayList<>();
+		SreSolicitudCertificacion vSreSolicitudCertificacion = new SreSolicitudCertificacion();
+		RespuestaSolicitudCertificacionParaAutorizarDto vRespuestaCertificacion = new RespuestaSolicitudCertificacionParaAutorizarDto();
+		RespuestaSolicitudCertificacionParaAutorizarDto vRespuestaSolicitudCertificacionProceso = new RespuestaSolicitudCertificacionParaAutorizarDto();
+
+		List<SolicitudCertificacionDto> vListaDto = new ArrayList<>();
+		vRespuestaSolicitudCertificacionProceso.setOk(false);
+		try {
+			vSreListaSolCertificacionEntidad = iSolicitudCertificacionConsultaDomain
+					.obtenerSolicitudesCertificacionParaAutorizarContribuyente(pSolicitud.getPersonaContribuyenteId());
+			Type listType = new TypeToken<List<SreDetalleSolicitudesCertificaciones>>() {
+			}.getType();
+			ModelMapper vListaSolicitudCertificacion = new ModelMapper();
+			vRespuestaCertificacion
+					.setLista(vListaSolicitudCertificacion.map(vSreListaSolCertificacionEntidad, listType));
+			if (vSreListaSolCertificacionEntidad == null) {
+				vRespuestaSolicitudCertificacionProceso
+						.addMensaje(mensajesDomain.getMensaje(EnumSubsistema.RECAUDACIONES,
+								EnumFacturacionTipoMensaje.RECUPERACION_DATOS_SISTEMAS_ERROR));
+			} else if (!vSreListaSolCertificacionEntidad.isEmpty()) {
+				for (SreDetalleSolicitudesCertificaciones vSreSolCertificacion : vSreListaSolCertificacionEntidad) {
+					SolicitudCertificacionDto dto = new SolicitudCertificacionDto();
+					String vRegistroSistema = iSistemasEstados
+							.obtenerVersionSistema(vSreSolCertificacion.getSistemaId());
+					dto.setVersion(vRegistroSistema);
+					dto.setSistemaId(vSreSolCertificacion.getSistemaId());
+					String vRegistroDescripcionSistema = iSistemasEstados
+							.obtenerDescripcionSistema(vSreSolCertificacion.getSistemaId());
+					dto.setNombreSistema(vRegistroDescripcionSistema);
+					StrCpsClasificador vClasificadorModalidad = iClasificadorDomain
+							.recuperarClasificadorPorId(vSreSolCertificacion.getModalidadFacturacionId());
+					dto.setDescripcionModalidad(vClasificadorModalidad.getDescripcion());
+					vSreSolicitudCertificacion = iSolicitudCertificacionConsultaDomain
+							.obtenerSolicitudCertificacion(vSreSolCertificacion.getSolicitudCertificacionId());
+					StrCpsClasificador vClasificadorEstadoSolicitud = iClasificadorDomain
+							.recuperarClasificadorPorId(vSreSolicitudCertificacion.getEstadoSolicitudCertificacionId());
+					dto.setDescripcionEstadoPrueba(vClasificadorEstadoSolicitud.getDescripcion());
+					dto.setFechaSolicitud(vSreSolicitudCertificacion.getFechaSolicitud());
+					dto.setFechaAprobacion(vSreSolicitudCertificacion.getFechaAprobacion());
+					dto.setFechaCancelacion(vSreSolicitudCertificacion.getFechaCancelacion());
+					dto.setPersonaContribuyenteId(vSreSolicitudCertificacion.getPersonaContribuyenteId());
+					dto.setEstadoId(vSreSolicitudCertificacion.getEstadoId());
+					dto.setCiteCertificado(vSreSolicitudCertificacion.getCiteCertificado());
+					vListaDto.add(dto);
+				}
+
+				vRespuestaSolicitudCertificacionProceso.setLista(vListaDto);
+				vRespuestaSolicitudCertificacionProceso.setOk(true);
+				vRespuestaSolicitudCertificacionProceso
+						.addMensaje(mensajesDomain.getMensaje(EnumSubsistema.RECAUDACIONES,
+								EnumFacturacionTipoMensaje.RECUPERACION_SOLICITUD_CERTIFICACION_EXITOSO));
+			} else {
+				vRespuestaSolicitudCertificacionProceso.setOk(false);
+				vRespuestaSolicitudCertificacionProceso
+						.addMensaje(mensajesDomain.getMensaje(EnumSubsistema.RECAUDACIONES,
+								EnumFacturacionTipoMensaje.RECUPERACION_SOLICITUD_CERTIFICACION_DATOS_NULOS));
+			}
+		} catch (Exception e) {
+			LogExcepcion.registrar(e, LOG, MethodSign.build(vRespuestaSolicitudCertificacionProceso));
+			vRespuestaSolicitudCertificacionProceso.setOk(false);
+			vRespuestaSolicitudCertificacionProceso.addMensaje(mensajesDomain.getMensaje(EnumSubsistema.RECAUDACIONES,
+					EnumFacturacionTipoMensaje.RECUPERACION_SOLICITUD_CERTIFICACION_ERROR));
+		}
+
+		return vRespuestaSolicitudCertificacionProceso;
+	}
+
+	/**
+	 * Obtener Solicitud de certificacion que estan en proceso para aprobar de
+	 * acuerdo al ID del contribuyente
+	 * 
+	 * @author: Freddy Yuca Muñoz
+	 * @Fecha: 03/12/20118
+	 * @param solicitu de certificacion
+	 * @return Devuelve objeto respuesta Dto de tipo Respuesta Sistemas
+	 *         Certificados.
+	 */
+	@Override
+	public RespuestaCertificadoAprobacionDto obtenerCertificadoDeAprobacion(
+			SolicitudCertificadoAprobacionDto pSolicitud) {
+		RespuestaCertificadoAprobacionDto vRespuesta = new RespuestaCertificadoAprobacionDto();
+		SolDocumentoEmitidoDto vSolicitudDe = new SolDocumentoEmitidoDto();
+		try {
+			DocumentoEmitidoDto vDocumentoEmitido = null;
+			vSolicitudDe.setTramiteId(pSolicitud.getTramiteId());
+			ResDocumentoEmitidoDto vRespuestaDe = iDocumentoEmitidoService.obtenerPorTramiteId(vSolicitudDe);
+			if (vRespuestaDe.getListaDocumentoEmitido() != null && !vRespuestaDe.getListaDocumentoEmitido().isEmpty()) {
+				Optional<DocumentoEmitidoDto> match = vRespuestaDe.getListaDocumentoEmitido().stream()
+						.filter(item -> item.getReferencia().equalsIgnoreCase(REFERENCIA)).findFirst();
+				if (match.orElse(null) != null) {
+					vDocumentoEmitido = match.get();
+				}
+			}
+			if (vDocumentoEmitido != null) {
+				StmArchivoAdjunto vArchivoAdjunto = domainArchivoAdjunto.obtenerDocumentoEmitidoId(
+						pSolicitud.getTramiteId(), vDocumentoEmitido.getDocumentoEmitidoId());
+
+				vRespuesta.setEstadoDocumentoAdjunto(domainDocumentoAdjunto
+						.obtenerPorId(vArchivoAdjunto.getDocumentoAdjuntoId()).getEstadoDocumentoAdjuntoId());
+
+				StmArchivo vArchivo = domainArchivo.obtenerArchivo(vArchivoAdjunto.getArchivoId());
+				vRespuesta.setCadenaCite(vDocumentoEmitido.getCite().getCadenaCite());
+				vRespuesta.setDocumentoEmitidoId(vDocumentoEmitido.getDocumentoEmitidoId());
+				vRespuesta.setArchivoCertificadoAprobacion(Base64.encodeBase64String(vArchivo.getArchivo()));
+				vRespuesta.setNombreArchivoCertificadoAprobacion(vArchivoAdjunto.getNombreArchivo());
+				StmFirmaDocumento vFirma = domainDocumentoAdjunto
+						.obtenerFirmaPorDocumentoAdjuntoId(vArchivoAdjunto.getDocumentoAdjuntoId());
+
+				vRespuesta.setEstadoFirmaId(vFirma != null ? vFirma.getEstadoFirmaId() : 0);
+				vRespuesta.setDocumentoAdjuntodId(vArchivoAdjunto.getDocumentoAdjuntoId());
+				vRespuesta.setOk(true);
+			}
+		} catch (Exception e) {
+			LogExcepcion.registrar(e, LOG, MethodSign.build(pSolicitud.getTramiteId()));
+			vRespuesta.setOk(false);
+			vRespuesta.addMensaje(mensajesDomain.getMensaje(EnumSubsistema.RECAUDACIONES,
+					EnumFacturacionTipoMensaje.ERROR_OBTENER_CERTIFICADO_APROBACION));
+		}
+
+		return vRespuesta;
+	}
+
+	public RespuestaCertificadoAprobacionDto generarCertificadoDeAprobacion(
+			SolicitudCertificadoAprobacionDto pSolicitud) {
+		RespuestaCertificadoAprobacionDto vRespuesta = new RespuestaCertificadoAprobacionDto();
+		SolDocumentoEmitidoDto vSolicitudDe = new SolDocumentoEmitidoDto();
+		try {
+			DocumentoEmitidoDto vDocumentoEmitido = null;
+			vSolicitudDe.setTramiteId(pSolicitud.getTramiteId());
+			ResDocumentoEmitidoDto vRespuestaDe = iDocumentoEmitidoService.obtenerPorTramiteId(vSolicitudDe);
+			if (vRespuestaDe.getListaDocumentoEmitido() != null && !vRespuestaDe.getListaDocumentoEmitido().isEmpty()) {
+				Optional<DocumentoEmitidoDto> match = vRespuestaDe.getListaDocumentoEmitido().stream()
+						.filter(item -> item.getReferencia().equalsIgnoreCase(REFERENCIA)).findFirst();
+				if (match.orElse(null) != null) {
+					vDocumentoEmitido = match.get();
+				}
+			}
+			if (vDocumentoEmitido != null) {
+				StmArchivoAdjunto vArchivoAdjunto = domainArchivoAdjunto.obtenerDocumentoEmitidoId(
+						pSolicitud.getTramiteId(), vDocumentoEmitido.getDocumentoEmitidoId());
+				StmArchivo vArchivo = domainArchivo.obtenerArchivo(vArchivoAdjunto.getArchivoId());
+				vRespuesta.setCadenaCite(vDocumentoEmitido.getCite().getCadenaCite());
+				vRespuesta.setDocumentoEmitidoId(vRespuestaDe.getDocumentoEmitidoId());
+				vRespuesta.setArchivoCertificadoAprobacion(Base64.encodeBase64String(vArchivo.getArchivo()));
+				vRespuesta.setNombreArchivoCertificadoAprobacion(vArchivoAdjunto.getNombreArchivo());
+				vRespuesta.setOk(true);
+			} else {
+				/* Adicionar que plantilla se utilizara para la generacion */
+				StrCcsPlantilla vPlantilla = domainPlantilla.getPlantillaById(PLANTILLA_ID_CERTIFICACION);
+				SolDocumentoEmitidoDto vSolDocumentoEmitido = new SolDocumentoEmitidoDto();
+				vSolDocumentoEmitido.setDocumentoEmitido(this.generarDocumentoEmitido(pSolicitud, vPlantilla));
+
+				List<DocumentoEmitidoRedactorDto> vRedactores = new ArrayList<>();
+				DocumentoEmitidoRedactorDto vRedactor = new DocumentoEmitidoRedactorDto();
+				vRedactor.setUsuarioRegistroId(pSolicitud.getUsuarioId());
+				vRedactor.setUsuarioUltimaModificacionId(pSolicitud.getUsuarioId());
+				vRedactor.setFechaRegistro(domainCalendario.getTimeStamp());
+				vRedactor.setFechaUltimaModificacion(domainCalendario.getTimeStamp());
+				vRedactor.setEstadoId(ConstFacturacion.ESTADO_ACTIVO);
+				vRedactor.setTipoRedactorDestinoId(ConstCorrespondencia.TIPO_REDACTOR_FIRMA);
+
+				vRedactor.setRedactorId(pSolicitud.getUsuarioId());
+				vRedactor.setDependenciaRedactorId(pSolicitud.getDependenciaId());
+				vRedactor.setOficinaRedactorId(pSolicitud.getOficinaId());
+				vRedactores.add(vRedactor);
+				vSolDocumentoEmitido.getDocumentoEmitido().setDocumentoEmitidoRedactores(vRedactores);
+
+				vSolDocumentoEmitido.setGenerarDocumentoAdjunto(true);
+
+				ResDocumentoEmitidoDto vResDocumentoEmitido = iDocumentoEmitidoService
+						.guardarDocumentoEmitido(vSolDocumentoEmitido);
+				if (vResDocumentoEmitido.isOk()) {
+					vRespuesta.setCadenaCite(vResDocumentoEmitido.getCadenaCite());
+					vRespuesta.setDocumentoEmitidoId(vResDocumentoEmitido.getDocumentoEmitidoId());
+					vRespuesta.setArchivoCertificadoAprobacion(vResDocumentoEmitido.getArchivoDocumentoAdjunto());
+					vRespuesta.setNombreArchivoCertificadoAprobacion(vResDocumentoEmitido.getNombreDocumentoAdjunto());
+					vRespuesta.setOk(true);
+				} else {
+					vRespuesta.setMensajes(vResDocumentoEmitido.getMensajes());
+				}
+			}
+		} catch (Exception e) {
+			LogExcepcion.registrar(e, LOG, MethodSign.build(pSolicitud.getTramiteId()));
+			vRespuesta.setOk(false);
+			vRespuesta.addMensaje(mensajesDomain.getMensaje(EnumSubsistema.RECAUDACIONES,
+					EnumFacturacionTipoMensaje.ERROR_OBTENER_CERTIFICADO_APROBACION));
+			TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
+		}
+
+		return vRespuesta;
+	}
+
+	private DocumentoEmitidoDto generarDocumentoEmitido(SolicitudCertificadoAprobacionDto pSolicitud,
+			StrCcsPlantilla pPlantilla) {
+		DocumentoEmitidoDto vDocumento = new DocumentoEmitidoDto();
+		CiteDto vCite = new CiteDto();
+		CodigoDto vCodigo = new CodigoDto();
+		Date vFechaEmision = domainCalendario.getFechaActual();
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(vFechaEmision);
+		int vGestion = cal.get(Calendar.YEAR);
+		DateFormat vFormateadorFecha = new SimpleDateFormat("dd' de 'MMMMM' de 'yyyy");
+		DateFormat vFormateadorFechaNormal = new SimpleDateFormat("dd/MM/yyyy");	
+		
+		iRegistrarSolicitudCertificacionDomain.registrarFechaCertificadoSolicitudCertificacion(pSolicitud.getUsuarioId(), pSolicitud.getSolicitudId(), domainCalendario.getTimeStamp());
+		
+		RespuestaDatosSistemasSolCertificacionDto vDatosSistema = iRecuperarDatosSistemasService
+				.obtenerDatosSistemaCertificacion(pSolicitud.getSistemaId(), pSolicitud.getSolicitudId());
+		// 0. cargar datos basicos del contribuyente
+		NitDatosBasicosDto nitDatosBasicos = iEmpadronamientoInterfacesService
+				.obtenerDatosBasicosXNIT(vDatosSistema.getNit());
+		String domicilioFiscal = iPersonaInterfacesPdrService.ObtenerDireccionCtbtePdr(nitDatosBasicos.getIfc(), "F");
+
+		// 1. cargar datos del cite
+		vCite.setUsuarioRegistroId(pSolicitud.getUsuarioId());
+		vCite.setUsuarioUltimaModificacionId(pSolicitud.getUsuarioId());
+		vCite.setFechaRegistro(vFechaEmision);
+		vCite.setFechaUltimaModificacion(vFechaEmision);
+		vCite.setOficinaId(pSolicitud.getOficinaId());
+		vCite.setDependenciaId(pSolicitud.getDependenciaId());
+		vCite.setTipoDocumentoId(pPlantilla.getTipoDocumento());
+		vCite.setEstadoCiteId(ConstCorrespondencia.ESTADO_CITE_NUEVO);
+		vCite.setGestion(vGestion);
+		vCite.setFechaEmision(vFechaEmision);
+		vCite.setEstadoId(ConstEstado.ESTADO_ACTIVO);
+
+		// 1.1 cargar datos del codigo
+		vCodigo.setUsuarioRegistroId(pSolicitud.getUsuarioId());
+		vCodigo.setUsuarioUltimaModificacionId(pSolicitud.getUsuarioId());
+		vCodigo.setFechaRegistro(vFechaEmision);
+		vCodigo.setFechaUltimaModificacion(vFechaEmision);
+		vCodigo.setEstadoId(ConstEstado.ESTADO_ACTIVO);
+		vCodigo.setGestion(vGestion);
+		vCodigo.setFechaEmision(vFechaEmision);
+		vCodigo.setEstadoCodigoId(CODIGO_ESTADO);
+		vCodigo.setTipoDestinoDocumentoId(CODIGO_TIPO_DESTINO);
+		vCodigo.setCodigoPlantilla(pPlantilla.getCodigoPlantilla());
+		vCodigo.setOficinaId(pSolicitud.getOficinaId());
+		vCodigo.setDependenciaId(pSolicitud.getDependenciaId());
+		vCodigo.setFirmaDependenciaId(pSolicitud.getDependenciaId());
+
+		// 2. cargar datos del documento emitido
+		vDocumento.setCite(vCite);
+		vDocumento.setCodigo(vCodigo);
+		vDocumento.setOficinaId(pSolicitud.getOficinaId());
+		vDocumento.setDependenciaId(pSolicitud.getDependenciaId());
+		vDocumento.setPlantillaId(pPlantilla.getPlantillaId());
+		vDocumento.setEstadoDocumentoEmitidoId(ConstCorrespondencia.ESTADO_COR_PREPARADO);
+		vDocumento.setReferencia(REFERENCIA);
+		vDocumento.setFechaDocumento(vFechaEmision);
+		vDocumento.setUsuarioRegistroId(pSolicitud.getUsuarioId());
+		vDocumento.setUsuarioUltimaModificacionId(pSolicitud.getUsuarioId());
+		vDocumento.setFechaRegistro(vFechaEmision);
+		vDocumento.setFechaUltimaModificacion(vFechaEmision);
+		vDocumento.setEstadoId(ConstEstado.ESTADO_ACTIVO);
+		vDocumento.setTipoFirmaId(StmParametros.TIPO_FIRMA_DIGITAL);
+		vDocumento.setSecuencialNumeroTicket(0L);
+		vDocumento.setTieneCodigo(true);
+		// 3. cargar datos del detalle
+		List<DocumentoEmitidoDetalleDto> documentoEmitidoDetalle = new ArrayList<>();
+		// 3.1 LUGAR
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, LUGAR, (short) 1,
+				nitDatosBasicos.getDescripcionDepartamento(), pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.2 RAZONSOCIAL
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, RAZON_SOCIAL, (short) 2,
+				vDatosSistema.getRazonSocial(), pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.3 DOMICILIOFISCAL
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, DOMICILIO_FISCAL, (short) 3, domicilioFiscal,
+				pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.4 FECHACONCLUSION
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, FECHA_CONCLUSION, (short) 4,
+				(vDatosSistema.getFechaAprobacion() == null ? "SIN FECHA DE CONCLUSION"
+						: vFormateadorFechaNormal.format(vDatosSistema.getFechaAprobacion())),
+				pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.5 NOMBREGERENCIA
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, NOMBRE_GERENCIA, (short) 5,
+				nitDatosBasicos.getDescripcionAdministracion(), pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.6 SISTEMAID
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, SISTEMA_ID, (short) 6,
+				String.valueOf(vDatosSistema.getSistemaId()), pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.7 VERSIONSISTEMA
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, VERSION_SISTEMA, (short) 7,
+				vDatosSistema.getVersion(), pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.8 CODIGOSISTEMA
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, CODIGO_SISTEMA, (short) 8,
+				vDatosSistema.getCodigoSistema(), pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.9 NUMERORND
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, NUMERO_RND, (short) 9, RESOLUCION_NUMERO,
+				pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.10 FECHARND
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, FECHA_RND, (short) 10, RESOLUCION_FECHA,
+				pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.11 NOMBRESISTEMA
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, NOMBRE_SISTEMA, (short) 11,
+				vDatosSistema.getNombreSistema(), pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.12 FECHASOLICITUD
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, FECHA_SOLICITUD, (short) 12,
+				vFormateadorFechaNormal.format(vDatosSistema.getFechaSolicitud()), pSolicitud.getUsuarioId(),
+				pSolicitud.getUsuarioId()));
+		// 3.13 MODALIDADES
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, MODALIDADES, (short) 13,
+				vDatosSistema.getModalidad(), pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.14 FECHAEMISIONCERTIFICADO
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, FECHA_EMISION_CERTIFICADO, (short) 14,
+				vFormateadorFecha.format(vFechaEmision), pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		// 3.15 NIT
+		documentoEmitidoDetalle.add(new DocumentoEmitidoDetalleDto(0L, 0L, NIT, (short) 15,
+				String.valueOf(vDatosSistema.getNit()), pSolicitud.getUsuarioId(), pSolicitud.getUsuarioId()));
+		vDocumento.setDocumentoEmitidoDetalle(documentoEmitidoDetalle);
+		// 4. cargar tramite
+		List<DocumentoEmitidoTramiteDto> documentoEmitidoTramites = new ArrayList<>();
+		DocumentoEmitidoTramiteDto vTramite = new DocumentoEmitidoTramiteDto();
+		vTramite.setTramiteId(pSolicitud.getTramiteId());
+		vTramite.setGenerado(true);
+		vTramite.setUsuarioRegistroId(pSolicitud.getUsuarioId());
+		vTramite.setUsuarioUltimaModificacionId(pSolicitud.getUsuarioId());
+		vTramite.setEstadoId(ConstEstado.ESTADO_ACTIVO);
+		documentoEmitidoTramites.add(vTramite);
+		vDocumento.setDocumentoEmitidoTramites(documentoEmitidoTramites);
+		// 5. cargar datos de las listas
+		List<DocumentoEmitidoListaDto> listas = new ArrayList<>();
+		DocumentoEmitidoListaDto lComponente = new DocumentoEmitidoListaDto();
+		lComponente.setNombre("c");
+		List<Map<String, String>> regComponentes = new ArrayList<>();
+		List<SreComponentesArchivos> listaComponentesArchivos = iRegistroHuellaSistemaDomain
+				.obtieneComponentesArchivos(pSolicitud.getSistemaId());
+		if (listaComponentesArchivos != null) {
+			for (SreComponentesArchivos vComponente : listaComponentesArchivos) {
+				Map<String, String> comp1 = new HashMap<>();
+				comp1.put("nombreArchivo", vComponente.getNombre());
+				comp1.put("ruta", vComponente.getRuta());
+				comp1.put("sha", vComponente.getSha2());
+				comp1.put("crc", vComponente.getCrc());
+				comp1.put("md5", vComponente.getMd5());
+				regComponentes.add(comp1);
+			}
+		}
+
+		DocumentoEmitidoListaDto lPrueba = new DocumentoEmitidoListaDto();
+		lPrueba.setNombre("p");
+		List<Map<String, String>> regPruebas = new ArrayList<>();
+
+		RespuestaListaRegistroPruebasAutomaticasDto vPruebasAutomaticas = iRegistroPruebasAutomaticasConsultaService
+				.obtieneListadoPruebasAutomaticas(pSolicitud.getSolicitudId(), pSolicitud.getTramiteId(),
+						pSolicitud.getSistemaId());
+		int vFila = 1;
+		if (vPruebasAutomaticas.getPruebasAutomaticas() != null) {
+			for (RegistrosPruebasAutomaticasDto vPrueba : vPruebasAutomaticas.getPruebasAutomaticas()) {
+				Map<String, String> prueba1 = new HashMap<>();
+				prueba1.put(CAMPO_FILA, String.valueOf(vFila));
+				prueba1.put(CAMPO_DESCRIPCION, vPrueba.getDescripcionPruebaAuto());
+				prueba1.put(CAMPO_TIPO, "Automatica");
+				prueba1.put(CAMPO_ESTADO, obtenerClasificador(vPrueba.getEstadoPruebaId()).getDescripcion());
+				prueba1.put(CAMPO_FECHA, "");
+				regPruebas.add(prueba1);
+				vFila++;
+			}
+		}
+
+		List<SreFacRegistrosPruebasManuDetalle> vPruebasManuales = iPruebasManualesDomain.obtieneListaPruebasManuales(
+				pSolicitud.getSolicitudId(), pSolicitud.getTramiteId(), pSolicitud.getSistemaId());
+
+		if (vPruebasManuales != null) {
+			for (SreFacRegistrosPruebasManuDetalle vPrueba : vPruebasManuales) {
+				Map<String, String> prueba1 = new HashMap<>();
+				prueba1.put(CAMPO_FILA, String.valueOf(vFila));
+				prueba1.put(CAMPO_DESCRIPCION, vPrueba.getNombre());
+				prueba1.put(CAMPO_TIPO, "Manual");
+				prueba1.put(CAMPO_ESTADO, obtenerClasificador(vPrueba.getpEstadoPruebaId()).getDescripcion());
+				prueba1.put(CAMPO_FECHA, "");
+				regPruebas.add(prueba1);
+				vFila++;
+			}
+		}
+		// verificar si las listas estan vacias
+		if (regComponentes.isEmpty()) {
+			Map<String, String> comp1 = new HashMap<>();
+			comp1.put("nombreArchivo", "");
+			comp1.put("ruta", "");
+			comp1.put("sha", "");
+			comp1.put("crc", "");
+			comp1.put("md5", "");
+			regComponentes.add(comp1);
+		}
+		if (regPruebas.isEmpty()) {
+			Map<String, String> prueba1 = new HashMap<>();
+			prueba1.put(CAMPO_FILA, "");
+			prueba1.put(CAMPO_DESCRIPCION, "");
+			prueba1.put(CAMPO_TIPO, "");
+			prueba1.put(CAMPO_ESTADO, "");
+			prueba1.put(CAMPO_FECHA, "");
+			regPruebas.add(prueba1);
+		}
+
+		lComponente.setRegistros(regComponentes);
+		lPrueba.setRegistros(regPruebas);
+		listas.add(lComponente);
+		listas.add(lPrueba);
+		vDocumento.setDocumentoEmitidoListas(listas);
+
+		return vDocumento;
+	}
+
+	public StrCpsClasificador obtenerClasificador(int clasificadorId) {
+		Optional<StrCpsClasificador> match = this.vClasificadores.stream()
+				.filter(item -> item.getClasificadorId() == clasificadorId).findFirst();
+		if (match.orElse(null) != null) {
+			return match.get();
+		} else {
+			StrCpsClasificador vClasificador = iClasificadorDomain.recuperarClasificadorPorId(clasificadorId);
+			this.vClasificadores.add(vClasificador);
+			return vClasificador;
+		}
+	}
+
+	/**
+	 * Obtener Solicitud de certificacion que estan en proceso para aprobar de
+	 * acuerdo al ID del contribuyente
+	 * 
+	 * @author: Freddy Yuca Muñoz
+	 * @Fecha: 03/12/20118
+	 * @param solicitu de certificacion
+	 * @return Devuelve objeto respuesta Dto de tipo Respuesta Sistemas
+	 *         Certificados.
+	 */
+	@Override
+	public RespuestaCertificadoAprobacionDto generarHash(SolicitudCertificadoAprobacionDto pSolicitud) {
+		RespuestaCertificadoAprobacionDto vRespuesta = new RespuestaCertificadoAprobacionDto();
+		SolDocumentoEmitidoDto vSolicitudDe = new SolDocumentoEmitidoDto();
+		try {
+			long vDocumentoEmitidoId = 0;
+			vSolicitudDe.setTramiteId(pSolicitud.getTramiteId());
+			ResDocumentoEmitidoDto vRespuestaDe = iDocumentoEmitidoService.obtenerPorTramiteId(vSolicitudDe);
+			if (vRespuestaDe.getListaDocumentoEmitido() != null && !vRespuestaDe.getListaDocumentoEmitido().isEmpty()) {
+				Optional<DocumentoEmitidoDto> match = vRespuestaDe.getListaDocumentoEmitido().stream()
+						.filter(item -> item.getReferencia().equalsIgnoreCase(REFERENCIA)).findFirst();
+				if (match.orElse(null) != null) {
+					vDocumentoEmitidoId = match.get().getDocumentoEmitidoId();
+				}
+			}
+			if (vDocumentoEmitidoId != 0) {
+				StmArchivoAdjunto vArchivoAdjunto = domainArchivoAdjunto
+						.obtenerDocumentoEmitidoId(pSolicitud.getTramiteId(), vDocumentoEmitidoId);
+				StmDocumentoAdjunto vDocumentoAdjunto = domainDocumentoAdjunto
+						.obtenerPorId(vArchivoAdjunto.getDocumentoAdjuntoId());
+				SolGenerarHashDto vSolcitudHash = new SolGenerarHashDto();
+				List<DocumentoAdjuntoDto> lista = new ArrayList<>();
+				ModelMapper vMapper = new ModelMapper();
+				DocumentoAdjuntoDto dtoDocAdjunto = vMapper.map(vDocumentoAdjunto, DocumentoAdjuntoDto.class);
+				lista.add(dtoDocAdjunto);
+				vSolcitudHash.setListaDocumentoAdjunto(lista);
+				vSolcitudHash.setUsuarioId(pSolicitud.getUsuarioId());
+				ResGenerarHashDto vRespuestaHash = iDocumentoAdjuntoService.generarHash(vSolcitudHash);
+				if (vRespuestaHash.isOk()) {
+					vRespuesta.setArchivoCertificadoAprobacionHash(vRespuestaHash.getArchivoZip());
+					vRespuesta.setNombreArchivoCertificadoAprobacionHash(vRespuestaHash.getNombreArchivo());
+					vRespuesta.setOk(true);
+				} else {
+					vRespuesta.setMensajes(vRespuestaHash.getMensajes());
+				}
+			}
+		} catch (Exception e) {
+			LogExcepcion.registrar(e, LOG, MethodSign.build(pSolicitud.getTramiteId()));
+			vRespuesta.setOk(false);
+			vRespuesta.addMensaje(mensajesDomain.getMensaje(EnumSubsistema.RECAUDACIONES,
+					EnumFacturacionTipoMensaje.ERROR_GENERAR_HASH));
+			TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
+		}
+
+		return vRespuesta;
+	}
+
+	@Override
+	public RespuestaCertificadoAprobacionDto incrustarFirma(SolicitudCertificadoAprobacionDto pSolicitud) {
+		RespuestaCertificadoAprobacionDto vRespuesta = new RespuestaCertificadoAprobacionDto();
+		try {
+			SolIncrustarFirmaDto vSolcitud = new SolIncrustarFirmaDto();
+			vSolcitud.setZipFirmasArchivo(pSolicitud.getArchivoFirma());
+			vSolcitud.setZipFirmasNombre(pSolicitud.getNombreArchivoFirma());
+			vSolcitud.setUsuarioId(pSolicitud.getUsuarioId());
+			ResIncrustarFirmaDto vRespuestaHash = iDocumentoAdjuntoService.incrustarFirma(vSolcitud);
+			if (vRespuestaHash.isOk()) {
+				SolDocumentoEmitidoDto vSolicitudDe = new SolDocumentoEmitidoDto();
+				DocumentoEmitidoDto vDocumentoEmitido = null;
+				vSolicitudDe.setTramiteId(pSolicitud.getTramiteId());
+				ResDocumentoEmitidoDto vRespuestaDe = iDocumentoEmitidoService.obtenerPorTramiteId(vSolicitudDe);
+
+				if (vRespuestaDe.getListaDocumentoEmitido() != null
+						&& !vRespuestaDe.getListaDocumentoEmitido().isEmpty()) {
+
+					Optional<DocumentoEmitidoDto> match = vRespuestaDe.getListaDocumentoEmitido().stream()
+							.filter(item -> item.getReferencia().equalsIgnoreCase(REFERENCIA)).findFirst();
+					if (match.orElse(null) != null) {
+						vDocumentoEmitido = match.get();
+					}
+					if (vDocumentoEmitido != null) {
+						StmArchivoAdjunto vArchivoAdjunto = domainArchivoAdjunto.obtenerDocumentoEmitidoId(
+								pSolicitud.getTramiteId(), vDocumentoEmitido.getDocumentoEmitidoId());
+
+						domainDocumentoAdjunto.actualizarEstadoDocumentoAdjunto(vArchivoAdjunto.getDocumentoAdjuntoId(),
+								StmParametros.DOCUMENTO_ADJUNTO_CONCLUIDO, pSolicitud.getUsuarioId());
+						vRespuesta.setOk(true);
+					} else {
+						vRespuesta.addMensaje(mensajesDomain.getMensaje(EnumSubsistema.RECAUDACIONES,
+								EnumFacturacionTipoMensaje.ERROR_REGISTRAR_FIRMA_DIGITAL));
+						TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
+					}
+				}
+			} else {
+				vRespuesta.setMensajes(vRespuestaHash.getMensajes());
+			}
+		} catch (Exception e) {
+			LogExcepcion.registrar(e, LOG, MethodSign.build(pSolicitud.getTramiteId()));
+			vRespuesta.setOk(false);
+			vRespuesta.addMensaje(mensajesDomain.getMensaje(EnumSubsistema.RECAUDACIONES,
+					EnumFacturacionTipoMensaje.ERROR_REGISTRAR_FIRMA_DIGITAL));
+			TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
+		}
+
+		return vRespuesta;
+	}
+
+	@Override
+	public RespuestaCertificadoAprobacionDto guardarDocumentoAdjunto(SolicitudCertificadoAprobacionDto pSolicitud) {
+		RespuestaCertificadoAprobacionDto vRespuesta = new RespuestaCertificadoAprobacionDto();
+		try {
+			SaiServidorPublicoDescripcion vUsuario = this.domainServidorPublicoOficina
+					.obtenerFuncionarioPorUsuarioId(pSolicitud.getUsuarioId());
+
+			StmArchivoAdjunto vArchivoAdjunto = this.domainArchivoAdjunto
+					.obtenerDocumentoEmitidoId(pSolicitud.getTramiteId(), pSolicitud.getDocumentoAdjuntoId());
+
+			StmFirmaDocumento vFirmaDocumento = this.domainDocumentoAdjunto
+					.obtenerFirmaPorDocumentoAdjuntoId(pSolicitud.getDocumentoAdjuntoId());
+			String vHashCadena;
+
+			StmArchivo vArchivo = this.domainArchivo.obtenerArchivo(vArchivoAdjunto.getArchivoId());
+			ArchivoDto vArchivo2 = new ArchivoDto();
+			vArchivo2.setArchivo(Base64.decodeBase64(pSolicitud.getArchivoFirma()));
+			vArchivo2.setEstadoId(ConstFacturacion.ESTADO_ACTIVO);
+			vArchivo2.setExtension(vArchivo.getExtension());
+			vArchivo2.setMime(vArchivo.getMime());
+			DocumentoAdjuntoArchivoDto archivoAdjunto2 = new DocumentoAdjuntoArchivoDto();
+			archivoAdjunto2.setArchivo(vArchivo2);
+			archivoAdjunto2.setDocumentoAdjuntoId(vArchivoAdjunto.getDocumentoAdjuntoId());
+			archivoAdjunto2.setEstadoId(ConstFacturacion.ESTADO_ACTIVO);
+			archivoAdjunto2.setNombreArchivo(vArchivoAdjunto.getNombreArchivo());
+			archivoAdjunto2.setTipoArchivoAdjuntoId(StmParametros.TIPO_ARCHIVO_ADJUNTO_FIRMADO);
+			archivoAdjunto2.setTramiteId(vArchivoAdjunto.getTramiteId());
+			archivoAdjunto2.setUsuarioRegistroId(pSolicitud.getUsuarioId());
+			archivoAdjunto2.setUsuarioUltimaModificacionId(pSolicitud.getUsuarioId());
+
+			this.domainDocumentoAdjunto.guardarArchivo(archivoAdjunto2);
+			this.domainDocumentoAdjunto.actualizarEstadoDocumentoAdjunto(vArchivoAdjunto.getDocumentoAdjuntoId(),
+					StmParametros.DOCUMENTO_ADJUNTO_CONCLUIDO, pSolicitud.getUsuarioId());
+
+			if (vFirmaDocumento == null) {
+				SaiServidorPublicoPersona vPersona = this.domainServidorPublicoPersona
+						.obtenerPorPersonaId(vUsuario.getPersonaId());
+				HashMap<EnumFirmaDigital, byte[]> generado = this.iFirmaPdf.generaHash(vArchivo.getArchivo(),
+						vPersona.getNumeroDocumento());
+				byte[] vHash = (byte[]) generado.get(EnumFirmaDigital.HASH_PARA_FIRMA);
+				byte[] vPdf = (byte[]) generado.get(EnumFirmaDigital.PDF_CON_ESPACIO_FIRMA);
+				vHashCadena = Base64.encodeBase64String(vHash);
+				FirmaDocumentoDto vFirma = new FirmaDocumentoDto();
+				vFirma.setTramiteId(pSolicitud.getTramiteId());
+				vFirma.setDocumentoAdjuntoId(archivoAdjunto2.getDocumentoAdjuntoId());
+				vFirma.setOficinaId(pSolicitud.getOficinaId());
+				vFirma.setFechaFirma(domainCalendario.getTimeStamp());
+				vFirma.setDependenciaId(pSolicitud.getDependenciaId());
+				vFirma.setTipoRubricaId(StmParametros.TIPO_RUBRICA_FIRMA);
+				vFirma.setUsuarioFirmaId(pSolicitud.getUsuarioId());
+				vFirma.setEstadoFirmaId(StmParametros.ESTADO_FIRMA_FIRMADO);
+				vFirma.setAliasFirma(vPersona.getNumeroDocumento());
+				vFirma.setHashGenerado(vHashCadena);
+				vFirma.setUsuarioRegistroId(pSolicitud.getUsuarioId());
+				vFirma.setUsuarioUltimaModificacionId(pSolicitud.getUsuarioId());
+				vFirma.setEstadoId(ConstFacturacion.ESTADO_ACTIVO);
+				this.domainDocumentoAdjunto.guardarFirma(vFirma);
+				domainDocumentoAdjunto.actualizarEstadoDocumentoAdjunto(pSolicitud.getDocumentoAdjuntoId(),
+						StmParametros.DOCUMENTO_ADJUNTO_CONCLUIDO, pSolicitud.getUsuarioId());
+			}
+
+			vRespuesta.setOk(true);
+		} catch (Exception e) {
+			LogExcepcion.registrar(e, LOG, MethodSign.build(pSolicitud.getSolicitudId()));
+			vRespuesta.setOk(false);
+			TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
+		}
+		return vRespuesta;
+	}
+
+	@Override
+	public NotificacionElectronicaListaDto obtenerNotificacionElectronicaPorContribuyenteYActuado(
+			SolicitudCertificadoAprobacionDto pSolicitud) {
+		NotificacionElectronicaListaDto vRespuesta = new NotificacionElectronicaListaDto();
+		vRespuesta.setOk(false);
+		try {
+			List<SadEntNotificacionElectronica> vNotificacionEntidad = iNotificacionElectronicaDomain
+					.obtenerNotificacionElectronicaPorContribuyenteYActuado(pSolicitud.getPersonaContribuyenteId(),
+							pSolicitud.getDocumentoAdjuntoId());
+
+			Type listType = new TypeToken<List<NotificacionElectronicaDto>>() {
+			}.getType();
+			ModelMapper vListaSolicitudCertificacion = new ModelMapper();
+
+			List<StrCpsClasificador> vClasificadorEstadosNotificacion = iClasificadorDomain
+					.listarClasificadorPorTipo("estado_notificacion_electronica_id");
+
+			List<NotificacionElectronicaDto> vNotificacionElectronicaDto = vListaSolicitudCertificacion
+					.map(vNotificacionEntidad, listType);
+			vNotificacionElectronicaDto.forEach(vfila -> {
+				vfila.setUsuarioNotificador(domainServidorPublicoOficina
+						.obtenerFuncionarioPorUsuarioId(vfila.getUsuarioNotificadorId()).getNombreCompleto());
+				vfila.setNit(iEmpadronamientoInterfacesService
+						.obtenerDatosBasicosXIFC(vfila.getPersonaContribuyenteId()).getNit());
+
+				String vDescripcion = vClasificadorEstadosNotificacion.stream()
+						.filter(x -> x.getClasificadorId() == vfila.getEstadoNotificacionElectronicaId()).findFirst()
+						.get().getDescripcion();
+				vfila.setEstadoNotificacionElectronicaDescripcion(vDescripcion);
+			});
+
+			vRespuesta.setNotificacionesElectronicasDto(vNotificacionElectronicaDto);
+			vRespuesta.setOk(true);
+		} catch (Exception e) {
+			LogExcepcion.registrar(e, LOG, MethodSign.build(pSolicitud.getSolicitudId()));
+			vRespuesta.setOk(false);
+		}
+		return vRespuesta;
+	}
+}

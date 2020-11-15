@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RequisitosSistemaFacturacion" pageWidth="612" pageHeight="792" columnWidth="556" leftMargin="28" rightMargin="28" topMargin="28" bottomMargin="28" uuid="eb1088f6-fc24-48bf-97c7-ea0b85c7b351">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="nit" class="java.lang.Long"/>
+	<parameter name="razonSocial" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="FechaSolicitud" class="java.lang.String"/>
+	<parameter name="NumeroAutorizacion" class="java.lang.String"/>
+	<parameter name="NumeroResolucionMae" class="java.lang.String"/>
+	<parameter name="FechaInicioAutorizacion" class="java.lang.String"/>
+	<parameter name="FechaFinAutorizacion" class="java.lang.String"/>
+	<parameter name="Image" class="java.awt.Image"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="59" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="133" y="0" width="295" height="52" forecolor="#05247A" backcolor="#FFFFFF" uuid="e4e8c7e4-f74a-4393-9344-03ffd3dd7f5b"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="11" isBold="true"/>
+					<paragraph rightIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["SOLICITUD DE AUTORIZACIÓN COMERCIALIZACIÓN DE ALIMENTOS - SEGURIDAD ALIMENTARIA Y ABASTECIMIENTO"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="428" y="0" width="128" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="738184e0-e3ac-4e4f-8963-61ea698e48b3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Código:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="428" y="13" width="128" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="4511b4a2-2fad-4a9c-8fd5-599a7c72bafc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["R-1153-01"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="428" y="26" width="128" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="e708a386-474b-4ba7-9f32-1bc880d3212c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Versión:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="428" y="39" width="128" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="6b310627-ca89-4bf1-a0ba-139a102e3880">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["0"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="133" height="52" forecolor="#000000" backcolor="#FFFFFF" uuid="ad254404-d339-42c1-ae1c-0dda69b9de70"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="12" isBold="true"/>
+					<paragraph rightIndent="50"/>
+				</textElement>
+			</textField>
+			<image>
+				<reportElement positionType="Float" x="2" y="2" width="127" height="49" forecolor="#000000" backcolor="#FFFFFF" uuid="93eeba16-a0b7-4cb2-98c7-b0f5f3469c76"/>
+				<box>
+					<pen lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA[$P{Image}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="109" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="30" width="555" height="70" uuid="40f1c2e0-668f-4d12-9cc9-4fded54e5722"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Mediante la presente, confirmamos la solicitud de autorización de alimentos - Seguridad Alimentaria y Abastecimiento. Realizada en fecha" +  $P{FechaSolicitud} + "con las siguientes caracteristicas:"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="7" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="275" splitType="Stretch">
+			<textField>
+				<reportElement x="291" y="29" width="230" height="20" uuid="a1e6c4de-bba9-4e87-a66f-c754453215e5"/>
+				<textElement>
+					<font fontName="Tahoma" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{nit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="291" y="50" width="230" height="20" uuid="8bcbc936-5a89-418b-8d55-a6cdb271d407"/>
+				<textElement>
+					<font fontName="Tahoma" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{razonSocial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="291" y="70" width="230" height="20" uuid="1326c346-ef40-4c46-a317-86c48af65b85"/>
+				<textElement>
+					<font fontName="Tahoma" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{NumeroAutorizacion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="110" y="29" width="179" height="20" forecolor="#002C5A" uuid="50166d54-9c37-4a67-8886-710cc017f056"/>
+				<textElement textAlignment="Right">
+					<font fontName="Tahoma" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nit"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="110" y="70" width="179" height="20" forecolor="#002C5A" uuid="add28167-4910-4315-85a6-16cc8e528547"/>
+				<textElement textAlignment="Right">
+					<font fontName="Tahoma" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nro. Autorización"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="110" y="50" width="179" height="20" forecolor="#002C5A" uuid="6682218f-4f3f-4dee-8f52-9c37826b068b"/>
+				<textElement textAlignment="Right">
+					<font fontName="Tahoma" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Razón Social"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="110" y="90" width="179" height="20" forecolor="#002C5A" uuid="d011808d-26a7-429e-8736-78e7c6cab512"/>
+				<textElement textAlignment="Right">
+					<font fontName="Tahoma" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nro. Resolución MAE"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="291" y="90" width="230" height="20" uuid="6ec24906-0e60-49de-8491-cb5996f85c54"/>
+				<textElement>
+					<font fontName="Tahoma" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{NumeroResolucionMae}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="110" y="10" width="179" height="20" forecolor="#002C5A" uuid="a01cbd40-c118-4a19-bd05-f417dfffda40"/>
+				<textElement textAlignment="Right">
+					<font fontName="Tahoma" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha de Solicitud"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="291" y="10" width="230" height="20" uuid="568d6dfa-7afc-4595-9187-1a84fb28ce07"/>
+				<textElement>
+					<font fontName="Tahoma" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{FechaSolicitud}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="110" y="110" width="179" height="20" forecolor="#002C5A" uuid="5aaf11bf-de53-4719-90bf-a40f3266741c"/>
+				<textElement textAlignment="Right">
+					<font fontName="Tahoma" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha Inicio Autorización"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="291" y="110" width="230" height="20" uuid="9b7b7fc4-ff52-4a38-b48b-6fa12227a2fb"/>
+				<textElement>
+					<font fontName="Tahoma" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{FechaInicioAutorizacion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="110" y="130" width="179" height="20" forecolor="#002C5A" uuid="6a47ea5e-78d9-402b-9d0e-e79cc1894fbe"/>
+				<textElement textAlignment="Right">
+					<font fontName="Tahoma" size="12" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha Fin Autorización"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="291" y="130" width="230" height="20" uuid="5c706ccb-1fc8-4e1c-a6ad-3f4793cc3434"/>
+				<textElement>
+					<font fontName="Tahoma" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  :   "+$P{FechaFinAutorizacion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="200" width="555" height="70" uuid="2721c313-67d9-4982-a284-557a0d9ab41c"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Tahoma" size="12"/>
+				</textElement>
+				<text><![CDATA[La autorización de comercialización de alimentos - Seguridad Alimentaria y Abastecimiento, no inhibe a la Administración Tributaria de verificar la autenticidad de los datos proporcionados y realizar las medidas de control que vea convenientes.]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="183" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="80" width="555" height="36" uuid="eb227c50-be9c-4763-b2ca-f16e74ca22b8"/>
+				<textElement textAlignment="Center">
+					<font fontName="Tahoma"/>
+				</textElement>
+				<text><![CDATA[_______________________
+<Firma Autorizada>]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="60" splitType="Stretch">
+			<textField>
+				<reportElement x="368" y="30" width="100" height="30" uuid="bdac78b4-0702-4932-a34c-0bfadbd89893"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="470" y="30" width="100" height="30" uuid="534cab34-00f4-40a6-be44-ebe0c31fca2d"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="13" splitType="Stretch"/>
+	</summary>
+</jasperReport>

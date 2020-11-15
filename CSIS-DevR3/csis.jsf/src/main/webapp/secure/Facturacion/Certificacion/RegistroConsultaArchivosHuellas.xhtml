@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<!-- <f:viewAction action="#{logedBean.check}" /> -->
+		<f:viewAction action="#{consultaRegistroHuellasDigitalesController.Load}" />
+	</f:metadata>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<h:form id="registroPruebasArchivosHuellasForm">
+
+			<p:panel header="Gestión de Registro de Digitales" styleClass="ui-fluid">
+				
+				<p:panel header="Listado de Huellas Digitales" toggleable="true" styleClass="card box-primary">
+					<p:panel style="border:none">
+						
+							<p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid">			
+						
+								<p:row></p:row>
+								<p:row></p:row>
+						
+								<p:outputLabel for="idlistaSistemasAutorizados" value="Sistema" style="font-weight:bold" />
+								
+								<p:row>																	
+									<p:selectOneMenu 
+										id="idlistaSistemasAutorizados"
+										widgetVar="idlistaSistemasAutorizados" 
+										value="#{consultaRegistroHuellasDigitalesController.sistemasCertificadosModel.sistemasContribuyentes.sistemaId}"
+										appendTo="@(body)"	
+										filter="true"													
+										validatorMessage="Debe seleccionar un valor"
+										requiredMessage="Campo requerido"											
+										required="true">
+									 	<f:selectItem itemValue="#{''}" itemLabel="Seleccione Sistema" />
+									 	<f:selectItem itemValue = "1" itemLabel = "Item 1" /> 
+									 	<f:selectItems value="#{consultaRegistroHuellasDigitalesController.listadoSistemasCertificadosModelList.listaSistemasContribuyentes}"  var="c" itemLabel="#{c.nombreSistema}" itemValue="#{c.sistemaId}" />
+										<p:clientValidator event="change" />
+										<p:clientValidator event="focus" />
+										<p:ajax event="itemSelect" listener="#{consultaRegistroHuellasDigitalesController.mostrarConsultaComponentes}" update="#{p:component('listaDetalleReporteConsulta')}"/>
+									</p:selectOneMenu>
+									<p:message for="idlistaSistemasAutorizados" id="idlistaSistemasAutorizadosMensajes" appendTo="@this">		
+									</p:message>
+								</p:row>
+							</p:panelGrid>
+							
+						
+							<p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid">
+							
+								<p:dataTable id="listaDetalleReporteConsulta"
+									value="#{consultaRegistroHuellasDigitalesController.registroHuellasDigitalesListaComponent.listaComponentesContribuyente}"
+									var="lrc" rowIndexVar="rowIndex"
+									widgetVar="listaDetalleReporteConsulta"
+									emptyMessage="No se encontraron registros."
+									styleClass="table table-striped table-bordered table-hover table-sm">
+									
+										<p:column style="width:16px" >
+								            <p:rowToggler/>
+								        </p:column>
+	
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Nro."></h:outputText>
+											</f:facet>
+											<h:outputText value="#{rowIndex+1}"></h:outputText>
+										</p:column>	
+	
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Nombre del Sistema"></h:outputText>
+											</f:facet>
+											<h:outputText value="#{lrc.nombreSistema}" rendered="#{lrc.nombreSistema==''?false:true}"></h:outputText>
+										</p:column>
+	
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Modadlidad"></h:outputText>
+											</f:facet>
+											<h:outputText value="#{lrc.descripcionModalidadFacturacionId}"></h:outputText>
+										</p:column>
+										
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Fecha Registro"></h:outputText>
+											</f:facet>
+											<h:outputText value="#{lrc.fechaRegistro}"></h:outputText>
+										</p:column>
+										
+										<p:rowExpansion>
+											<p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-11" layout="grid" style="border:none">
+												<p:row></p:row>
+									            <p:dataTable var="listaInterna" value="#{lrc.listaComponentesContribuyente}" emptyMessage="No se encontraron registros.">
+													<p:column>
+														<f:facet name="header">
+															<h:outputText value="Nombre del Archivo"></h:outputText>
+														</f:facet>
+														<h:outputText value="#{listaInterna.nombreArchivo}"></h:outputText>
+													</p:column>
+													
+													<p:column>
+														<f:facet name="header">
+															<h:outputText value="Ruta"></h:outputText>
+														</f:facet>
+														<h:outputText value="#{listaInterna.ruta}"></h:outputText>
+													</p:column>		
+													
+													<p:column>
+														<f:facet name="header">
+															<h:outputText value="Componente"></h:outputText>
+														</f:facet>
+														<h:outputText value="#{listaInterna.nombreComponente}"></h:outputText>
+													</p:column>																				
+								         	 	</p:dataTable>
+								          </p:panelGrid>
+								        </p:rowExpansion>
+								</p:dataTable>	
+							
+										
+								<!-- <p:dataTable id="listaDetalleReporteConsulta"
+									value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.listaRegistroHuellasDigitalesDto}"
+									var="lrc" rowIndexVar="rowIndex"
+									widgetVar="listaDetalleReporteConsulta"
+									styleClass="table table-striped table-bordered table-hover table-sm">
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="NOMBRE DEL ARCHIVO"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lrc.nombre}"></h:outputText>
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="NOMBRE DEL COMPONENTE"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lrc.componenteMinimo}"></h:outputText>
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="RUTA DEL ARCHIVO"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lrc.rutaArchivo}"></h:outputText>
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="SHA"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lrc.sha2}"></h:outputText>
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="CRC"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lrc.crc}"></h:outputText>
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="MD5"></h:outputText>
+										</f:facet>
+										<h:outputText value="#{lrc.md5}"></h:outputText>
+									</p:column>
+
+								</p:dataTable>	 -->
+							</p:panelGrid>		
+							
+							<p:panelGrid columns="4" columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-2,ui-grid-col-2" layout="grid" style="border:none">
+								<p:row></p:row>
+								<p:row></p:row>
+								<p:row></p:row>
+								<sre:ComponenteCargadoHuellasDigital></sre:ComponenteCargadoHuellasDigital>			
+							</p:panelGrid>					
+					</p:panel>
+				</p:panel>				
+			</p:panel>	
+		</h:form>
+	</ui:define>
+</ui:composition>

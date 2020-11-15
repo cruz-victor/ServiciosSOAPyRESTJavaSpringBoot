@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+
+<composite:interface>
+	<composite:attribute name="paginador" />
+</composite:interface>
+
+<composite:implementation>
+
+	<f:event type="postAddToView"
+		listener="#{gestionPAutoController.Load()}" />
+	<h:form>
+		<p:dataTable var="automaticas" widgetVar="automaticas"
+			value="#{gestionPAutoController.model}"
+			emptyMessage="No hay pruebas automaticas registradas/encontradas."
+			filteredValue="#{gestionPAutoController.filtroPruebasAuto}"
+			rowIndexVar="rowIndex" rows="10" paginator="true"
+			paginatorPosition="bottom" rowsPerPageTemplate="5,10,15"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+			currentPageReportTemplate="{totalRecords} registro(s)"
+			styleClass="table table-striped table-bordered table-hover table-sm"
+			lazy="true"			>
+			<f:facet name="header">
+				<p:row>
+					<p:outputPanel style="float: right;">
+						<h:outputText value="Filtrar por Prueba, Estado " />
+						<p:inputText id="globalFilter" placeholder="Dato a buscar" />
+						<p:commandButton id="btnEjecutarFiltro" icon="fa fa-search"
+							styleClass="btn btn-xs" oncomplete="PF('automaticas').filter();" />
+						<p:commandButton id="btnLimpiarFiltro" icon="fa fa-eraser"
+							styleClass="btn btn-xs"
+							onclick="PF('automaticas').clearFilters();" />
+					</p:outputPanel>
+					<br />
+					<br />
+				</p:row>
+			</f:facet>
+
+			<p:column width="3%" headerText="Nº">
+				<h:outputText value="#{rowIndex+1}"></h:outputText>
+			</p:column>
+			<p:column width="60%" filterBy="#{automaticas.descripcionPruebaAuto}"
+				headerText="Prueba" filterMatchMode="contains"
+				filterStyle="display:none">
+				<h:outputText value="#{automaticas.descripcionPruebaAuto}" />
+			</p:column>
+			<p:column width="8%" headerText="Nº Pruebas Realizadas"
+				style="text-align: center">
+				<h:outputText value="#{automaticas.cantidadIntento}" />
+			</p:column>
+			<p:column width="8%" headerText="Nº Pruebas correctas esperadas"
+				style="text-align: center">
+				<h:outputText value="#{automaticas.cantidadCorrectos}" />
+			</p:column>
+			<p:column width="4%" headerText="%" style="text-align: right">
+				<h:outputText value="#{automaticas.porcentajeCorrectos}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="0" pattern="0%"/>
+				</h:outputText>
+			</p:column>
+			<p:column width="10%"
+				filterBy="#{automaticas.descripcionEstadoPruebaAuto}"
+				headerText="Estado" filterMatchMode="exact"
+				filterStyle="display:none" style="text-align: center">
+				<h:outputText value="#{automaticas.descripcionEstadoPruebaAuto}" />
+			</p:column>
+		</p:dataTable>
+
+	</h:form>
+</composite:implementation>
+</html>
+

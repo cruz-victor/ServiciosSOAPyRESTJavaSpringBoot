@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor">
+
+	<f:metadata>
+		<f:viewAction action="#{listaSistemasController.Load}" />
+	</f:metadata>
+	<ui:define name="title">
+        Listado Proveedores de Sistemas de Facturación
+    </ui:define>
+	<ui:define name="body">
+		<p:panel header="Sistemas Certificados y en Proceso de Certificación"
+			styleClass="box-primary" toggleable="true">
+			<h:form id="listadoSistemasGeneral">
+				<p:dataTable id="listaSistemasGeneral"
+					widgetVar="listaSistemasGeneral"
+					value="#{listaSistemasController.lista}"
+					var="lista" emptyMessage="No existen registros de Proveedores actualmente."
+					rowIndexVar="rowIndex" rows="10" paginator="true" 
+					paginatorAlwaysVisible="false"
+					paginatorPosition="bottom"
+					lazy="true"
+					sortOrder="ascending"
+					sortBy="#{lista.solicitudCertificacionId}"
+					rowsPerPageTemplate="5,10,20"
+					styleClass="table table-striped table-bordered table-hover table-sm">
+					<f:facet name="header">
+						<p:outputPanel>
+							<p:outputLabel for="globalFilter"
+								value="Buscar" />
+							<div class="ui-inputgroup">
+								<p:inputText id="globalFilter" placeholder="Criterio.."
+									widgetVar="globalFilter" maxlength="15" />
+								<p:commandButton icon="fa fa-search"
+									onclick="PF('listaSistemasGeneral').filter()"
+									styleClass="btn-primary btn-info btn-sm btn-glued-sm"
+									title="Buscar" />
+							</div>
+						</p:outputPanel>
+					</f:facet>
+					<p:column headerText="N°">
+						<h:outputText value="#{rowIndex+1}"></h:outputText>
+					</p:column>
+					<p:column headerText="ID"  filterBy="#{lista.solicitudCertificacionId}" filterMatchMode="contains" filterStyle="display:none" visible="false">
+						<p:outputLabel value="#{lista.solicitudCertificacionId}"
+							style="font-weight:normal" />
+					</p:column>
+					<p:column headerText="NIT"  filterBy="#{lista.nit}" filterMatchMode="contains" filterStyle="display:none" sortBy="#{lista.nit}">
+						<p:outputLabel value="#{lista.nit}"
+							style="font-weight:normal" />
+					</p:column>
+					<p:column headerText="Razón Social"  filterBy="#{lista.razonSocial}" filterMatchMode="contains" filterStyle="display:none" sortBy="#{lista.razonSocial}">
+						<p:outputLabel value="#{lista.razonSocial}"
+							style="font-weight:normal" />
+					</p:column>
+					<p:column headerText="Nombre Sistema"  filterBy="#{lista.nombreSistema}" filterMatchMode="contains" filterStyle="display:none" sortBy="#{lista.nombreSistema}">
+						<p:outputLabel value="#{lista.nombreSistema}"
+							style="font-weight:normal" />
+					</p:column>
+
+					<p:column headerText="Versión"  filterBy="#{lista.version}" filterMatchMode="contains" filterStyle="display:none" >
+						<p:outputLabel value="#{lista.version}" style="font-weight:normal" />
+					</p:column>
+
+					<p:column headerText="Modalidad" filterBy="#{lista.descripcionModalidad}" filterMatchMode="contains" filterStyle="display:none" >
+						<p:outputLabel value="#{lista.descripcionModalidad}"
+							style="font-weight:normal" />
+					</p:column>
+
+					<p:column headerText="Estado Certificación" filterBy="#{lista.descripcionEstadoSolicitud}" filterMatchMode="contains" filterStyle="display:none" >
+						<p:outputLabel value="#{lista.descripcionEstadoSolicitud}"
+							style="font-weight:normal" />
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+		</p:panel>
+	</ui:define>
+
+</ui:composition>

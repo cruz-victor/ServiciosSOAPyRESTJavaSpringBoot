@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+
+<composite:interface>
+
+	<composite:attribute name="ComponenteButtonVisitaInCitu"
+		method-signature="void DefaultMetod()" />
+	<composite:attribute name="ComponenteButtonRegistroHuellas"
+		method-signature="void DefaultMetod()" />
+	<composite:attribute name="ComponenteButtonPruebas"
+		method-signature="void DefaultMetod()" />
+	<composite:attribute name="idComponenteExterno"
+		type="java.lang.Boolean" />
+	<composite:attribute name="mostrarBotonInsitu" type="java.lang.Boolean" />
+	<composite:attribute name="mostrarBotonRegistroComponentes"
+		type="java.lang.Boolean" />
+
+	<!-- 	<composite:clientBehavior name="clickPruebas" targets="idAceptar" -->
+	<!-- 		event="click" /> -->
+	<!-- 	<composite:clientBehavior name="clickRegistroInsitu" targets="idInSitu" -->
+	<!-- 		event="click" /> -->
+	<!-- 	<composite:clientBehavior name="clickRegistroComponentes" -->
+	<!-- 		targets="idVrificarComp" event="click" /> -->
+</composite:interface>
+
+
+
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+	<h:form id="formBotoneraGestionPruebas">
+	<p:panelGrid id="panelBotoneraGestionPruebas" columns="3" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="pull-rigth">
+	<p:commandButton value="Pruebas" id="idAceptar" rendered="false" style="width:200px;"
+						ajax="true" actionListener="#{cc.attrs.ComponenteButtonPruebas}"
+						styleClass="btn btn-primary btn-sm btn-block" />
+	<p:commandButton value="Registrar Inf. Componentes"
+						id="idVrificarComp" ajax="true" style="width:200px;"
+						actionListener="#{cc.attrs.ComponenteButtonRegistroHuellas}"
+						styleClass="btn btn-primary btn-sm btn-block"
+						rendered="#{cc.attrs.mostrarBotonRegistroComponentes}" />
+	<p:commandButton value="Verificar In Situ" id="idInSitu"
+						ajax="true" style="width:200px;"
+						actionListener="#{cc.attrs.ComponenteButtonVisitaInCitu}"
+						styleClass="btn btn-primary btn-sm btn-block "
+						rendered="#{cc.attrs.mostrarBotonInsitu}" />
+	</p:panelGrid>
+	</h:form>
+</composite:implementation>
+</html>
+

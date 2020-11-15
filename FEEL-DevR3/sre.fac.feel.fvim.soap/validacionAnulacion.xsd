@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	attributeFormDefault="unqualified" elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="validacionAnulacionFacturaNotaFiscal">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="codigoSistema">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1" />
+							<xs:maxLength value="20" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codigoAmbiente">
+					<xs:annotation>
+						<xs:appinfo>
+							Codigo Ambiente
+							Dato númerico
+						</xs:appinfo>
+						<xs:documentation>
+							PRODUCCION - 1
+							PRUEBAS - 2
+						</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:enumeration value="1" />
+							<xs:enumeration value="2" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codigoModalidad" type="xs:integer"
+					fixed="1">
+					<xs:annotation>
+						<xs:appinfo>
+							Codigo Modalidad
+							Dato númerico
+						</xs:appinfo>
+						<xs:documentation>
+							COMPUTARIZADA - 2
+							ELECTRONICA - 1
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="nit">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="0" />
+							<xs:maxInclusive value="9999999999999" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="cuis">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1" />
+							<xs:maxLength value="20" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="cufd">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1" />
+							<xs:maxLength value="100" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codigoDocumentoFiscal"
+					type="xs:integer" fixed="1">
+					<xs:annotation>
+						<xs:appinfo>
+							Codigo Documento Fiscal
+							Dato númerico
+						</xs:appinfo>
+						<xs:documentation>
+							FACTURA - 1
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="codigoDocumentoSector"
+					type="xs:integer" fixed="27">
+					<xs:annotation>
+						<xs:appinfo>
+							Codigo Documento Sector
+							Dato númerico
+						</xs:appinfo>
+						<xs:documentation>
+							FACTURA VENTA INTERNA MINERALES - 27
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="codigoSucursal">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="0" />
+							<xs:maxInclusive value="9999" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codigoPuntoVenta" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="0" />
+							<xs:maxInclusive value="9999" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="numeroDocumentoFiscal">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="1" />
+							<xs:maxInclusive value="99999999" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="cuf">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1" />
+							<xs:maxLength value="100" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codigoMotivo">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="1" />
+							<xs:maxInclusive value="9999" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="codigoRecepcion">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="1" />
+							<xs:maxInclusive value="99999999" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

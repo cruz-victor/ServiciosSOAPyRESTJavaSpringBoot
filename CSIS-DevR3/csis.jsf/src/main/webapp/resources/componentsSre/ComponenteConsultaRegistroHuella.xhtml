@@ -1,0 +1,234 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<composite:interface>
+		<composite:attribute name="EsVisibleOperaciones" />
+	</composite:interface>
+	
+	<composite:implementation>	
+
+<!-- 		<f:event type="preRenderView" listener="#{consultaRegistroHuellasDigitalesController.LoadComponente(contextoSolicitudCertificacionSistemaModel.solicitud.contribuyenteId, contextoSolicitudCertificacionSistemaModel.solicitud.sistemaId)}" />
+	 -->
+	 
+	 	<p:remoteCommand name="rc" update="#{p:component('idTextoModulos')} #{p:component('idMensajeEstadosFacturas')}" />
+	 	<!-- <p:remoteCommand name="idMensajeSistemaSelector" update="#{p:component('idlistaSistemasAutorizadosMensajes')}" /> -->
+	 
+		<p:panel style="border:none">
+						
+							<!-- <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid">			
+						
+								<p:row></p:row>
+								<p:row></p:row>
+						
+								<p:outputLabel for="idlistaSistemasAutorizados" value="Sistema" style="font-weight:bold" />
+								
+								<p:row>																	
+									<p:selectOneMenu 
+										rendered="#{cc.attrs.EsVisibleOperaciones}"
+										id="idlistaSistemasAutorizados"
+										widgetVar="idlistaSistemasAutorizados" 
+										value="#{seguimientoCertificacionSistemasComponentesController.sistemasCertificadosModel.sistemasContribuyentes.sistemaId}"
+										appendTo="@(body)"	
+										filter="true"													
+										validatorMessage="Debe seleccionar un valor"
+										requiredMessage="Campo requerido"											
+										required="true">
+									 	<f:selectItem itemValue="#{''}" itemLabel="Seleccione Sistema" />
+									 	<f:selectItems value="#{seguimientoCertificacionSistemasComponentesController.listaDetalleHuellaList.listaSistemasSolicitudCertificacionDto.listaSistemasSolicitudCertificacionDto}"  var="c" itemLabel="#{c.nombreSistema}" itemValue="#{c.sistemaId}" />
+										<p:clientValidator event="change" />
+										<p:clientValidator event="focus" />
+										<p:ajax event="itemSelect" listener="#{seguimientoCertificacionSistemasComponentesController.cambioComboSistema}" update="#{p:component('listaDetalleReporteConsulta')}"/>
+									</p:selectOneMenu>
+									<p:message for="idlistaSistemasAutorizados" id="idlistaSistemasAutorizadosMensajes" appendTo="@this">		
+									</p:message>
+								</p:row>
+							</p:panelGrid> -->
+							
+						
+							<p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid">
+							
+								<p:dataTable id="listaDetalleReporteConsulta"
+									value="#{seguimientoCertificacionSistemasComponentesController.listaDetalleHuellaList.listaDetalleHuellaDto.listaDetalleHuella}"
+									var="lista" rowIndexVar="rowIndex"
+									widgetVar="listaDetalleReporteConsulta"
+									emptyMessage="No se encontraron registros."
+									styleClass="table table-striped table-bordered table-hover table-sm">
+									
+										<p:column style="width:16px" >
+								            <p:rowToggler/>
+								        </p:column>
+	
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Nro."></h:outputText>
+											</f:facet>
+											<h:outputText value="#{rowIndex+1}"></h:outputText>
+										</p:column>	
+	
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Nombre del Archivo"></h:outputText>
+											</f:facet>
+											<h:outputText value="#{lista.componentesArchivos.nombre}"></h:outputText>
+										</p:column>
+										
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Extensión del Archivo"></h:outputText>
+											</f:facet>
+											<h:outputText value="#{lista.componentesArchivos.extension}"></h:outputText>
+										</p:column>
+	
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Ruta Archivo"></h:outputText>
+											</f:facet>
+											<h:outputText value="#{lista.componentesArchivos.ruta}"></h:outputText>
+										</p:column>
+										
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Fecha Registro"></h:outputText>
+											</f:facet>
+											<h:outputText value="#{lista.componentesArchivos.fechaRegistro}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										
+										<p:rowExpansion>
+											<p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-11" layout="grid" style="border:none">
+												<p:row></p:row>
+									            <p:dataTable var="listaInterna" value="#{lista.listaComponentsCertificados}" emptyMessage="No se encontraron registros.">
+													<p:column>
+														<f:facet name="header">
+															<h:outputText value="Nombre del Componente"></h:outputText>
+														</f:facet>
+														<h:outputText value="#{listaInterna.tipoCompoonenteDescripcion}"></h:outputText>
+													</p:column>													
+								         	 	</p:dataTable>
+								          </p:panelGrid>
+								        </p:rowExpansion>
+								        
+								        <p:column width="8%" style="text-align:center" rendered="#{cc.attrs.EsVisibleOperaciones}">
+											<f:facet name="header">
+												<br />
+												<h:outputText value="Anular Registro"></h:outputText>
+												<br />
+												<br />
+											</f:facet>
+											<p:commandButton id="idBotonAnularRegistro" styleClass="text-red"
+												icon="fa fa-sign-out" ajax="true" async="true" process="@this" actionListener="#{seguimientoCertificacionSistemasComponentesController.anularHuella(lista.componentesArchivos.archivoId)}"
+												title="Anulación del registro de huella" update="#{p:component('listaDetalleReporteConsulta')}">
+												<p:confirm header="Confirmación" message="¿Está seguro de Anular el Registro de Huella?" icon="fa fa-exclamation-triangle" />
+											</p:commandButton>
+										</p:column>
+								</p:dataTable>	
+								
+								<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+									<p:panelGrid columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid" styleClass="ui-fluid">
+							        	<p:commandButton value="Aceptar" type="button" styleClass="btn btn-primary btn-sm ui-confirmdialog-yes" icon="fa fa-check" />
+							        	<p:commandButton value="Cancelar" type="button" styleClass="btn btn-warning btn-sm ui-confirmdialog-no" icon="fa fa-times" />
+							        </p:panelGrid>
+						    	</p:confirmDialog>  
+					    	
+							</p:panelGrid>		
+							
+							 <!-- onclick="idMensajeSistemaSelector() -->
+							
+							<p:commandButton id="idAdicionar" validateClient="true" rendered="#{cc.attrs.EsVisibleOperaciones}"
+									inmediate="false" process="@parent" async="true" value="Adicionar"
+									styleClass="btn btn-primary pull-right" update="#{p:component('idContenidocuadroDialogoCargadoHuellaArchivo')}"
+									actionListener="#{seguimientoCertificacionSistemasComponentesController.adicionarComponenteHuellaDialogo}">
+							</p:commandButton>
+							
+							
+							
+<!-- 							<p:panelGrid columns="4" columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-2,ui-grid-col-2" layout="grid" style="border:none">
+								<p:row></p:row>
+								<p:row></p:row>
+								<p:row></p:row>
+								<sre:ComponenteCargadoHuellasDigital></sre:ComponenteCargadoHuellasDigital>			
+							</p:panelGrid>	 -->				
+					</p:panel>
+					
+					<p:dialog header="Cargado de huellas digitales de Sistema"
+							closable="false" width="700"
+							id="cuadroDialogoCargadoHuellaArchivo" widgetVar="cuadroDialogoCargadoHuellaArchivo" position="center center center centers"
+							modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+							
+							<p:panel id="idContenidocuadroDialogoCargadoHuellaArchivo">
+							
+								<p:panelGrid  columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-fluid">
+								
+									
+									<p:outputLabel id="idNombreRutaHuellaLabel" for="idNombreRutaHuellaInput" value="RUTA DEL ARCHIVO" style="font-weight:bold"/>
+									<p:row>						
+										<p:inputText id="idNombreRutaHuellaInput" value="#{seguimientoCertificacionSistemasComponentesController.registroArchivoComponent.archivo.rutaArchivo}" w:placeholder="Ruta Archivo" maxlength="255"
+													 readonly="false" rendered="#{cc.attrs.EsVisibleOperaciones}"
+													 validatorMessage="Nombre de Ruta Incorrecto"
+													 requiredMessage="Campo requerido" required="true">
+													<p:clientValidator event="blur" />
+													<p:clientValidator event="keyup" />
+										</p:inputText>
+								
+										<p:message for="idNombreRutaHuellaInput" id="idNombreRutaHuellaMensjaes">
+										</p:message>
+									</p:row>
+									
+								
+									<p:outputLabel id="idTextoModulos" for="idComponentesMinimos" value="COMPONENTES MINIMOS" style="font-weight:bold"/>
+									<p:row>						
+										<p:selectCheckboxMenu id="idComponentesMinimos" layout="responsive"
+											columns="10" widgetVar="idComponentesMinimos"
+											value="#{seguimientoCertificacionSistemasComponentesController.registroDetalleHuellaModel.componentesMinimosId}"
+											multiple="true" filter="true" filterMatchMode="startsWith" appendTo="@(body)"
+											validatorMessage="Seleccione un valor"
+											requiredMessage="Campo requerido" required="true">
+											<f:selectItems
+												value="#{certificacionParametrics.listaComponentesMinimos}"
+												var="c" itemLabel="#{c.descripcion}"
+												itemValue="#{c.clasificadorId}" />
+											<p:ajax event="toggleSelect" update="#{p:component('idTextoModulos')} #{p:component('idMensajeEstadosFacturas')}" global="false" />
+											<p:ajax event="change" update="#{p:component('idTextoModulos')} #{p:component('idMensajeEstadosFacturas')}" global="false" />
+										</p:selectCheckboxMenu>
+										<p:message for="idComponentesMinimos" id="idMensajeEstadosFacturas">
+										</p:message>
+									</p:row>
+								</p:panelGrid>
+								
+								<sre:ComponenteCargarArchivo></sre:ComponenteCargarArchivo>
+									
+								<p:panelGrid columns="3" columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4" layout="grid" styleClass="ui-fluid">
+									<p:row></p:row>
+									<p:commandButton id="idCancelar" value="Cancelar"
+										styleClass="btn btn-warning btn-sm btn-block" global="false"
+										oncomplete="PF('cuadroDialogoCargadoHuellaArchivo').hide()">
+									</p:commandButton>
+						
+									<!-- actionListener="#{registroHuellasDigitalesController.adicionarComponente}" process="@parent:@parent"
+									
+									update="#{p:component('listaDetalleReporteConsulta')}" -->
+						
+									<p:commandButton id="idGuardar" value="Guardar." process="@parent:@parent"	update="#{p:component('listaDetalleReporteConsulta')}"					
+										styleClass="btn btn-primary btn-sm btn-block" validateClient="true" async="true" ajax="true" onclick="rc();" actionListener="#{seguimientoCertificacionSistemasComponentesController.registrarComponenteArchivo}"
+										oncomplete="if(PF('idComponentesMinimos').inputs.filter(':checked').length==0)
+													{
+														toastr.error('Debe agregar al menos un componente.', 'Advertencia');									
+													}
+													else
+													{
+														PF('cuadroDialogoCorregirFacturaCompraManual').hide();
+													}">
+									</p:commandButton>
+								</p:panelGrid>
+							</p:panel>
+						</p:dialog>
+		
+	</composite:implementation>
+</html>
+

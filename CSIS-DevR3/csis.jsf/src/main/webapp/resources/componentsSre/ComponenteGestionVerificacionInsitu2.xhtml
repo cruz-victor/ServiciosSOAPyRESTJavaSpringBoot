@@ -1,0 +1,269 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+
+<composite:interface>
+	<composite:attribute name="paginador" />
+	<composite:attribute name="Editar" type="java.lang.String" />
+</composite:interface>
+
+<!-- 	<f:event type="postAddToView" listener="#{gestionInsituController.initVista()}" /> -->
+<!-- 	<f:viewAction action="#{gestionInsituController.initVista}" /> -->
+ 			<!-- <p:remoteCommand name="GuardarObs" action="#{gestionInsituController.guardarNuevaObservacion()}"/> -->
+
+<composite:implementation>
+
+	<f:event type="postAddToView" listener="#{gestionInsituController.initVista()}" />
+
+	<p:panel id="idPanelVerificacionInSitu"
+		header="Listado Observaciones Componentes Verificados In Situ"
+		styleClass="box-primary">
+
+		<h:form id="formDetallePruebasSistemaInSitu">			
+			<p:panel id="pnlComponentesInsitu">
+				<p:dataTable var="comps" widgetVar="comps" id="idPanelTabla" 
+					value="#{gestionInsituController.verificacionInsituModelo.listaComponentes}"
+					emptyMessage="No hay componentes registrados o encontrados"
+					filteredValue="#{gestionInsituController.verificacionInsituModelo.filtroComponentes}"
+					rowIndexVar="rowIndex" rows="10" paginator="true"
+					paginatorPosition="bottom" rowsPerPageTemplate="5,10,15"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{totalRecords} registro(s)"
+					styleClass="table table-striped table-bordered table-hover table-sm">
+					<f:facet name="header">
+						<p:row>
+							<p:outputPanel style="float: right;">
+								<h:outputText value="Filtrar por Componente, Estado " />
+								<p:inputText id="globalFilter" placeholder="Dato a buscar" />
+								<p:commandButton id="btnEjecutarFiltro" icon="fa fa-search"
+									styleClass="btn btn-xs" onclick="PF('comps').filter();"
+									oncomplete="" />
+								<p:commandButton id="btnLimpiarFiltro" icon="fa fa-eraser"
+									styleClass="btn btn-xs" onclick="PF('comps').clearFilters();" />
+							</p:outputPanel>
+							<br />
+							<br />
+						</p:row>
+					</f:facet>
+					<br />
+					<br />
+					<p:column width="3%" style="text-align: center"
+						ariaHeaderText="Expanda la fila">
+						<p:rowToggler />
+					</p:column>
+					<p:column width="60%" filterBy="#{comps.tipoComponenteDescripcion}"
+						headerText="Componente" filterMatchMode="contains"
+						filterStyle="display:none">
+						<h:outputText value="#{comps.tipoComponenteDescripcion}" />
+					</p:column>
+					<p:column width="14%" filterBy="#{comps.estadoPruebaDescripcion}"
+						headerText="Estado" filterMatchMode="exact"
+						filterStyle="display:none">
+						<h:outputText value="#{comps.estadoPruebaDescripcion}" />
+					</p:column>
+					<p:column width="4%" headerText="Revisar"
+						style="display:text-align: center" rendered="#{cc.attrs.Editar ne false}">
+						<p:commandLink id="btnComentar" value="Revisar"
+							rendered="#{comps.estadoPruebaId eq 598 ? false:true}"
+							icon="fa fa-plus" ajax="true" async="true" style="width:30px;"
+							process="@this" update="#{p:component('dlgNuevoCmp')}"
+							actionListener="#{gestionInsituController.nuevaObservacion(comps)}"
+							oncomplete="PF('dlgNuevoCmp').show();">
+							<f:setPropertyActionListener
+								target="#{gestionInsituController.verificacionInsituModelo.filaEdit}"
+								value="#{rowIndex}" />
+						</p:commandLink>
+
+					</p:column>
+					<p:rowExpansion>
+						<p:panel id="panelObs">
+							<p:dataTable var="obs"
+								value="#{comps.bitacorasObservacionesComponentesInsitu}"
+								emptyMessage="No hay observaciones registradas"
+								style="padding:0 50px 0;">
+								<p:column width="70%" headerText="Observaciones">
+									<h:outputText value="#{obs.observaciones}" />
+								</p:column>
+								<p:column width="12%" headerText="Fecha"
+									style="text-align: center">
+									<h:outputText value="#{obs.fechaRegistro}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+							</p:dataTable>
+						</p:panel>
+					</p:rowExpansion>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+		
+		<h:form>
+			<p:remoteCommand name="GuardarObs"
+				action="#{gestionInsituController.guardarNuevaObservacion()}"
+				update="#{p:component('pnlComponentesInsitu')}" oncomplete="PF('comps').filter()" />
+				
+				
+			<p:dialog header="Registro Observación Componente In Situ"
+				id="dlgNuevoCmp" widgetVar="dlgNuevoCmp" resizable="false"
+				dynamic="false" modal="true" position="center">
+				<p:panelGrid columns="2" columnClasses="ui-grid-2,ui-grid-10"
+					styleClass="ui-noborder">
+					<h:outputText value="Observaciones" />
+					<p:inputTextarea id="idObs" rows="3" cols="50" maxlength="250"
+						onkeyup="value=value.toUpperCase()"
+						counterTemplate="{0} caracteres restantes" counter="displayCtr"
+						value="#{gestionInsituController.verificacionInsituModelo.nuevaObservacion.observaciones}"
+						required="true" requiredMessage="Introduzca una observación">
+						<p:keyFilter regEx="/[A-Z ÁÉÍÓÚÑ0-9_-]/i" />
+					</p:inputTextarea>
+					<p:spacer></p:spacer>
+					<h:outputText id="displayCtr" />
+					<p:spacer></p:spacer>
+					<p:message for="idObs" />
+					<h:outputText value="Estado" />
+					<p:selectOneRadio id="idEstado"
+						value="#{gestionInsituController.verificacionInsituModelo.componenteConObs.estadoPruebaId}">
+						<f:selectItem itemLabel="Pendiente" itemValue="597" />
+						<f:selectItem itemLabel="Aprobado" itemValue="598" />
+						<f:selectItem itemLabel="Erroneo" itemValue="599" />
+					</p:selectOneRadio>
+					<p:spacer></p:spacer>
+				</p:panelGrid>
+				<p:panelGrid columns="3"
+					columnClasses="ui-grid-8,ui-grid-2,ui-grid-2" style="float: right;"
+					styleClass="ui-noborder">
+					<p:spacer></p:spacer>
+					<p:commandButton id="btnGuardar" value="Guardar"
+						actionListener="#{gestionInsituController.mostrar}" ajax="true"
+						validateClient="true" process="idObs" immediate="false"
+						oncomplete="PF('dlgNuevoCmp').hide(); GuardarObs();"
+						styleClass="btn btn-primary btn-sm btn-block">
+					</p:commandButton>
+					<p:commandButton value="Cancelar" id="btnCancelar" ajax="true"
+						immediate="true" onclick="PF('dlgNuevoCmp').hide();"
+						styleClass="btn btn-danger btn-sm btn-block" />
+				</p:panelGrid>
+			</p:dialog>
+		</h:form>
+	</p:panel>
+
+	<p:panel id="pnlVerificacionesInSitu" rendered="#{cc.attrs.Editar ne false}"
+		header="Lista Verificacion(es) Realizada(s) In Situ"
+		styleClass="box-primary" toggleable="true">
+
+		<h:form>
+			<p:dataTable id="listaVerificacionesInSitu"
+				value="#{gestionInsituController.verificacionInsituModelo.listaVerificaciones}"
+				var="verifs" rowIndexVar="rowIndex" rows="10"
+				widgetVar="listaVerificacionesInSitu" paginator="true"
+				sortMode="multiple"
+				 rowsPerPageTemplate="5,10,15"
+				emptyMessage="No hay verificaciones registradas."
+				paginatorPosition="bottom"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{totalRecords} registro(s)"
+				styleClass="table table-striped table-bordered table-hover table-sm">
+
+				<p:column width="10%" headerText="Usuario Registro">
+					<h:outputText value="#{verifs.descripcionUsuarioRegistro}" />
+				</p:column>
+
+				<p:column width="10%" headerText="Fecha Verificación">
+					<h:outputText value="#{verifs.fechaVerificacion}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+
+				<p:column width="60%" headerText="Observación">
+					<h:outputText value="#{verifs.observacion}" />
+				</p:column>
+
+				<p:column width="10%" headerText="Estado de Verificación">
+					<h:outputText value="#{verifs.descripcionEstadoObservacionInsitu}" />
+				</p:column>
+
+			</p:dataTable>
+
+			<div class="modal-footer">
+				<div style="float: right;">
+					<p:commandButton value="Nuevo" id="btnNuevoComponente"
+						type="button" style="margin-right:20px;" ajax="true"
+						update="#{p:component('dlgNuevaVerif')}"
+						styleClass="btn btn-primary btn-sm btn-block"
+						onclick="PF('dlgNuevaVerif').show();" />
+				</div>
+			</div>
+
+
+		</h:form>
+		<p:dialog
+			header="Registro Observación Verificación Componentes In Situ"
+			id="dlgNuevaVerif" widgetVar="dlgNuevaVerif" resizable="false"
+			modal="true" position="center bottom">
+			<h:form>
+				<p:panelGrid id="dlg2" columns="2"
+					columnClasses="ui-grid-1,ui-grid-11" styleClass="ui-noborder">
+					<h:outputLabel value="Observaciones" />
+					<p:inputTextarea id="idVerObs" rows="3" cols="50" maxlength="250"
+						w:autofocus="true" required="true"
+						counterTemplate="{0} caracteres restantes"
+						onkeyup="value=value.toUpperCase()" counter="display"
+						value="#{gestionInsituController.verificacionInsituModelo.nuevaVerificacion.observacion}"
+						requiredMessage="Introduzca una observación">
+						<p:keyFilter regEx="/[A-Z ÁÉÍÓÚÑ0-9_-]/i" />
+					</p:inputTextarea>
+					<p:spacer></p:spacer>
+					<h:outputText id="display" />
+					<p:spacer></p:spacer>
+					<p:message for="idVerObs" />
+
+					<p:outputLabel for="fecha" class="control-label" value="Fecha" />
+					<p:calendar id="fecha" navigator="true"
+						value="#{gestionInsituController.verificacionInsituModelo.nuevaVerificacion.fechaVerificacion}"
+						converterMessage="Fecha Incorrecta" inputStyleClass="form-control"
+						maxlength="10" pattern="dd/MM/yyyy"
+						validatorMessage="Fecha Incorrecta" required="true"
+						w:placeholder="dd/mm/AAAA" requiredMessage="Requerido">
+						<f:convertDateTime pattern="dd/MM/yyyy" timeStyle="short"
+							type="date" />
+					</p:calendar>
+					<p:spacer></p:spacer>
+					<p:message for="fecha" />
+
+					<h:outputLabel value="Estado" />
+					<p:selectOneRadio id="estado2"
+						value="#{gestionInsituController.verificacionInsituModelo.nuevaVerificacion.estadoOservacionInsituId}">
+						<f:selectItem itemLabel="Aprobado" itemValue="1438" />
+						<f:selectItem itemLabel="Rechazado" itemValue="1439" />
+					</p:selectOneRadio>
+				</p:panelGrid>
+
+				<p:panelGrid columns="3" styleClass="ui-noborder"
+					style="float: right;">
+					<p:column></p:column>
+					<p:column>
+						<p:commandButton value="Guardar" id="btnGuardar2" ajax="true"
+							actionListener="#{gestionInsituController.guardarNuevaVerificacion}"
+							oncomplete="PF('dlgNuevaVerif').hide();" validateClient="true"
+							process="@form"
+							update="#{p:component('pnlVerificacionesInSitu')}"
+							immediate="false" styleClass="btn btn-primary btn-sm btn-block" />
+					</p:column>
+					<p:column>
+						<p:commandButton value="Cancelar" id="btnCancelar2" ajax="true"
+							immediate="true" onclick="PF('dlgNuevaVerif').hide();"
+							styleClass="btn btn-danger btn-sm btn-block" />
+					</p:column>
+				</p:panelGrid>
+			</h:form>
+		</p:dialog>
+
+	</p:panel>
+
+</composite:implementation>
+
+</html>
+

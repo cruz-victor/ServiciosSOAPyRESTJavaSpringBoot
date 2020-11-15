@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:sreSeguimiento="http://java.sun.com/jsf/composite/componentsSeguimientoEtapaFaseDosSre"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<f:viewAction action="#{logedBean.check}" />
+		<f:viewAction action="#{seguimientoCertificacionSistemasComponentesController.Load}" />
+	</f:metadata>
+
+	<ui:define name="title">
+		<!-- FACTURACION -->
+	</ui:define>
+
+	<ui:define name="body">
+
+		<h:form>
+			<p:panel header="Seguimiento de Certificación de Sistemas">
+				<p:panel header="Datos Básicos" toggleable="true"
+					styleClass="card box-primary">
+					<p:panel style="border:none" styleClass="ui-fluid">
+						<sre:ComponenteDatosBasicos></sre:ComponenteDatosBasicos>
+					</p:panel>
+				</p:panel>
+				
+				<p:panel id="idGrillaSistemas">				
+					<p:panel header="Sistemas Asociados" toggleable="true" styleClass="card box-primary" rendered="#{seguimientoCertificacionSistemasComponentesController.comportamientoPaginaModel.controlGrillas['GrillaSistemas']}">
+						<sreSeguimiento:ComponenteSeguimientoEtapaFaseDosSistemas EsVisibleOperaciones="true"></sreSeguimiento:ComponenteSeguimientoEtapaFaseDosSistemas>						
+					</p:panel>
+					
+					<p:panel header="ETAPAS FASE II" toggleable="true" styleClass="card box-primary" rendered="#{seguimientoCertificacionSistemasComponentesController.comportamientoPaginaModel.controlGrillas['GrillaSistemas_Etapa']}" >
+					
+						<sreSeguimiento:ComponenteSeguimientoEtapaFaseDos EsVisibleOperaciones="true" idActualizarTrasVerDetalle="idGrillaSistemas"></sreSeguimiento:ComponenteSeguimientoEtapaFaseDos>
+						<p:commandButton value="Volver" actionListener="#{seguimientoCertificacionSistemasComponentesController.volverSistemasEtapas('GrillaSistemas_Etapa')}" update="#{p:component('idGrillaSistemas')}" process="@this" styleClass="btn btn-success btn-sm"></p:commandButton>
+					</p:panel>
+					
+					<p:panel header="REGISTRO DE HUELLA" toggleable="true" styleClass="card box-primary" rendered="#{seguimientoCertificacionSistemasComponentesController.comportamientoPaginaModel.controlGrillas['GrillaSistemas_Etapa_Huellas']}">
+					<!-- <sre:ComponenteCargadoHuellasDigital></sre:ComponenteCargadoHuellasDigital> -->
+					<!-- <sre:ComponenteCargarArchivo></sre:ComponenteCargarArchivo> -->
+					<sre:ComponenteConsultaRegistroHuella EsVisibleOperaciones="true"></sre:ComponenteConsultaRegistroHuella>
+					
+					
+					<p:commandButton value="Volver" actionListener="#{seguimientoCertificacionSistemasComponentesController.volverSistemasEtapas('GrillaSistemas_Etapa_Huellas')}" update="#{p:component('idGrillaSistemas')}" process="@this" styleClass="btn btn-success btn-sm"></p:commandButton>
+					</p:panel>
+					
+					<p:panel header="ESQUEMA DE DESPLIEGUE" toggleable="true" styleClass="card box-primary" rendered="#{seguimientoCertificacionSistemasComponentesController.comportamientoPaginaModel.controlGrillas['GrillaSistemas_Etapa_EsquemaDespliegue']}">
+						<sreSeguimiento:ComponenteSeguimientoFaseDosDiagramas EsVisibleOperaciones="#{true}" idDiagramaOperacion="#{seguimientoCertificacionSistemasComponentesController.FASE_DOS_ARCHIVO_DESPLIEGUE}" idActualizarTrasGuardarArchivo="idGrillaSistemas"></sreSeguimiento:ComponenteSeguimientoFaseDosDiagramas>								
+						<p:commandButton value="Volver" actionListener="#{seguimientoCertificacionSistemasComponentesController.volverSistemasEtapas('GrillaSistemas_Etapa_EsquemaDespliegue')}" update="#{p:component('idGrillaSistemas')}" process="@this" styleClass="btn btn-success btn-sm"></p:commandButton>
+					</p:panel>
+					
+					<p:panel header="ESQUEMA DE COMUNICACION" toggleable="true" styleClass="card box-primary" rendered="#{seguimientoCertificacionSistemasComponentesController.comportamientoPaginaModel.controlGrillas['GrillaSistemas_Etapa_EsquemaComunicacion']}">
+						<sreSeguimiento:ComponenteSeguimientoFaseDosDiagramas EsVisibleOperaciones="#{true}" idDiagramaOperacion="#{seguimientoCertificacionSistemasComponentesController.FASE_DOS_ARCHIVO_COUMNICACION}" idActualizarTrasGuardarArchivo="idGrillaSistemas"></sreSeguimiento:ComponenteSeguimientoFaseDosDiagramas>
+						<p:commandButton value="Volver" actionListener="#{seguimientoCertificacionSistemasComponentesController.volverSistemasEtapas('GrillaSistemas_Etapa_EsquemaComunicacion')}" update="#{p:component('idGrillaSistemas')}" process="@this" styleClass="btn btn-success btn-sm"></p:commandButton>
+					</p:panel>
+					
+					<p:panel header="ETAPAS DE COMPONENTES" toggleable="true" styleClass="card box-primary" rendered="#{seguimientoCertificacionSistemasComponentesController.comportamientoPaginaModel.controlGrillas['GrillaSistemas_Etapa_EsquemaComponente']}">
+						<sreSeguimiento:ComponenteSeguimientoFaseDosDiagramas EsVisibleOperaciones="#{true}" idDiagramaOperacion="#{seguimientoCertificacionSistemasComponentesController.FASE_DOS_ARCHIVO_COMPONENTES}" idActualizarTrasGuardarArchivo="idGrillaSistemas"></sreSeguimiento:ComponenteSeguimientoFaseDosDiagramas>
+						<p:commandButton value="Volver" actionListener="#{seguimientoCertificacionSistemasComponentesController.volverSistemasEtapas('GrillaSistemas_Etapa_EsquemaComponente')}" update="#{p:component('idGrillaSistemas')}" process="@this" styleClass="btn btn-success btn-sm"></p:commandButton>
+					</p:panel>
+					
+					<p:panel header="ETAPAS DE REGISTRO DE ARCHIVO MANUAL USUARIO" toggleable="true" styleClass="card box-primary" rendered="#{seguimientoCertificacionSistemasComponentesController.comportamientoPaginaModel.controlGrillas['GrillaSistemas_Etapa_EsquemaManualUsuario']}">
+						<sreSeguimiento:ComponenteSeguimientoFaseDosDiagramas EsVisibleOperaciones="#{true}" idDiagramaOperacion="#{seguimientoCertificacionSistemasComponentesController.FASE_DOS_ARCHIVO_MANUAL_USUARIO}" idActualizarTrasGuardarArchivo="idGrillaSistemas"></sreSeguimiento:ComponenteSeguimientoFaseDosDiagramas>
+						<p:commandButton value="Volver" actionListener="#{seguimientoCertificacionSistemasComponentesController.volverSistemasEtapas('GrillaSistemas_Etapa_EsquemaManualUsuario')}" update="#{p:component('idGrillaSistemas')}" process="@this" styleClass="btn btn-success btn-sm"></p:commandButton>
+					</p:panel>
+					<p:panel header="ETAPAS DE REGISTRO DE ARCHIVO MANUAL INSTALACION" toggleable="true" styleClass="card box-primary" rendered="#{seguimientoCertificacionSistemasComponentesController.comportamientoPaginaModel.controlGrillas['GrillaSistemas_Etapa_EsquemaManualInstalacion']}">
+						<sreSeguimiento:ComponenteSeguimientoFaseDosDiagramas EsVisibleOperaciones="#{true}" idDiagramaOperacion="#{seguimientoCertificacionSistemasComponentesController.FASE_DOS_ARCHIVO_MANUAL_INSTALACION}" idActualizarTrasGuardarArchivo="idGrillaSistemas"></sreSeguimiento:ComponenteSeguimientoFaseDosDiagramas>
+						<p:commandButton value="Volver" actionListener="#{seguimientoCertificacionSistemasComponentesController.volverSistemasEtapas('GrillaSistemas_Etapa_EsquemaManualInstalacion')}" update="#{p:component('idGrillaSistemas')}" process="@this" styleClass="btn btn-success btn-sm"></p:commandButton>
+					</p:panel>
+					<p:panel header="ETAPAS DE REGISTRO AMBIENTE" toggleable="true" styleClass="card box-primary" rendered="#{seguimientoCertificacionSistemasComponentesController.comportamientoPaginaModel.controlGrillas['GrillaSistemas_Etapa_SistemaOperativo']}">
+						<sreSeguimiento:ComponenteSeguimientoFaseDosAmbiente EsVisibleOperaciones="#{true}" idDiagramaOperacion="#{seguimientoCertificacionSistemasComponentesController.FASE_DOS_AMBIENTE}" idActualizarTrasGuardarArchivo="idGrillaSistemas"></sreSeguimiento:ComponenteSeguimientoFaseDosAmbiente>
+						<p:commandButton value="Volver" actionListener="#{seguimientoCertificacionSistemasComponentesController.volverSistemasEtapas('GrillaSistemas_Etapa_SistemaOperativo')}" update="#{p:component('idGrillaSistemas')}" process="@this" styleClass="btn btn-success btn-sm"></p:commandButton>
+					</p:panel>
+				</p:panel>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+

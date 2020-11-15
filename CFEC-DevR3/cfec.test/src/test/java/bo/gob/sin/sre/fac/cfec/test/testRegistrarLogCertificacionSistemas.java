@@ -1,0 +1,196 @@
+package bo.gob.sin.sre.fac.cfec.test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import bo.gob.sin.config.AppConfig;
+import bo.gob.sin.sre.fac.cfec.dto.RespuestaListaRegistroRecepcionesSoapDto;
+import bo.gob.sin.sre.fac.cfec.dto.RespuestaXmlXsdDto;
+import bo.gob.sin.sre.fac.cfec.dto.XmlRecepcionGenericoDto;
+import bo.gob.sin.sre.fac.cfec.dto.interfaces.Respuesta;
+import bo.gob.sin.sre.fac.cfec.dto.parameter.Parametros;
+import bo.gob.sin.sre.fac.cfec.servicedomain.ICoreFacturacionSoap;
+import bo.gob.sin.sre.fac.cfec.servicedomain.IUtilitarios;
+import bo.gob.sin.sre.fac.cfec.servicedomain.validation.CodigosMensajesServiciosSOAPServiceImpl;
+import bo.gob.sin.str.cexc.LogExcepcion;
+import bo.gob.sin.str.cexc.MethodSign;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = { AppConfig.class })
+@Transactional
+@Rollback 
+public class testRegistrarLogCertificacionSistemas {
+
+	private static final Logger LOG = LoggerFactory.getLogger(TestComputarizadaEstandar.class);
+	
+	@Autowired
+	IUtilitarios iutil;
+	
+	@Autowired
+	ICoreFacturacionSoap iCoreFacturacionSoap;
+	
+	@Test
+	@Rollback(false)
+	public void testRegistrarLogEtapa7CertiticacionSistemasFirmaValida() throws Exception{
+		
+		RespuestaXmlXsdDto vRespuesta = new RespuestaXmlXsdDto();
+		XmlRecepcionGenericoDto vArchivoXml = new XmlRecepcionGenericoDto();
+		List<Integer>  pListaErrores = new ArrayList<>();
+		pListaErrores.add(11);
+		LOG.info("validarDatos de la Recepcion ||Iniciando");
+		try {
+			
+			//archivo decodificado
+			vArchivoXml.setV_archivo("H4sICBhqy1wEAGZhY3R1cmFDb21wdXRhcml6YWRhRXN0YW5kYXIudHh0AJVWXZeaMBD9QX3hQ3qWR1k+hC5REBKTNwM9CATLaZWvX98J61a2bk/bBw8akpk7d+7cuLPNFSd9kTd4zDTR8Uopw/2q90tL8AZ1zBNXNillfoibl6Qod9MKPVdDQwlS8kNwijTzkm2wQg9B+7Vxa5riKffcK/Pc0d+cLtwzpu35NB0TpTxuYiWzv3Uveq7no6GHo9FlTdaF1boP9yZN0iGh2klw4lyOxJjjUC0tl3GY/V9x4KzM3V65Ypw4wVPmuRXDqDp6+ELToaOaqxyJed3tg3+q6UViePY/2dG3wreHipJAUA2PNAFeynXhP6+feCOUmKhtppnjrnJ6wKWHdgjP8OlFM9rcwZfjAXVZtThzxhd2CLq4cat8M8frQ3s9oGQtz6iAfeQKO1E9VrPGkfnluWLnIZVVq4ERXDE7L1FiCUaoyhJcMi/VUYIrmqxhTzahpO+ojptdoXyBszP+nLAaMGooqfUYPqFdr6KaruIaeVs7trZp2qMauXFlPUdKNO6ezfnMMgbX4pZpZpITpGZndOL2qpf7Htfv9YKuRkZQNXNfIytxBtd3hl06WlGcGrtIMROIUR8Pkl/Ucm21qHnW5ZmrlsrPcYcbfM09p/i6Qe22MVpug143gcr2fvEyLXI2GPruupyIac5b+X2Y1JfQTuETpGFSfA6T9Wfg/Qp8qJC/AYzfaCr79TsGo+MkGBkOTl8b85pqJtTi/pC1pGrsJlBLUlokToeAlNZ+nyI/woHj233HG/NCz4FIG/cz14yEQ32U9B/UF7eZZzrwHvovazQD5smnqCmJPoWynxpwRPIOe6LnSiz7e2HEULgiavk8kvjE7A905sk+qkLyt6tCZWtn+taOfmntXawFh1TOhjeIVzxPf+X8DV+kDa2MxZKVttCGzT0hMYgP9ITYIQYezIjCedAoYLvxoqgCuKih/yemPS14u2FX41PWtOJfNMGJKXlNuR5LfQ5okhyo3awrz1Te9+V1PfbwBNzcuPNlPReuSc5jkUGvXjl75CCBXAz6savoags6eFi/c6AcDxZw5l5oI15r12ct2JSo5ZEsa15iHRDgEMxzQBuZ8guXGnfgXz8+yPODHYD/BtbqQXzdW9v++7pAdjptSyvkelhk4G15I+ScTr4XCwqz5m+kHsUVZkLJGhfujbRgZFVAPeCRci88D2EB/lOAj0sdteCd9cuzVQHG+bu/qWXsM/jt67sK5sLDBnBXL700PyBV+jCfjH3iKMADeDFxxzsH93l5p1kVCfBK6bHDXW/vZimB2Va4fvPyuR9uCWvil7/aQ80OoAtvWOpTenCbN3IGY1fWzDW1pRpwbjsKmtbS+/605yMPGwGbKrGmmpCeNGwT+qb1x/ePcxJljVnnspbJiNJSkfdGjxb6SjdBxza4yr0lZ7NWR9DZzYPdMFaeCuKeKOCHulGVNaKn83+CpZbd9/5z/32PvcHX2XccVTD5LjFwUkfQu9/X73GzTSBkLkzgfvRe+xtWM5d91mCJEct7ddbC4/w6Em/+j56U6bi8zfZbDtBUcPOAR69MNQx40r/Gfdu/B1897q1VptWfAfMP+G+hZGcs/HLd3foH/Y2FnEnupZI3+P12t7s2aKXPQXfA/2cKfMUwZ1TOxcH/9BMEXM0csAkAAA==");
+			vArchivoXml.setV_archivoXml(iutil.decodificarArchivo(vArchivoXml.getV_archivo()));
+			vArchivoXml.setP_tipo_ambiente_id(2);
+			vArchivoXml.setP_tipo_documento_sector_id(18);
+			vArchivoXml.setP_tipo_documento_fiscal_id(1);
+			vArchivoXml.setV_recepcionId(0L);
+			vArchivoXml.setP_codigo_sistema("39562F");
+			iutil.registrarLogCertificacionSistemas(vArchivoXml, pListaErrores);			
+				
+			LOG.info("testRegistrarLogCertiticacionSistemas ==>"+vRespuesta.toString());  
+		} catch (Exception e) {
+			LogExcepcion.registrar(e, LOG, MethodSign.build(vRespuesta));
+			LOG.info("registrarLog Certificación Sistemas||Excepcion");
+		}
+	}
+	
+	@Test
+	@Rollback(false)
+	public void testRegistrarLogEtapa7CertiticacionSistemasFirmaInvalida() throws Exception{
+		
+		RespuestaXmlXsdDto vRespuesta = new RespuestaXmlXsdDto();
+		XmlRecepcionGenericoDto vArchivoXml = new XmlRecepcionGenericoDto();
+		List<Integer>  pListaErrores = new ArrayList<>();
+		LOG.info("validarDatos de la Recepcion ||Iniciando");
+		try {
+			
+			//archivo decodificado
+			vArchivoXml.setV_archivo("H4sICBhqy1wEAGZhY3R1cmFDb21wdXRhcml6YWRhRXN0YW5kYXIudHh0AJVWXZeaMBD9QX3hQ3qWR1k+hC5REBKTNwM9CATLaZWvX98J61a2bk/bBw8akpk7d+7cuLPNFSd9kTd4zDTR8Uopw/2q90tL8AZ1zBNXNillfoibl6Qod9MKPVdDQwlS8kNwijTzkm2wQg9B+7Vxa5riKffcK/Pc0d+cLtwzpu35NB0TpTxuYiWzv3Uveq7no6GHo9FlTdaF1boP9yZN0iGh2klw4lyOxJjjUC0tl3GY/V9x4KzM3V65Ypw4wVPmuRXDqDp6+ELToaOaqxyJed3tg3+q6UViePY/2dG3wreHipJAUA2PNAFeynXhP6+feCOUmKhtppnjrnJ6wKWHdgjP8OlFM9rcwZfjAXVZtThzxhd2CLq4cat8M8frQ3s9oGQtz6iAfeQKO1E9VrPGkfnluWLnIZVVq4ERXDE7L1FiCUaoyhJcMi/VUYIrmqxhTzahpO+ojptdoXyBszP+nLAaMGooqfUYPqFdr6KaruIaeVs7trZp2qMauXFlPUdKNO6ezfnMMgbX4pZpZpITpGZndOL2qpf7Htfv9YKuRkZQNXNfIytxBtd3hl06WlGcGrtIMROIUR8Pkl/Ucm21qHnW5ZmrlsrPcYcbfM09p/i6Qe22MVpug143gcr2fvEyLXI2GPruupyIac5b+X2Y1JfQTuETpGFSfA6T9Wfg/Qp8qJC/AYzfaCr79TsGo+MkGBkOTl8b85pqJtTi/pC1pGrsJlBLUlokToeAlNZ+nyI/woHj233HG/NCz4FIG/cz14yEQ32U9B/UF7eZZzrwHvovazQD5smnqCmJPoWynxpwRPIOe6LnSiz7e2HEULgiavk8kvjE7A905sk+qkLyt6tCZWtn+taOfmntXawFh1TOhjeIVzxPf+X8DV+kDa2MxZKVttCGzT0hMYgP9ITYIQYezIjCedAoYLvxoqgCuKih/yemPS14u2FX41PWtOJfNMGJKXlNuR5LfQ5okhyo3awrz1Te9+V1PfbwBNzcuPNlPReuSc5jkUGvXjl75CCBXAz6savoags6eFi/c6AcDxZw5l5oI15r12ct2JSo5ZEsa15iHRDgEMxzQBuZ8guXGnfgXz8+yPODHYD/BtbqQXzdW9v++7pAdjptSyvkelhk4G15I+ScTr4XCwqz5m+kHsUVZkLJGhfujbRgZFVAPeCRci88D2EB/lOAj0sdteCd9cuzVQHG+bu/qWXsM/jt67sK5sLDBnBXL700PyBV+jCfjH3iKMADeDFxxzsH93l5p1kVCfBK6bHDXW/vZimB2Va4fvPyuR9uCWvil7/aQ80OoAtvWOpTenCbN3IGY1fWzDW1pRpwbjsKmtbS+/605yMPGwGbKrGmmpCeNGwT+qb1x/ePcxJljVnnspbJiNJSkfdGjxb6SjdBxza4yr0lZ7NWR9DZzYPdMFaeCuKeKOCHulGVNaKn83+CpZbd9/5z/32PvcHX2XccVTD5LjFwUkfQu9/X73GzTSBkLkzgfvRe+xtWM5d91mCJEct7ddbC4/w6Em/+j56U6bi8zfZbDtBUcPOAR69MNQx40r/Gfdu/B1897q1VptWfAfMP+G+hZGcs/HLd3foH/Y2FnEnupZI3+P12t7s2aKXPQXfA/2cKfMUwZ1TOxcH/9BMEXM0csAkAAA==");
+			vArchivoXml.setV_archivoXml(iutil.decodificarArchivo(vArchivoXml.getV_archivo()));
+			vArchivoXml.setP_tipo_ambiente_id(2);
+			vArchivoXml.setP_tipo_documento_sector_id(18);
+			vArchivoXml.setP_tipo_documento_fiscal_id(1);
+			vArchivoXml.setV_recepcionId(0L);
+			vArchivoXml.setP_codigo_sistema("39562F");
+			iutil.registrarLogCertificacionSistemas(vArchivoXml, pListaErrores);			
+				
+			LOG.info("testRegistrarLogCertiticacionSistemas ==>"+vRespuesta.toString());  
+		} catch (Exception e) {
+			LogExcepcion.registrar(e, LOG, MethodSign.build(vRespuesta));
+			LOG.info("registrarLog Certificación Sistemas||Excepcion");
+		}
+	}
+	
+	@Test
+	@Rollback(false)
+	public void testRegistrarLogEtapa7CertiticacionSistemasListaNula() throws Exception{
+		
+		RespuestaXmlXsdDto vRespuesta = new RespuestaXmlXsdDto();
+		XmlRecepcionGenericoDto vArchivoXml = new XmlRecepcionGenericoDto();
+		LOG.info("validarDatos de la Recepcion ||Iniciando");
+		try {
+			
+			//archivo decodificado
+			vArchivoXml.setV_archivo("H4sICBhqy1wEAGZhY3R1cmFDb21wdXRhcml6YWRhRXN0YW5kYXIudHh0AJVWXZeaMBD9QX3hQ3qWR1k+hC5REBKTNwM9CATLaZWvX98J61a2bk/bBw8akpk7d+7cuLPNFSd9kTd4zDTR8Uopw/2q90tL8AZ1zBNXNillfoibl6Qod9MKPVdDQwlS8kNwijTzkm2wQg9B+7Vxa5riKffcK/Pc0d+cLtwzpu35NB0TpTxuYiWzv3Uveq7no6GHo9FlTdaF1boP9yZN0iGh2klw4lyOxJjjUC0tl3GY/V9x4KzM3V65Ypw4wVPmuRXDqDp6+ELToaOaqxyJed3tg3+q6UViePY/2dG3wreHipJAUA2PNAFeynXhP6+feCOUmKhtppnjrnJ6wKWHdgjP8OlFM9rcwZfjAXVZtThzxhd2CLq4cat8M8frQ3s9oGQtz6iAfeQKO1E9VrPGkfnluWLnIZVVq4ERXDE7L1FiCUaoyhJcMi/VUYIrmqxhTzahpO+ojptdoXyBszP+nLAaMGooqfUYPqFdr6KaruIaeVs7trZp2qMauXFlPUdKNO6ezfnMMgbX4pZpZpITpGZndOL2qpf7Htfv9YKuRkZQNXNfIytxBtd3hl06WlGcGrtIMROIUR8Pkl/Ucm21qHnW5ZmrlsrPcYcbfM09p/i6Qe22MVpug143gcr2fvEyLXI2GPruupyIac5b+X2Y1JfQTuETpGFSfA6T9Wfg/Qp8qJC/AYzfaCr79TsGo+MkGBkOTl8b85pqJtTi/pC1pGrsJlBLUlokToeAlNZ+nyI/woHj233HG/NCz4FIG/cz14yEQ32U9B/UF7eZZzrwHvovazQD5smnqCmJPoWynxpwRPIOe6LnSiz7e2HEULgiavk8kvjE7A905sk+qkLyt6tCZWtn+taOfmntXawFh1TOhjeIVzxPf+X8DV+kDa2MxZKVttCGzT0hMYgP9ITYIQYezIjCedAoYLvxoqgCuKih/yemPS14u2FX41PWtOJfNMGJKXlNuR5LfQ5okhyo3awrz1Te9+V1PfbwBNzcuPNlPReuSc5jkUGvXjl75CCBXAz6savoags6eFi/c6AcDxZw5l5oI15r12ct2JSo5ZEsa15iHRDgEMxzQBuZ8guXGnfgXz8+yPODHYD/BtbqQXzdW9v++7pAdjptSyvkelhk4G15I+ScTr4XCwqz5m+kHsUVZkLJGhfujbRgZFVAPeCRci88D2EB/lOAj0sdteCd9cuzVQHG+bu/qWXsM/jt67sK5sLDBnBXL700PyBV+jCfjH3iKMADeDFxxzsH93l5p1kVCfBK6bHDXW/vZimB2Va4fvPyuR9uCWvil7/aQ80OoAtvWOpTenCbN3IGY1fWzDW1pRpwbjsKmtbS+/605yMPGwGbKrGmmpCeNGwT+qb1x/ePcxJljVnnspbJiNJSkfdGjxb6SjdBxza4yr0lZ7NWR9DZzYPdMFaeCuKeKOCHulGVNaKn83+CpZbd9/5z/32PvcHX2XccVTD5LjFwUkfQu9/X73GzTSBkLkzgfvRe+xtWM5d91mCJEct7ddbC4/w6Em/+j56U6bi8zfZbDtBUcPOAR69MNQx40r/Gfdu/B1897q1VptWfAfMP+G+hZGcs/HLd3foH/Y2FnEnupZI3+P12t7s2aKXPQXfA/2cKfMUwZ1TOxcH/9BMEXM0csAkAAA==");
+			vArchivoXml.setV_archivoXml(iutil.decodificarArchivo(vArchivoXml.getV_archivo()));
+			vArchivoXml.setP_tipo_ambiente_id(2);
+			vArchivoXml.setP_tipo_documento_sector_id(18);
+			vArchivoXml.setP_tipo_documento_fiscal_id(1);
+			vArchivoXml.setV_recepcionId(0L);
+			vArchivoXml.setP_codigo_sistema("39562F");
+			iutil.registrarLogCertificacionSistemas(vArchivoXml, null);			
+				
+			LOG.info("testRegistrarLogCertiticacionSistemas ==>"+vRespuesta.toString());  
+		} catch (Exception e) {
+			LogExcepcion.registrar(e, LOG, MethodSign.build(vRespuesta));
+			LOG.info("registrarLog Certificación Sistemas||Excepcion");
+		}
+	}
+	
+	@Test
+	@Rollback(false)
+	public void testRegistrarLogEtapa7CertiticacionSistemasArchivoNulo() throws Exception{
+		
+		RespuestaXmlXsdDto vRespuesta = new RespuestaXmlXsdDto();
+		XmlRecepcionGenericoDto vArchivoXml = new XmlRecepcionGenericoDto();
+		List<Integer>  pListaErrores = new ArrayList<>();
+		LOG.info("validarDatos de la Recepcion ||Iniciando");
+		try {
+			
+			//archivo decodificado
+			vArchivoXml.setV_archivo("H4sICBhqy1wEAGZhY3R1cmFDb21wdXRhcml6YWRhRXN0YW5kYXIudHh0AJVWXZeaMBD9QX3hQ3qWR1k+hC5REBKTNwM9CATLaZWvX98J61a2bk/bBw8akpk7d+7cuLPNFSd9kTd4zDTR8Uopw/2q90tL8AZ1zBNXNillfoibl6Qod9MKPVdDQwlS8kNwijTzkm2wQg9B+7Vxa5riKffcK/Pc0d+cLtwzpu35NB0TpTxuYiWzv3Uveq7no6GHo9FlTdaF1boP9yZN0iGh2klw4lyOxJjjUC0tl3GY/V9x4KzM3V65Ypw4wVPmuRXDqDp6+ELToaOaqxyJed3tg3+q6UViePY/2dG3wreHipJAUA2PNAFeynXhP6+feCOUmKhtppnjrnJ6wKWHdgjP8OlFM9rcwZfjAXVZtThzxhd2CLq4cat8M8frQ3s9oGQtz6iAfeQKO1E9VrPGkfnluWLnIZVVq4ERXDE7L1FiCUaoyhJcMi/VUYIrmqxhTzahpO+ojptdoXyBszP+nLAaMGooqfUYPqFdr6KaruIaeVs7trZp2qMauXFlPUdKNO6ezfnMMgbX4pZpZpITpGZndOL2qpf7Htfv9YKuRkZQNXNfIytxBtd3hl06WlGcGrtIMROIUR8Pkl/Ucm21qHnW5ZmrlsrPcYcbfM09p/i6Qe22MVpug143gcr2fvEyLXI2GPruupyIac5b+X2Y1JfQTuETpGFSfA6T9Wfg/Qp8qJC/AYzfaCr79TsGo+MkGBkOTl8b85pqJtTi/pC1pGrsJlBLUlokToeAlNZ+nyI/woHj233HG/NCz4FIG/cz14yEQ32U9B/UF7eZZzrwHvovazQD5smnqCmJPoWynxpwRPIOe6LnSiz7e2HEULgiavk8kvjE7A905sk+qkLyt6tCZWtn+taOfmntXawFh1TOhjeIVzxPf+X8DV+kDa2MxZKVttCGzT0hMYgP9ITYIQYezIjCedAoYLvxoqgCuKih/yemPS14u2FX41PWtOJfNMGJKXlNuR5LfQ5okhyo3awrz1Te9+V1PfbwBNzcuPNlPReuSc5jkUGvXjl75CCBXAz6savoags6eFi/c6AcDxZw5l5oI15r12ct2JSo5ZEsa15iHRDgEMxzQBuZ8guXGnfgXz8+yPODHYD/BtbqQXzdW9v++7pAdjptSyvkelhk4G15I+ScTr4XCwqz5m+kHsUVZkLJGhfujbRgZFVAPeCRci88D2EB/lOAj0sdteCd9cuzVQHG+bu/qWXsM/jt67sK5sLDBnBXL700PyBV+jCfjH3iKMADeDFxxzsH93l5p1kVCfBK6bHDXW/vZimB2Va4fvPyuR9uCWvil7/aQ80OoAtvWOpTenCbN3IGY1fWzDW1pRpwbjsKmtbS+/605yMPGwGbKrGmmpCeNGwT+qb1x/ePcxJljVnnspbJiNJSkfdGjxb6SjdBxza4yr0lZ7NWR9DZzYPdMFaeCuKeKOCHulGVNaKn83+CpZbd9/5z/32PvcHX2XccVTD5LjFwUkfQu9/X73GzTSBkLkzgfvRe+xtWM5d91mCJEct7ddbC4/w6Em/+j56U6bi8zfZbDtBUcPOAR69MNQx40r/Gfdu/B1897q1VptWfAfMP+G+hZGcs/HLd3foH/Y2FnEnupZI3+P12t7s2aKXPQXfA/2cKfMUwZ1TOxcH/9BMEXM0csAkAAA==");
+			vArchivoXml.setV_archivoXml(iutil.decodificarArchivo(vArchivoXml.getV_archivo()));
+			vArchivoXml.setP_tipo_ambiente_id(2);
+			vArchivoXml.setP_tipo_documento_sector_id(18);
+			vArchivoXml.setP_tipo_documento_fiscal_id(1);
+			vArchivoXml.setV_recepcionId(0L);
+			vArchivoXml.setP_codigo_sistema("39562F");
+			iutil.registrarLogCertificacionSistemas(null, pListaErrores);			
+				
+			LOG.info("testRegistrarLogCertiticacionSistemas ==>"+vRespuesta.toString());  
+		} catch (Exception e) {
+			LogExcepcion.registrar(e, LOG, MethodSign.build(vRespuesta));
+			LOG.info("registrarLog Certificación Sistemas||Excepcion");
+		}
+	}
+	
+	@Test
+	@Rollback(false)
+	public void TestVerificacionFirma() throws Exception{
+		// computarizada OK
+		XmlRecepcionGenericoDto vArchivoXml = new XmlRecepcionGenericoDto();
+
+		Respuesta vRespuesta = new Respuesta();
+		LOG.info("recepcionFactura ||Iniciando");
+		try {
+			//***            
+			vArchivoXml.setP_codigo_sistema("E79A306");
+			vArchivoXml.setP_tipo_ambiente_id(2);
+			vArchivoXml.setP_tipo_emision_id(1);
+			vArchivoXml.setP_tipo_modalidad_id(2);
+			vArchivoXml.setP_nit(1020703023L);
+			vArchivoXml.setP_cuis("10DC8801");
+			vArchivoXml.setP_cufd("8F35E3A6970F81B67E41535CC2C492CE");
+			vArchivoXml.setP_tipo_documento_fiscal_id(1);
+			vArchivoXml.setP_tipo_documento_sector_id(1);
+			vArchivoXml.setP_sucursal_id(0);
+			vArchivoXml.setP_punto_venta_id(null);			
+			vArchivoXml.setP_fecha_envio("2019-06-13T12:27:27.829");
+//			vArchivoXml.setvOrigenServicio(1);
+//			vArchivoXml.setV_archivo("H4sIAAAAAAAAAJ1YW3OrOpP9QftFArMrfpiHYBCGGDkIXYzeuLiCQdjsxBfg109jJ/tkz5wzX52pShXhInX36tWrW34NdJ3ZDJcdIUUgm2odXYvONJmQUxWQiw7IGK7rcxE407Zj02sanao1u20PT9fKruzNsZw23XLU49MYe8+3zfTsbOz5ezblqmzCg7so1HApp35RWu0y7GpUrZ9/bsYlrC4v1RRfCjs6bqbwFnv+Vfk4FhY9aYXrjTKX0mZ10VEz7wPrfxbdcpspbErbrTNL8syqTaFIXFi0rgJzLRp00B2BOOQIMXxoRVHZLS+5ojXbUZQpp8124WW/pm3YLF5eA1pnnWz0Lqpf305PEDtiCveltRxfGx98ijGd2lvcvD1tLKevfHnOd/Ra3tc6uFByLNAXhv4Pyp+H19XyUs0+dssgA/vV596ZLbvXhhjwqaVWiONAdnFHuq0HsQcS4vGR5s946705sEdTqezHqhngqtvXJrFjblaU+5jx+JY0zyNtxCKZQjtBURA37SJpTMCE9h9rYc1s01q2uaquwobc7qIpU7cfsXe7/t1zsNXmu8hkFu0La/EjschHEYi3pJuvxsoVuYS+Mxbj4i3m8RRPt6sOzAjxNLlaXv6wt5aXKlgqrRyUpV+5Mx/AH1QepQHsAU86rz8W2MXFkV1lN6/xZz862PME+ZuxvvsSN8/DNkU3ekBDbJKBTqcx5icUrxZOPLWwlwa/6/qRu5kH9/xcCxWNWkb1HjggrCX4ST5eW9wD1y/gVwJ5N/vmBpxfnrNjZERHfhaWw4FP/ScmTWGxXltLke/cKwtmbLGZ/U0Vm6891Ajkx/8WD+vLYOnDHjM/ZhwiHcxX02Yqmff84se3b55+UC++zbmf81Mc5Rl8+8PeJ77nMhjM55o34HG/7Zy+8NABahfrNPwx57+w8A1iPM/4F9Od5w/fEP3I72vFH/a+8pZYQz+v0fz7GmwghhbyVGvr6UfM//qeK4kAn6sIyPFh57MmMKvLrod1/j/5+IWByHbRL71jj/oDHoEtUcx17y3Grfd8uePx53Owg68zJiyQE9TVA58mvG2aZ8jD37z7xk0Oe2kF9ppssf0jls/n8C3k6gZY1cCfHuIa7vva97x6oD+HXD3NeTwDVxDEegWt/Phr33ABvLxBjH//fo4zkI6etYg7pFi5N8DB0kq2hR2+AVcOsx6F65kb5gI1ABoGOhzID3hmyqPuM+A43F/CYKjL0QU7gMudX8zAvROu4doBz7vlFAbLDvYD7WNXeAfrKOCjDdQj2IsBr8HsgRP6UXu4tCXkzlxf29+9Ab6Lkrlusw54bkNvUGT8xOCrPr7znc+6C7H8wZXvXBYW6E4AGvstL2xXgw67dy35/i30nynnPWj4bRke2VgpcXhtvu37D+vmvaEm/9B3wBZwGD4e/IY+cdc1VmtfQhyzXkDv4wvQ2mfQfLABceQ7fa9xpuhdJ+Ze8qfWRVe9vsfDc7WAunq+QR/4rm8jYIQBS4jbXP5+7dMPLsT5/1r76T9wOgIePnQx6yBfFpmAa63e0Qbydst+6x/w97c+hXcsft/PHFfO/X+o4TZ/1MMI++CZF8AVClztPzkB/JQzvnLuj1Cv95oAP++1Wa7nnmGuEvYDno9/1AYCHgIv7jo0/lMf+Pt6BR4eZLBE9541PT9q26Y4M496utfRp04Cn8Cu+E9aw+Hb/p77O15zzQxm3gfyciw6Mvdq8zXv/OtZZ8acUKgFx2jfXHR3xwH0wnnMVGro92Bj5umsmzloauiTD6idMd+xU8HRIV8zVHqn6wbsVaNjx6NzLbvyKkl4hR54i9NlykR83gf4Y6PigQaL8/05f55i/qgL6NsXwB40gnzku/4xF7WzhtdX7f32sZ5nJC0+n69ctwgqsGXAL/Qf57TYS66zDxrw1iM+wzsT2jBHpHjKA3+kPLv78h3Xr5jveHdy1iRzn+2ITFOI/YEfGwGvSQPOxS6e8ROgP5fS0uAbekvUcARbwLP6/G/zAxwEjR2uZSDbze4bBg+OfLfz/7S7FOJwtz1scESSEcPseztnk4+KA7o/h3lyoCndzflOoJff9XId37GS6wjqk3Zg53zXLvy/sPBBM2D2hdqc+WIl/waPAfBADzxg9hnpH3lioDWgH+h7jr6eSZj/QHNBn4ZIEO0xVCu5piLnz1fdYaqtN9Ag1paiDyofvSddPyaqdymWfrxzVT6hpw2aewT0DaLrYi3NI77I6A7wV07zWZOgn9XcI6Oi09f/WZdffqy6BKUdmlRbHbRH+wTLLYOzwAaTUyJPOBNowW09VT7U/bH62Bty3O7cmwqqkHn1qBFO+bjcyHYpEkmAxxlKVImKloZpY9aVDxpjlS/xZGzquUSj20LLmhYes5hk2xjRiE1yDdocpEFd0669yvT8wUyFUlyfoJ6PQvlW0Ya3pO3fhSSLcpLNy+QaeXRb2tANt8KpaG8of+5PrB2sEp9ulERxpdAUt06y98w7JbRhNstjWbNYLX9xY1i57pNC6JPyqCz85Ta1M5ThChAZIB91sD9Kvu9gbcPOmymyBYp+Vqp9XzXVpvSHDehSLAO9KVdnh6+JkZaj40afqRqcKnDSlFCVmxZLL/qVe/qwh3zKY9SW7dN7qZ6QEgy+GwgHQdqvn1HhL6y8e7PTdfQuiP/CvTpOG3naq2qT+2xL1zA3wDlMBsQoj7h5QxxG+gNd11FsWLsl/vI1mbnwrR7lXxxJLemkyunusyV5w7Fn/OxzVlSeuG3FPA8Bt2Z93TFY09NUGJ/avZcggrSq3AqZVaKqKFWkBiwz6dUybwk8Z0yJflPgPsrXuuEtYXB+WglBbL7uiRDYpX7lxlKSZFfZKTE7cWS1nKS/MkQwsaTwfJ1wIpmgxwppJmUEy2S09+nPRPQrjRyVtERLn7ynxqVJwzJGGKEC+3xXbfPW2Fz1skJYFbj2pQ/3gtEKOSLdlS+/39nVUXd0kRLmZm105EavEoEFa2WeGPJeEDdibb+SRDiwB2GGQlfXSmD4rsU8t6uXChtfwqsUSScxLJVtvwNft+lbL/YiIsLQVWqYSoyGd46UHqEas3fWMi65eRVSLpiRP5lwIG76FfeCC5nGMnoRu55IhAG/B2bMjyg3EZGGMbDFVya57eH4ChglUvUEjrJujj7x7WqaYPK+XdfeviUvSVdtZRt5FOLNkfPCZcQqJI9K1BuIYwV1SwDXFRf1lhF/4IZpqJufTMYvXEQuQ/RYSPoC5yCxDcwiR5BbCXvNeMsI8JWQe/iTJGC76hr7ji852QL3J8CfUB/z0q42QpqX1FrmqaqtDDmuUOcV6+pFkfRaov6WHVu8l2YX73QT+9EtM/Uqln3GG/cQI4xVEzq5GM7pUc+8XKWgixzyl9vklFtmvd2VoBF33rmJWHqJ9BeQ1ygVkafR2Vvd3xErtvVx75/PWePWKdR6eXzD8F2Y++cptZxfe4hDd/WvIjjb4AvO1z1Kbb3jXGaJqTuGyKsMhlOKnK1o6VpbxoeZyY877bO1eNkfTZZ2bw4PKrGxxKKy4yuVLKM+pbqtDZsYS5W2hMzg3NuvS2MuaTdQIbWjYRbIsUzyLrxq07uVT3pO6rBqoTfhKNsGoZXjFrHktGCTCXkjR4nFmCrMFfCgsuQlHZdG7MxCTjXWXTbuialT+TZsPf0rE082Pyw/UkxfYF7+SNsB8Tl/XnbdTPqnQHWTBlqXuCalIN6qQ1AthLM1fWeNm+diGQBU19LKFlTpMLUrJhXL0iO9pROJaOAkAnCNhTlpY9xKuka19Aa+noRvpq1whG6Iijv/ncJcJyX0nXbxkhxlnQrppTu3YyLi+8MHFk102PqLaYMqXViRA31ghLq1yhafk8aVLF2yVDAXNGZVTK6ucORDHu86kYIrsI9I7u/frlyQid36uT5atq5mHtipEAvmk8ujPmqYBaEwfGLyADgJPEyP7mHPpaNkOVRdfEvgXvnhoEy9jYNw4juZx43peYBfqha7sV95wibrlaFR1lBfCLkCPZGJ8BFwcPbTKgKcFEqMOTLvidC4wISnanGtOug7Qt9iYkKhxE0JB2bqZ6Q6PObtcst5FGnVbzLTGynjiaVPL9tgcEovcbazrvG65rY8lt6bkwZRw3jklUZ6iut+u2a/KnMalU9B06J8v9O1Bq0RHPyVMKNOLMux+ZXC/CoNNEaYRSjMA7l1JmVysuGM9BGn5x33iCokFGQ3HLR/s+DsmmvvDbMgmVRX6bSLndxEbOs7KbVOg+KgvZ6+Ms/N4CyhKMym6qjPqnG3MddhJaNDjs6s5BJqs/6lA+cl25XXFJ1vFGlTIq15QMKtSMa9b657FVlbFb7nsgfdqKC3sSBtXKRtCToHGVqHi5j0Ow4dgSn8DjXbQpx5QUwD58KBmvZFINLnBPRWQCtsJc+PerU/hu8cseOWU81thuJAHgrfDAkXKJFvdtaQnUDmQyuEGDZTYRsrbtE8Y2VwbnMSOC/BuaCbz7Lzb0ErmAEf/ZTVj9/gbtc/eu/nbAY9FpedmOfl7uu3TaYGA+fT8fPMQR6/2bK6bBb/9d+SYgNcYBYAAA==");
+//			vArchivoXml.setV_hash_archivo("9414c2a641fae3f03fbbbdce67e6e714ddbc7c54dad5817b2373afed4aa10ca1");
+			vArchivoXml.setV_archivo("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");
+			vArchivoXml.setV_hash_archivo("433c3a03e1818fdd85decd73e4450d60f52a4a05c18a164d2bf415793378bbb8");
+			RespuestaListaRegistroRecepcionesSoapDto vRespuestaDto = iCoreFacturacionSoap.CoreFacturacionPrincipal(vArchivoXml, Parametros.Recepcion);
+			// conversion a interfaces
+			vRespuesta.setCodigoRecepcion(vRespuestaDto.getCodigoRecepcion());
+			vRespuesta.setTransaccion(vRespuestaDto.isTransaccion());
+			vRespuesta.setCodigoEstado(vRespuestaDto.getCodigoEstado());
+			vRespuesta.setListaCodigosRespuestas(vRespuestaDto.getListaCodigosRespuestas());
+
+			LOG.info("registrarRecepcion CompEstandar ==>"+vRespuesta.toString());
+			// Caso Computarizado Ideal 
+			// codigoRecepcion=12594
+		} catch (Exception e) {
+			LogExcepcion.registrar(e, LOG, MethodSign.build(vRespuesta));
+			LOG.info("registrarRecepcion Estandar||Excepcion");
+			vRespuesta.setCodigoRecepcion(0L);
+			vRespuesta.setTransaccion(false);
+			vRespuesta.setCodigoEstado(CodigosMensajesServiciosSOAPServiceImpl.RECEPCION_RECHAZADA);
+			vRespuesta.getListaCodigosRespuestas().add(CodigosMensajesServiciosSOAPServiceImpl.ERROR_DE_EJECUCION_DEL_SERVICIO);
+		}
+	}
+}

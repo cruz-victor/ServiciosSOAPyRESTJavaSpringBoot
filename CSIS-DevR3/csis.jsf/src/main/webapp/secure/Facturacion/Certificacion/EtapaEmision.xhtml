@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor"
+	xmlns:workflow="http://java.sun.com/jsf/composite/workflow"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<!-- <f:viewAction action="#{logedBean.check}" /> -->
+		<!-- 		<f:viewAction action="#{AprobacionCerttificacionController.Load}"/> -->
+	</f:metadata>
+
+	<ui:define name="title">
+        Revisar Pruebas iniciales y Emitir Certificado de Cumplimiento de Sistemas Computacionales (CCSC)
+    </ui:define>
+
+	<ui:define name="body">
+		<div class="box box-primary">
+			<h:form id="AprobacionRechazosistemasForm">
+				<div class="box-header with-border">
+					<h3 class="box-title ">GESTION DE PRUEBAS</h3>
+					<div class="box-tools pull-left">
+						<button type="button" class="btn btn-box-tool"
+							data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="chart">
+						<div class="row"></div>
+
+						<p />
+						<br />
+						<h:panelGroup id="idListadoDetalles">
+							<h:panelGroup id="idListadoSistemas">
+								<!-- 								rendered="#{aprobacionCertificacion.comportamientoPaginaModel.esVisiblePanelGroup and registroSolicitudSistemasController.comportamientoPaginaModel.esVisiblePanel}"> -->
+								<p:tabView>
+									<p:tab title="DETALLE DE GESTION DE PRUEBAS">
+										<div class="row">
+											<div class="col-xs-12"></div>
+										</div>
+									</p:tab>
+									<p:tab title="EMITIR CCSC Y FIRMA DIGITAL">
+										<p:panelGrid columns="2"
+											columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-6"
+											layout="grid">
+											<p:commandButton value="Emitir CCSC" ajax="false"
+												onclick="PrimeFaces.monitorDownload(start, stop);"
+												styleClass="btn-sm btn-block btn-primary">
+												<p:fileDownload
+													value="#{etapaEmision.obtenerCertificadoDeAprobacion()}" />
+											</p:commandButton>
+										</p:panelGrid>
+										<br/>
+										<p:outputLabel value="Enviar Archivo Firmado Digitalmente" />
+										<br/>
+										<p:panelGrid columns="4"
+											columnClasses="ui-grid-col-4,ui-grid-col-2,ui-grid-col-2,ui-grid-col-4"
+											layout="grid">
+											<p:fileUpload id="archivoSubir" uploadLabel="Adjuntar Archivo Firmado Digitalemnte"  skinSimple="true"
+												update="@widgetVar(archivo), @widgetVar(btnDescargar)"
+												auto="true" multiple="false" sizeLimit="5000000"
+												allowTypes="/(\.|\/)(pdf|PDF)$/" />
+											<p:commandButton value="Enviar"
+												onclick="PF('dialogCertificacion').show();"
+												styleClass="btn-sm btn-block btn-success" />
+										</p:panelGrid>
+									</p:tab>
+									<p:tab title="REGISTRO DE BITACORA">
+										<div class="row">
+											<div class="col-xs-12"></div>
+										</div>
+									</p:tab>
+								</p:tabView>
+							</h:panelGroup>
+						</h:panelGroup>
+					</div>
+				</div>
+			</h:form>
+		</div>
+		<workflow:botonera id="customBotonera"
+			linkRedireccion="#{contextoUsuarioModel.RutaBandeja()}"  
+			managedBean="#{etapaEmision.botoneraFacController}" />
+	</ui:define>
+</ui:composition>

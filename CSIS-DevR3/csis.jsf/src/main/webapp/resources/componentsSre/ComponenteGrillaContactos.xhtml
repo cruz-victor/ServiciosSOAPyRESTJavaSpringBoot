@@ -1,0 +1,432 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+
+<composite:interface>
+	<composite:attribute name="ComponenteIdTrasActualizar" />
+	<composite:attribute name="ComponenteIdTrasEliminar" />
+	<composite:attribute name="ComponenteIdTrasEditar" />
+	<composite:attribute name="ComponenteIdTrasCancelarEdicion" />		
+	<composite:attribute name="EsVisibleOperaciones" />
+	<composite:attribute name="EsVisibleOperaciones" />
+</composite:interface>
+
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+
+<style type="text/css">
+/*     .ui-datatable table tbody tr td .ui-row-editor .ui-icon-pencil  {
+        margin-left:8px;
+        icon:'fa fa-pencil-circle fa-2x'
+    } */
+    
+/* .ui-datatable table tbody tr td .ui-row-editor .ui-icon-pencil 
+{
+  background: none !important;
+   text-indent: initial;
+    display: inline-block; 
+   font: normal normal normal 14px/1 FontAwesome;
+   font-size: inherit;
+   text-rendering: auto;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   transform: translate(0, 0);     
+   height: 20px;
+  width:20px;
+} 
+
+.ui-datatable table tbody tr td .ui-row-editor .ui-icon-pencil:before {
+   content: "\f044";
+   height: 20px;
+  width:20px;
+}
+.ui-datatable table tbody tr td .ui-row-editor .ui-icon-pencil:hover {
+   font-weight: bold;
+   height: 20px;
+  width:20px;
+}  */
+/* 
+.ui-datatable .ui-row-editor .ui-icon-pencil:before{
+    content: "\f040";
+}
+
+.ui-datatable .ui-row-editor .ui-icon-pencil {
+    font-family: FontAwesome;
+    background-image: none !important;
+    text-indent: 0px;
+    background-repeat: no-repeat;
+    display: block;
+    overflow: visible;
+    text-indent: 0px;
+}
+
+.ui-icon-check {
+   font-family: FontAwesome;
+    background-image: none !important;
+    text-indent: 0px;
+    background-repeat: no-repeat;
+    display: block;
+    overflow: visible;
+    text-indent: 0px;
+}
+.ui-icon-close {
+   font-family: FontAwesome;
+    background-image: none !important;
+    text-indent: 0px;
+    background-repeat: no-repeat;
+    display: block;
+    overflow: visible;
+    text-indent: 0px;
+}
+
+.ui-icon-close:before{
+    content: "\f00d";
+}
+
+.ui-icon-check:before{
+    content: "\f00c";
+}
+ */
+ 
+.ui-datatable .ui-row-editor .ui-icon-pencil:before{
+    content: "\f14b";
+}
+</style>
+
+
+	<h:form id="idComponentGrillaContactosForm">
+<!-- 	<p:remoteCommand name="rc" update="#{p:component('commandB')}" global="true" /> -->
+ 		
+        	
+        	
+			<p:dataTable id="idComponentelistaDatoContribuyentes"
+				value="#{certificacionSolicitudCertificacionList.listaContactos}"
+				var="gc" rowIndexVar="rowIndex" rows="5"
+				widgetVar="idComponentelistaDatoContribuyentes" paginator="false" editable="true"
+				emptyMessage="Registros no encontrados." paginatorPosition="bottom"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+				styleClass="table table-striped table-bordered table-hover table-sm">
+	
+				<!-- <p:ajax event="cellEdit"
+					immediate="true"
+					listener="#{certificacionSolicitudCertificacionList.onCellEdit}"
+					update="#{p:component('idComponentelistaDatoContribuyentes')}" global="false"/> -->
+	
+				<p:ajax event="rowEdit"  listener="#{certificacionSolicitudCertificacionList.onRowEdit}" update="#{p:component('idComponentelistaDatoContribuyentes')} #{cc.attrs.ComponenteIdTrasEditar}" global="false" />
+	        	<p:ajax event="rowEditCancel"  listener="#{certificacionSolicitudCertificacionList.onRowCancel}" update="#{p:component('idComponentelistaDatoContribuyentes')} #{cc.attrs.ComponenteIdTrasCancelarEdicion}" global="false" />			
+				<p:ajax event="rowEditInit"  listener="#{certificacionSolicitudCertificacionList.sumadorEditados}" global="false" update="#{cc.attrs.ComponenteIdTrasEditar}"/>
+				
+				
+				<p:column headerText="N°" width="5%">
+					<p:outputLabel value="#{rowIndex+1}" />
+				</p:column>
+	
+				<p:column headerText="Nombre Completo"
+					filterBy="#{gc.nombre}" filterMatchMode="contains"
+					filterStyle="display:none">
+					<p:cellEditor>
+						<f:facet name="output">
+							<p:outputLabel value="#{gc.nombre}" />	
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{gc.nombre}" requiredMessage="Campo requerido" required="true">
+								<p:keyFilter regEx="/[a-zA-Z áéíóúñÁÉÍÓÚÑ0-9_-]/i" />					
+								<f:ajax event="valueChange" oncomplete="onCellEdit()" immediate="true" process="@this" update="idComponentelistaDatoContribuyentes"> </f:ajax>
+							</p:inputText>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				
+				<p:column headerText="Tipo Documento"
+					filterBy="#{gc.nombre}" filterMatchMode="contains"
+					filterStyle="display:none">
+					<p:cellEditor>
+						<f:facet name="output">					
+							<p:outputLabel value="#{(solicitudCertificacionController.certificacionParametrics.listaTipoDocumentoIdentidad.stream().filter(lista -> lista.clasificadorId.equals(gc.tipoDocumentoIdentidad)).findFirst().orElse(null)).descripcion}" />						
+						</f:facet>
+						<f:facet name="input">
+							<p:selectOneMenu id="idTipodocumentoIdentidad"
+								value="#{gc.tipoDocumentoIdentidad}"
+								readonly="false"
+								
+								validatorMessage="Debe seleccionar un valor"
+								requiredMessage="Campo requerido"											
+								required="true">
+								<f:selectItem itemValue="#{null}"
+									itemLabel="Seleccione Tipo Documento" />
+								<f:selectItems
+									value="#{solicitudCertificacionController.certificacionParametrics.listaTipoDocumentoIdentidad}"
+									var="c" itemLabel="#{c.descripcion}"
+									itemValue="#{c.clasificadorId}" />
+								<p:clientValidator event="change" />
+								<p:clientValidator event="focus" />
+							</p:selectOneMenu>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+	
+				<p:column headerText="Número Documento"
+					filterBy="#{gc.numeroDocumento}" filterMatchMode="contains"
+					filterStyle="display:none">
+					<p:cellEditor>
+						<f:facet name="output">
+							<p:outputLabel value="#{gc.numeroDocumento}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{gc.numeroDocumento}" requiredMessage="Campo requerido" required="true" maxlength="20">
+								<p:keyFilter regEx="/[0-9a-zA-Z]/i" />
+							</p:inputText>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				
+				<p:column headerText="Complemento"
+					filterBy="#{gc.complemento}" filterMatchMode="contains"
+					filterStyle="display:none">		
+					<p:cellEditor>
+						<f:facet name="output">
+							<p:outputLabel value="#{gc.complemento}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{gc.complemento}" requiredMessage="Campo requerido" maxlength="2" required="false">							
+								<f:validateRegex pattern="^([0-9])([a-zA-Z])" />
+							</p:inputText>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				<p:column headerText="Correo Eletrónico"
+					filterBy="#{gc.correo}" filterMatchMode="contains"
+					filterStyle="display:none">
+					<p:cellEditor>
+						<f:facet name="output">
+							<p:outputLabel value="#{gc.correo}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{gc.correo}" requiredMessage="Campo requerido" required="true">
+								<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							</p:inputText>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				<p:column headerText="Celular"
+					filterBy="#{gc.celular}" filterMatchMode="contains"
+					filterStyle="display:none">
+					<p:cellEditor>
+						<f:facet name="output">
+							<p:outputLabel value="#{gc.celular}" />
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#{gc.celular}" requiredMessage="Campo requerido" required="true" maxlength="20">
+								<f:validateRegex pattern="^[0-9\+]{8,}$" />
+								<p:clientValidator event="blur" />
+								<p:clientValidator event="keyup" />
+								<p:keyFilter regEx="/[0-9]/i" />
+							</p:inputText>
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+	
+	
+				<p:column width="10%" style="text-align:center"
+					rendered="#{cc.attrs.EsVisibleOperaciones}">
+					<f:facet name="header">
+						
+						<h:outputText value="Operaciones"/>
+					</f:facet>
+					<p:rowEditor/>
+					<p:commandLink styleClass="text-red" type="button" process="@this" ajax="true" oncomplete="PF('componenteCuadroDialogoEliminar').show();">
+						<i class="fa fa-trash fa-2x"></i>
+						<f:setPropertyActionListener value="#{gc}" target="#{certificacionSolicitudCertificacionList.contactos}" />
+					</p:commandLink>			
+				</p:column>
+				<!-- ADICIONAR -->
+				<f:facet name="footer" class="text-left">
+		            <p:outputPanel class="text-left">
+		            
+		                <p:commandButton  value="Adicionar Contacto" style="width:175px" icon="fa fa-plus text-primary" actionListener="#{certificacionSolicitudCertificacionList.limpiar}"					
+										  oncomplete="PF('componenteCuadroDialogo').show();"
+							 			  global="false" styleClass="btn btn-primary btn-sm ui-confirmdialog-yes bg-green"/>
+		            </p:outputPanel>
+		        </f:facet>
+		        
+			</p:dataTable>
+		 
+		 <p:dialog id="componenteCuadroDialogoEliminar" header="¿Desea quitar el Contacto?"
+			widgetVar="componenteCuadroDialogoEliminar"
+			position="center center center center" modal="true" showEffect="fade"
+			hideEffect="fade" resizable="false">
+			
+			<p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" layout="grid" styleClass="ui-fluid">
+				<p:commandButton id="idComponenteCuadroDialogoEliminarAceptar" 
+								 value="Aceptar" 
+								 styleClass="ui-confirmdialog-yes" 
+								 icon="pi pi-check" update="#{cc.attrs.ComponenteIdTrasEliminar} #{p:component('idComponentelistaDatoContribuyentes')}"
+								  actionListener="#{certificacionSolicitudCertificacionList.eliminarContacto}" process="@this" global="false" oncomplete="PF('componenteCuadroDialogoEliminar').hide();"/>
+				
+				<p:commandButton id="idComponenteCuadroDialogoEliminarCancelar" value="Cancelar" styleClass="ui-confirmdialog-no" icon="pi pi-times" oncomplete="PF('componenteCuadroDialogoEliminar').hide();" global="false"/>
+			</p:panelGrid>
+		</p:dialog>
+		
+		
+
+		<p:dialog id="componenteCuadroDialogo" header="Adicionar Contacto"
+			widgetVar="componenteCuadroDialogo" width="50%"
+			position="center center center center" modal="true" showEffect="fade"
+			hideEffect="fade" resizable="false" appendTo="@this" styleClass="ui-fluid">			
+				<p:panel id="idPanelComponenteDatosContacto">
+					<p:panelGrid columns="3"
+						columnClasses="ui-grid-col-2,ui-grid-col-1,ui-grid-col-9" layout="grid">
+												
+						<p:outputLabel for="idPersonaContacto" value="Nombre Completo"	style="font-weight:bold" />
+						<p:row><div style="font-weight:bold;color:red;text-align:left"><p:outputLabel value="(*)"></p:outputLabel></div></p:row>
+						<p:row>
+							<p:inputText id="idPersonaContacto"
+								w:placeholder="Nombre Completo" readonly="false"
+								validatorMessage="Nombre Incorrecto"
+								required="true"
+								requiredMessage="Campo requerido" 
+								value="#{certificacionSolicitudCertificacionList.contactos.nombre}"
+								maxlength="250">
+								<p:keyFilter regEx="/[a-zA-Z áéíóúñÁÉÍÓÚÑ0-9_-]/i" />
+								<p:clientValidator event="blur" />
+								<p:clientValidator event="keyup" />
+							</p:inputText>
+							<p:message for="idPersonaContacto" />
+						</p:row>
+											
+						<p:outputLabel for="idTipodocumentoIdentidad" value="Tipo Documento" style="font-weight:bold"/>
+						<p:row><div style="font-weight:bold;color:red;text-align:left"><p:outputLabel value="(*)"></p:outputLabel></div></p:row>
+						<p:row>
+	       					<p:selectOneMenu id="idTipodocumentoIdentidad"
+								value="#{certificacionSolicitudCertificacionList.contactos.tipoDocumentoIdentidad}"
+								readonly="false"
+								filter="true"
+								appendTo="@this"
+								validatorMessage="Debe seleccionar un valor"
+								requiredMessage="Campo requerido"											
+								required="true">
+								<f:selectItem itemValue="#{null}"
+									itemLabel="Seleccione" />
+								<f:selectItems
+									value="#{solicitudCertificacionController.certificacionParametrics.listaTipoDocumentoIdentidad}"
+									var="c" itemLabel="#{c.descripcion}"
+									itemValue="#{c.clasificadorId}" />
+								<p:clientValidator event="change" />
+								<p:clientValidator event="focus" />
+							</p:selectOneMenu>
+							<p:message for="idTipodocumentoIdentidad" />
+						</p:row>
+						
+						<p:outputLabel for="idContactoCarnet" value="Número Documento" style="font-weight:bold" />
+						<p:row><div style="font-weight:bold;color:red;text-align:left"><p:outputLabel value="(*)"></p:outputLabel></div></p:row>
+						<p:row>
+							<p:inputText w:placeholder="Número Documento"
+								id="idContactoCarnet"
+								maxlength="20"
+								value="#{certificacionSolicitudCertificacionList.contactos.numeroDocumento}"
+								readonly="false" validatorMessage="Sólo número válido"
+								requiredMessage="Campo requerido" required="true">
+								<p:clientValidator event="blur" />
+								<p:clientValidator event="keyup" />
+								<p:keyFilter regEx="/[0-9a-zA-Z]/i" />
+							</p:inputText>
+							<p:message for="idContactoCarnet" />
+						</p:row>
+							
+						<p:outputLabel for="idComplemento" value="Complemento" style="font-weight:bold" />
+						<p:row></p:row>					
+						<p:row>
+							<p:inputText w:placeholder="Complemento" id="idComplemento"
+								value="#{certificacionSolicitudCertificacionList.contactos.complemento}"
+								readonly="false" required="false"
+								validatorMessage="Sólo código válido"
+								requiredMessage="Campo requerido" maxlength="2">
+								<f:validateRegex pattern="^([0-9])([a-zA-Z])" />
+								
+								<p:clientValidator event="keyup" />
+							</p:inputText>
+							<p:message for="idComplemento" />
+						</p:row>
+	
+						<p:outputLabel for="idCorreoContacto" value="Correo Electrónico" style="font-weight:bold" />
+						<p:row><div style="font-weight:bold;color:red;text-align:left"><p:outputLabel value="(*)"></p:outputLabel></div></p:row>
+						<p:row>
+							<p:inputText readonly="false" id="idCorreoContacto"
+								value="#{certificacionSolicitudCertificacionList.contactos.correo}"
+								type="text" class="form-control"
+								validatorMessage="Correo inválido"
+								requiredMessage="Campo requerido" 
+								required="true"
+								w:placeholder="Introduzca correo electrónico" maxlength="50">
+								<p:clientValidator event="blur" />
+								<p:clientValidator event="keyup" />
+								<f:validateRegex
+									pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							</p:inputText>
+							<p:message for="idCorreoContacto" />
+						</p:row>
+	
+						<p:outputLabel for="idCelular" value="Celular" style="font-weight:bold" />
+						<p:row><div style="font-weight:bold;color:red;text-align:left"><p:outputLabel value="(*)"></p:outputLabel></div></p:row>
+						<p:row>
+							<p:inputText w:placeholder="Celular" id="idCelular"
+								value="#{certificacionSolicitudCertificacionList.contactos.celular}"
+								readonly="false" validatorMessage="Sólo número válido"
+								requiredMessage="Campo requerido" 
+								required="true"
+								maxlength="20">
+								<p:clientValidator event="blur" />
+								<p:clientValidator event="keyup" />
+								<f:validateRegex pattern="^[0-9\+]{8,}$" />
+								<p:keyFilter regEx="/[0-9]/i" />
+							</p:inputText>
+							<p:message for="idCelular" />
+						</p:row>
+	
+					</p:panelGrid>
+			
+					<p:row><div style="font-weight:bold;color:red;text-align:left"><p:outputLabel value="(*) Campos Obligatorios"></p:outputLabel></div></p:row>
+			
+					<p:panelGrid columns="3"
+						columnClasses="ui-grid-col-8,ui-grid-col-2,ui-grid-col-2"
+						layout="grid">
+	
+						<p:spacer />
+	
+						<p:commandButton id="idComponenteCancelarDialogo" value="Cancelar" validateClient="false"
+							styleClass="btn btn-warning btn-sm btn-block" async="true" inmediate="true" resetValues="true"
+							process="@this" oncomplete="PF('componenteCuadroDialogo').hide();"
+							actionListener="#{certificacionSolicitudCertificacionList.cancelarContacto}"
+							update="idComponentelistaDatoContribuyentes idPanelComponenteDatosContacto #{p:component('idComponentelistaDatoContribuyentes')}">
+						</p:commandButton>
+	
+						<p:commandButton id="idComponenteAgregarContacto" value="Adicionar"
+							styleClass="btn btn-primary btn-sm btn-block" ajax="true"
+							validateClient="true" resetValues="true"
+							actionListener="#{certificacionSolicitudCertificacionList.adicionarContacto}"
+							process="idPanelComponenteDatosContacto"
+							oncomplete="PF('componenteCuadroDialogo').hide();"
+							update="idComponentelistaDatoContribuyentes #{p:component('idPanelComponenteDatosContacto')} #{cc.attrs.ComponenteIdTrasActualizar}" icon="fa fa-plus text-primary">
+							                                            
+						</p:commandButton>
+	
+					</p:panelGrid>
+				</p:panel>	
+		</p:dialog>
+		
+	</h:form>
+</composite:implementation>
+
+<!-- EJEMPLO -->
+
+<!-- <sre:ComponenteGrillaContactos ComponenteIdTrasActualizar="" 
+	                               						   ComponenteIdTrasEliminar=""
+	                               				           EsVisibleOperaciones="true"/> -->
+
+</html>
+

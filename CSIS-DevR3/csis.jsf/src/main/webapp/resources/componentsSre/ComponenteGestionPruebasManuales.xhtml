@@ -1,0 +1,158 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+
+<composite:interface>
+	<composite:attribute name="Editar" type="java.lang.String" />
+	// Editar = "true" o "none" al usar componente para permitir modificar/adicionar datos
+</composite:interface>
+
+<composite:implementation>
+
+	<f:event type="postAddToView"
+		listener="#{gestionPManualController.Load()}" />
+	<h:form id="formPruebaManual">
+		<p:dataTable id="listaPruebasManuales" var="manuales"
+			value="#{gestionPManualController.listaPruebasManuales}"
+			filteredValue="#{gestionPManualController.filtroPruebasManuales}"
+			rowIndexVar="rowIndex" rows="10" widgetVar="manuales"
+			rowsPerPageTemplate="5,10,15" paginator="true" sortMode="multiple"
+			emptyMessage="No hay pruebas manuales registradas."
+			paginatorPosition="bottom"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			currentPageReportTemplate="{totalRecords} registros"
+			styleClass="table table-striped table-bordered table-hover table-sm">
+
+			<f:facet name="header">
+				<p:row>
+					<p:outputPanel style="float: right;">
+						<h:outputText value="Filtrar por Prueba, Estado " />
+						<p:inputText id="globalFilter" placeholder="Dato a buscar" />
+						<p:commandButton id="btnEjecutarFiltro" icon="fa fa-search"
+							styleClass="btn btn-xs" oncomplete="PF('manuales').filter();" />
+						<p:commandButton id="btnLimpiarFiltro" image="fa fa-eraser"
+							styleClass="btn btn-xs" onclick="PF('manuales').clearFilters();" />
+					</p:outputPanel>
+					<br />
+					<br />
+				</p:row>
+			</f:facet>
+
+			<p:column width="3%" headerText="Nº">
+				<h:outputText value="#{rowIndex+1}" />
+			</p:column>
+
+			<p:column width="42%" headerText="Prueba"
+				filterBy="#{manuales.nombre}" filterMatchMode="contains"
+				filterStyle="display:none">
+				<h:outputText value="#{manuales.nombre}" />
+			</p:column>
+
+			<p:column width="10%" headerText="Estado"
+				filterBy="#{manuales.descripcion}" filterMatchMode="exact"
+				filterStyle="display:none">
+				<h:outputText value="#{manuales.descripcion}" />
+			</p:column>
+
+			<p:column width="40%" headerText="Observaciones">
+				<h:outputText value="#{manuales.observaciones}" />
+			</p:column>
+
+
+			<p:column width="5%" rendered="#{cc.attrs.Editar ne false}"
+				style="text-align: center;">
+				<p:commandLink id="nonAjax"
+					rendered="#{manuales.estadoPruebaId ne 598}" value="Editar"
+					oncomplete="PF('dlgPruebasManualesObs').show();" style="width:30px;" ajax="true"
+					icon="fa fa-edit"
+					actionListener="#{gestionPManualController.editarFilaPruebaManual(manuales)}"
+					update="#{p:component('dialogo')} #{p:component('pnlEstado')}"
+					process="@this">
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+
+
+		<p:dialog header="Registrar Observaciones de Prueba Manual" id="dlg1"
+			widgetVar="dlgPruebasManualesObs" minHeight="40" modal="true" dynamic="true"
+			position="top top top top">
+			<!-- 			<h:outputText value="Registrar Observaciones de Prueba Manual" /> -->
+			<p:panelGrid id="dialogo" columns="2" styleClass="ui-noborder">
+				<p:column>
+					<h:outputText value="Observación:" />
+				</p:column>
+				<p:column>
+					<div class="row">
+						<div class="col-md-12">
+							<p:inputTextarea id="idObservaciones" rows="6" cols="100"
+								maxlength="250" required="true"
+								requiredMessage="Introduzca un texto"
+								onkeyup="value=value.toUpperCase()"
+								value="#{gestionPManualController.pruebaManualTmp.observaciones}"
+								counter="display"
+								counterTemplate="{0} Caracteres Restantes." >
+								<p:keyFilter regEx="/[A-Z ÁÉÍÓÚÑ0-9_-]/i" />
+								<p:clientValidator event="blur" />
+								<p:clientValidator event="keyup" />
+							</p:inputTextarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<h:outputText id="display" />
+						</div>
+					</div>
+					<p:message for="idObservaciones" />
+				</p:column>
+			</p:panelGrid>
+
+			<p:panelGrid id="pnlEstado" columns="4" styleClass="ui-noborder"
+				columnClasses="ui-grid-4,ui-grid-4,ui-grid-2,ui-grid-2">
+				<p:column>
+					<h:outputText value="Estado:" />
+				</p:column>
+				<p:column>
+					<p:selectOneRadio id="console"
+						value="#{gestionPManualController.pruebaManualTmp.estadoPruebaId}">
+						<f:selectItem itemLabel="Pendiente" itemValue="597" />
+						<f:selectItem itemLabel="Aprobado" itemValue="598" />
+						<f:selectItem itemLabel="Erroneo" itemValue="599" />
+					</p:selectOneRadio>
+				</p:column>
+				<p:column></p:column>
+				<p:column></p:column>
+
+				<p:column></p:column>
+				<p:column></p:column>
+				<p:column>
+					<p:row>
+						<p:commandButton value="Guardar" id="idGuardar"
+							actionListener="#{gestionPManualController.guardarCambiosPruebasManuales}"
+							oncomplete="PF('dlgPruebasManualesObs').hide();"
+							update="#{p:component('listaPruebasManuales')}" ajax="true"
+							styleClass="btn btn-primary btn-sm btn-block"
+							validateClient="TRUE">
+							<!-- 							<p:confirm header="Advertencia" -->
+							<!-- 								message="¿Está seguro de realizar la modificación?" -->
+							<!-- 								icon="ui-icon-alert" /> -->
+						</p:commandButton>
+
+					</p:row>
+				</p:column>
+				<p:column>
+					<p:row>
+						<p:commandButton value="Cancelar" id="idCancelar"
+							onclick="PF('dlgPruebasManualesObs').hide();" ajax="true"
+							styleClass="btn btn-danger btn-sm btn-block" />
+					</p:row>
+				</p:column>
+			</p:panelGrid>
+		</p:dialog>
+	</h:form>
+</composite:implementation>
+
+</html>
+

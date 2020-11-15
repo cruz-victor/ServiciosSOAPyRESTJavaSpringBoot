@@ -1,0 +1,18 @@
+
+management:
+  security:
+    enabled: true
+
+
+spring:
+  resources:
+    chain:
+      enabled: true
+  cache:
+    cache-names: clasificadoresPorId, alcaldiasPorProvincia, clasificadoresTipo
+    caffeine:
+      spec: maximumSize=500, expireAfterAccess=30s
+
+      
+  
+ 

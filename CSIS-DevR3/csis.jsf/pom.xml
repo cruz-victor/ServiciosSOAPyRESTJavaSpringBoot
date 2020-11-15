@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>bo.gob.sin.sre.fac.csis</groupId>
+	<artifactId>csis.jsf</artifactId>
+	<packaging>war</packaging>
+	<name>sre.fac.csis.jsf</name>
+
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+
+	<parent>
+		<groupId>bo.gob.sin.sre.fac.csis</groupId>
+		<artifactId>csis</artifactId>
+		<version>0.8.0.0-SNAPSHOT</version>
+	</parent>
+
+	<build>
+		<finalName>FacCertificacion</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>http://siatrepositorio.impuestos.gob.bo:8081/artifactory/SIAT-Snapshot</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<dependencies>
+		<dependency>
+		    <groupId>bo.gob.sin.str.ccs.dpto</groupId>
+		    <artifactId>dpto.domain</artifactId>
+		    <version>RELEASE</version>
+		</dependency>		
+		
+		<dependency>
+		    <groupId>bo.gob.sin.scn.empa.ccoc</groupId>
+		    <artifactId>ccoc.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>bo.gob.sin.scn.empa.caco</groupId>
+		    <artifactId>caco.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>bo.gob.sin.scn.empa.para</groupId>
+			<artifactId>para.dto</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>bo.gob.sin.scn.empa.capd.apnd</groupId>
+		    <artifactId>apnd.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>bo.gob.sin.scn.empa.capd.aper</groupId>
+		    <artifactId>aper.dto</artifactId>
+		    <version>0.16.0.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>bo.gob.sin.scn.empa.capd.apjd</groupId>
+		    <artifactId>apjd.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+				
+		<dependency>
+		    <groupId>bo.gob.sin.scn.empa.casu</groupId>
+		    <artifactId>casu.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+		
+		<dependency>
+	    	<groupId>bo.gob.sin.scn.empa.cado.adom</groupId>
+	    	<artifactId>adom.dto</artifactId>
+	    	<version>RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20170516</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>3.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp-urlconnection</artifactId>
+			<version>3.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>logging-interceptor</artifactId>
+			<version>3.9.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-json</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>bo.gob.sin.sen.enmo</groupId>
+		    <artifactId>enmo.jsf</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+		
+		
+		<dependency>
+		    <groupId>bo.gob.sin.str.cmsj</groupId>
+		    <artifactId>cmsj.dto</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>bo.gob.sin.str.cps.clas</groupId>
+		    <artifactId>clas.dto</artifactId>
+		    <version>1.1.0.0</version>
+		</dependency>		
+
+		<dependency>
+			<groupId>bo.gob.sin.sre.fac.csis</groupId>
+			<artifactId>csis.dto</artifactId>
+			<version>0.8.0.0-SNAPSHOT</version>
+		</dependency>
+				
+		<dependency>
+		    <groupId>bo.gob.sin.str.cmsj</groupId>
+		    <artifactId>cmsj.mail</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>bo.gob.sin.str.util</groupId>
+			<artifactId>util.pin</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+		
+		<!-- Workflow -->
+
+		<dependency>
+			<groupId>bo.gob.sin.sap.cbot</groupId>
+			<artifactId>cbot.componentes.jsf</artifactId>
+			<version>0.6.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>bo.gob.sin.sap.cder</groupId>
+			<artifactId>cder.cest</artifactId>
+			<version>0.6.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>bo.gob.sin.sap.cder</groupId>
+			<artifactId>cder.componentes.jsf</artifactId>
+			<version>0.6.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>bo.gob.sin.sap.cbre</groupId>
+			<artifactId>cbre.dto</artifactId>
+			<version>0.6.0.0</version>
+		</dependency>
+		
+		<!-- PDF -->
+		
+		<dependency>
+		    <groupId>bo.gob.sin.str</groupId>
+		    <artifactId>cpdf.jsf</artifactId>
+		    <version>0.2.0.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>bo.gob.sin.sap.cead</groupId>
+  			<artifactId>cead.componentes.jsf</artifactId>
+		    <version>0.6.0.5</version>
+		</dependency>		
+	</dependencies>
+	<version>0.8.0.0-SNAPSHOT</version>
+</project>

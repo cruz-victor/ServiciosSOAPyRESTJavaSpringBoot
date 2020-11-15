@@ -1,0 +1,116 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>bo.gob.sin.sre.fac.csis</groupId>
+	<artifactId>csis.query</artifactId>
+	<version>1.1.0.0</version>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.7.RELEASE</version>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<spring.version>4.3.10.RELEASE</spring.version>
+		<postgresql.version>42.2.4</postgresql.version>
+	</properties>
+
+	<build>
+		<finalName>${project.name}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<!-- SPRING -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+
+		<!-- Spring Framework Caching Support -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+
+		<!-- Base de Datos -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version>
+		</dependency>
+
+		<!-- JSON -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+
+		<!-- Dependencias asociadas al negocio -->
+		<dependency>
+			<groupId>bo.gob.sin.sre.fac.csis</groupId>
+			<artifactId>csis.dto</artifactId>
+			<version>0.8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>bo.gob.sin.sre.fac.csis</groupId>
+			<artifactId>csis.entities</artifactId>
+			<version>0.8.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>bo.gob.sin.str</groupId>
+			<artifactId>cexc</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>bo.gob.sin.str</groupId>
+			<artifactId>enum</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>bo.gob.sin.str.caut</groupId>
+			<artifactId>caut.security</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>bo.gob.sin.str.cps.clas</groupId>
+		    <artifactId>clas.entities</artifactId>
+		    <version>RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>bo.gob.sin.str.cps.clas</groupId>
+			<artifactId>clas.dto</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+	</dependencies>
+
+ 	<name>sre.fac.csis.query</name>
+</project>

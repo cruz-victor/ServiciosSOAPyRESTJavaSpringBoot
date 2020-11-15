@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	attributeFormDefault="unqualified" elementFormDefault="qualified">
+	<xs:element name="facturaElectronicaBoletoAereo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="cabecera">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="nitEmisor">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="1" />
+										<xs:maxInclusive value="9999999999999" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="numeroBoleto">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="1" />
+										<xs:maxInclusive value="9999999999999" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="cuf">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="100" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="cufd">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="100" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="codigoSucursal">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="0" />
+										<xs:maxInclusive value="9999" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="fechaEmision" type="xs:dateTime" />
+							<xs:element name="nombreRazonSocialEmisor">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="200" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element
+								name="nombreRazonSocialBeneficiarioCreditoFiscal">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="500" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element
+								name="numeroDocumentoBeneficiarioCreditoFiscal">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="20" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="nombrePasajero">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="300" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="numeroDocumentoPasajero"
+								nillable="true">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="20" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="codigoIataLineaAerea">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="1" />
+										<xs:maxInclusive value="999" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="codigoIataAgenteViajes">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:minInclusive value="1" />
+										<xs:maxInclusive value="99999999999999999999" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="nitAgenteViajes" nillable="true">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:maxInclusive value="9999999999999" />
+										<xs:minExclusive value="0" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="CodigoOrigenServicio">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="50" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="codigoMoneda">
+								<xs:simpleType>
+									<xs:restriction base="xs:integer">
+										<xs:maxInclusive value="9999" />
+										<xs:minExclusive value="0" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tipoCambio">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:totalDigits value="20" />
+										<xs:fractionDigits value="5" />
+										<xs:minExclusive value="0" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="montoTarifa">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:totalDigits value="20" />
+										<xs:fractionDigits value="5" />
+										<xs:minExclusive value="0" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="montoTotalBoleto">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:totalDigits value="20" />
+										<xs:fractionDigits value="5" />
+										<xs:minExclusive value="0" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="montoSujetoIva">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:totalDigits value="20" />
+										<xs:fractionDigits value="5" />
+										<xs:minExclusive value="0" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="codigoTipoTransaccion">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="10" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="codigoDocumentoSector"
+								type="xs:integer" fixed="20" />
+							<xs:element name="caed">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="100" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

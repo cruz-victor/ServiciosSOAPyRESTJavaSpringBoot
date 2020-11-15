@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:workflow="http://java.sun.com/jsf/composite/workflow"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+				<f:viewAction action="#{verificacionInSituImprenta.Load()}" />
+	</f:metadata>
+
+	<ui:define name="title">
+		AUTORIZACIÓN DE IMPRENTAS ETAPA DE VERIFICACION IN SITU Y EMISION DE AUTORIZACION/RECHAZO	
+    </ui:define>
+	<ui:define name="body">
+		<div class="box box-primary">
+			<h:form id="VerificacionInSituImprentas">
+				<H4>
+					<h:outputLabel style="font-weight:bold;text-decoration:underline"
+						value="Verificación IN SITU y Emision de Autorización/Rechazo" />
+				</H4>
+				<p:tabView id="tabVerificacionInSiImprenta" dynamic="false"
+					cache="true">
+					<p:tab title="Datos del Contribuyente">
+
+					</p:tab>
+					<p:tab title="Verificación Equipos IN SITU">
+
+					</p:tab>
+
+					<p:tab title="Verificación otros aspectos IN SITU">
+
+					</p:tab>
+
+					<p:tab title="Emision Autorizacion/Rechazo y Notificación">
+
+					</p:tab>
+					<p:tab title="Registro Bitácora">
+
+					</p:tab>
+				</p:tabView>
+
+			</h:form>
+		</div>
+		<workflow:botonera id="customBotonera" linkRedireccion="#{contextoUsuarioModel.RutaBandeja()}"
+			managedBean="#{etapaEmisionGestionPruebasController.Load()}"></workflow:botonera>
+	</ui:define>
+</ui:composition>

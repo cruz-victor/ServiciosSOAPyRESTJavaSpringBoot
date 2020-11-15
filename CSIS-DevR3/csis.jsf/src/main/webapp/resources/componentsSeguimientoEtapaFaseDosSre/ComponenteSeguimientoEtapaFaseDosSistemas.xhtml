@@ -1,0 +1,79 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+
+<composite:interface>
+	<composite:attribute name="EsVisibleOperaciones" />
+</composite:interface>
+
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+
+	<h:form>
+		<p:dataTable id="idConsultaSistemasAsociadosContribuyente"
+			widgetVar="idConsultaSistemasAsociadosContribuyente"
+			value="#{seguimientoCertificacionSistemasComponentesController.listaDetalleHuellaList.listaSistemasSolicitudCertificacionDto.listaSistemasSolicitudCertificacionDto}"
+			var="lista" emptyMessage="No se encontraron registros."
+			rowIndexVar="rowIndex" rows="20" paginator="true"
+			sortMode="multiple" paginatorPosition="bottom"
+			rowsPerPageTemplate="50,75,100"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+			styleClass="table table-striped table-bordered table-hover table-sm">
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Nro."></h:outputText>
+				</f:facet>
+				<h:outputText value="#{rowIndex+1}"></h:outputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Nombre de Sistema"></h:outputText>
+				</f:facet>
+				<h:outputText value="#{lista.nombreSistema}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Tipo Sistema"></h:outputText>
+				</f:facet>
+				<h:outputText value="#{lista.tipoSistema}">
+				</h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Modalidad"></h:outputText>
+				</f:facet>
+				<h:outputText value="#{lista.modalidad}">
+				</h:outputText>
+			</p:column>
+			<!-- <p:column style="text-align: center">
+				<f:facet name="header">
+					<h:outputText value="Porcentaje de Certificación"></h:outputText>
+				</f:facet>
+				<p:progressBar value="#{lista.porcentaje}" displayOnly="true" />
+				<h:outputText value="#{lista.porcentaje} %">
+				</h:outputText>
+			</p:column> -->
+			<p:column width="8%" style="text-align:center" rendered="#{cc.attrs.EsVisibleOperaciones}">
+				<f:facet name="header">
+					<br />
+					<h:outputText value="Ver Detalle de Etapas"></h:outputText>
+					<br />
+					<br />
+				</f:facet>
+				<p:commandButton id="idBotonVerDetalles" styleClass="text-blue"
+					icon="fa fa-search" ajax="true" async="true" process="@this" actionListener="#{seguimientoCertificacionSistemasComponentesController.VerDetallesEtapas(lista.contribuyenteId, lista.sistemaId, lista.solicitudCertificacionId)}"
+					title="Ver Detalle de Etapas" update="#{p:component('idGrillaSistemas')}">
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+	</h:form>
+</composite:implementation>
+</html>
+

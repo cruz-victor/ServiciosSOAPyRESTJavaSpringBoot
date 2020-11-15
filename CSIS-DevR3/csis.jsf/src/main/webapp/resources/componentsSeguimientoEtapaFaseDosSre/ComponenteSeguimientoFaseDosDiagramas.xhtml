@@ -1,0 +1,116 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<composite:interface>
+		<composite:attribute name="EsVisibleOperaciones" />
+		<composite:attribute name="idDiagramaOperacion" />
+		<composite:attribute name="idActualizarTrasGuardarArchivo" />
+	</composite:interface>
+	
+	<composite:implementation>	
+	 
+		<p:panel style="border:none" id="listaDiagramaConsultaFaseDosContenedor">
+<!-- 				<p:remoteCommand name="idTipoEsquemaRC" update="#{p:component('idTipoEsquemaMensaje')} #{p:component('idTipoEsquema')}" />		 -->
+							<p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid">
+							
+								<p:dataTable id="listaDiagramaConsultaFaseDos"
+									value="#{seguimientoCertificacionSistemasComponentesController.listadoArchivosDiagramaList.listaDiagramasCertificaciones.listaDiagramasCertificacionesDto}"
+									var="lista" rowIndexVar="rowIndex"
+									widgetVar="listaDiagramaConsultaFaseDos"
+									emptyMessage="No se encontraron registros."
+									styleClass="table table-striped table-bordered table-hover table-sm">
+									
+	
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Nro."></h:outputText>
+											</f:facet>
+											<h:outputText value="#{rowIndex+1}"></h:outputText>
+										</p:column>	
+	
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Nombre del Archivo"></h:outputText>
+											</f:facet>
+											<h:outputText value="#{lista.nombreArchivo}"></h:outputText>
+										</p:column>
+										
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Extensión del Archivo"></h:outputText>
+											</f:facet>
+											<h:outputText value="#{lista.extensionArchivo}"></h:outputText>
+										</p:column>
+										
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Fecha Registro"></h:outputText>
+											</f:facet>
+											<h:outputText value="#{lista.fechaRegistro}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										
+								        <p:column width="8%" style="text-align:center" rendered="#{cc.attrs.EsVisibleOperaciones}">
+											<f:facet name="header">
+												<br />
+												<h:outputText value="Anular Registro"></h:outputText>
+												<br />
+												<br />
+											</f:facet>
+											<p:commandButton id="idDespliegueDiagrama" styleClass="text-red"
+												icon="fa fa-sign-out" ajax="true" async="true" process="@this" actionListener="#{seguimientoCertificacionSistemasComponentesController.actualizaDiagramasCertificaciones(lista.archivoDiagramaId, lista.diagramaCertificacionId, lista.etapaId)}"
+												title="Anulación del registro de huella" update=":#{p:component(cc.attrs.idActualizarTrasGuardarArchivo)}">
+												<p:confirm header="Confirmación" message="¿Está seguro de Anular el Registro seleccionado?" icon="fa fa-exclamation-triangle" />
+											</p:commandButton>
+										</p:column>
+								</p:dataTable>
+								
+								<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+									<p:panelGrid columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid" styleClass="ui-fluid">
+							        	<p:commandButton value="Aceptar" type="button" styleClass="btn btn-primary btn-sm ui-confirmdialog-yes" icon="fa fa-check" />
+							        	<p:commandButton value="Cancelar" type="button" styleClass="btn btn-warning btn-sm ui-confirmdialog-no" icon="fa fa-times" />
+							        </p:panelGrid>
+						    	</p:confirmDialog>  
+					    	
+							</p:panelGrid>		
+														
+						 	<p:commandButton id="idAdicionar" validateClient="true" rendered="#{cc.attrs.EsVisibleOperaciones}"
+									inmediate="false" process="@parent" async="true" value="Adicionar"
+									styleClass="btn btn-primary pull-right" update="#{p:component('idContenidocuadroDialogoCargadoHuellaArchivo')} #{p:component('idCargarArchivoComponent')}"
+									actionListener="#{seguimientoCertificacionSistemasComponentesController.adicionarComponenteDiagramaDialogo(cc.attrs.idDiagramaOperacion)}"
+									oncomplete="PF('cuadroDialogoCargadoDiagramaArchivo').show();">
+							</p:commandButton>
+										
+					</p:panel>
+					
+					<p:dialog header="Cargado del archivo digital" closable="false" width="700"
+							id="cuadroDialogoCargadoDiagramaArchivo" widgetVar="cuadroDialogoCargadoDiagramaArchivo" position="center center center centers"
+							modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+							
+							<p:panel id="idContenidocuadroDialogoCargadoHuellaArchivo">
+									
+									<sre:ComponenteCargarArchivo></sre:ComponenteCargarArchivo>
+										
+									<p:panelGrid columns="3" columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4" layout="grid" styleClass="ui-fluid">
+										<p:row></p:row>
+										<p:commandButton id="idCancelar" value="Cancelar"
+											styleClass="btn btn-warning btn-sm btn-block" global="false"
+											oncomplete="PF('cuadroDialogoCargadoDiagramaArchivo').hide()">
+										</p:commandButton>
+							
+										<p:commandButton id="idGuardar" value="Guardar" process="@parent:@parent"	update=":#{p:component(cc.attrs.idActualizarTrasGuardarArchivo)}"		
+											styleClass="btn btn-primary btn-sm btn-block" validateClient="true" async="true" ajax="true"  actionListener="#{seguimientoCertificacionSistemasComponentesController.registrarComponenteArchivoDiagrama(cc.attrs.idDiagramaOperacion)}">
+										</p:commandButton>
+									</p:panelGrid>
+								</p:panel>
+					</p:dialog>
+		
+	</composite:implementation>
+</html>
+

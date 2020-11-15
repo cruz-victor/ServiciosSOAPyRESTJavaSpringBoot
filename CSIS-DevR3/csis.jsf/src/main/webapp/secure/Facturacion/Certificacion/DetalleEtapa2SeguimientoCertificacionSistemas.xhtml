@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor">
+
+	<f:metadata>
+		<!-- <f:viewAction action="#{logedBean.check}" /> -->
+		<f:viewAction
+			action="#{seguimientoCertificacionSistemasController.Load}" />
+	</f:metadata>
+
+	<ui:define name="title">
+		<!-- FACTURACION -->
+	</ui:define>
+
+	<ui:define name="body">
+		<h:form id="formConsultaSistemasAsociadosContribuyente">
+			<p:panel header="Consulta Sistema Asociados Contribuyente">
+
+				<p:panel header="Datos Básicos" toggleable="true"
+					styleClass="card box-primary">
+					<p:panel style="border:none" styleClass="ui-fluid">
+						<sre:ComponenteDatosBasicos></sre:ComponenteDatosBasicos>
+					</p:panel>
+				</p:panel>
+				<br />
+				<br />
+				<h:panelGroup id="idContenedorOpciones" style="border:none">
+					<p:panel header="Detalle de casos de prueba de la Etapa II - Validaciones general XML/XSD" toggleable="true"
+						styleClass="card box-primary"
+						visible="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.mostrarPanel}">
+						
+						<p:dataTable id="idConsultaSistemasAsociadosContribuyente"
+							widgetVar="idConsultaSistemasAsociadosContribuyente"
+							value="#{seguimientoCertificacionSistemasController.seguimientoCertificacionSistemasList.listaSistemasProveedorDto.lista}"
+							var="lista" emptyMessage="No se encontraron registros."
+							rowIndexVar="rowIndex" rows="5" paginator="true"
+							sortMode="multiple" paginatorPosition="bottom"
+							rowsPerPageTemplate="5,10,20"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+							styleClass="table table-striped table-bordered table-hover table-sm">
+
+							<p:column headerText="Nro">								
+								<p:outputLabel value="#{rowIndex+1}"></p:outputLabel>
+							</p:column>
+							<p:column headerText="Parametro de entrada">
+<!-- 								<p:outputLabel value="#{lista.parametroEntrada}"></p:outputLabel>						 -->
+							</p:column>
+							<p:column headerText="Tipo Validación">
+<!-- 								<p:outputLabel value="#{lista.tipoValidacion}"></p:outputLabel> -->
+							</p:column>
+							<p:column headerText="Prueba">
+<!-- 								<p:outputLabel value="#{lista.prueba}"></p:outputLabel> -->
+							</p:column>
+							<p:column headerText="Resultado esperado">
+<!-- 								<p:outputLabel value="#{lista.resultadoEsperado}"></p:outputLabel> -->
+							</p:column>
+							<p:column headerText="Solucion">
+<!-- 								<p:outputLabel value="#{lista.solucion}"></p:outputLabel> -->
+							</p:column>
+							<p:column headerText="Tipo emisión">
+<!-- 								<p:outputLabel value="#{lista.tipoEmision}"></p:outputLabel> -->
+							</p:column>
+							<p:column headerText="Documento sector">
+<!-- 								<p:outputLabel value="#{lista.documentoSector}"></p:outputLabel> -->
+							 </p:column>
+							 <p:column headerText="Fecha de prueba">
+<!-- 							 	<p:outputLabel value="#{lista.fechaPrueba}"></p:outputLabel> -->
+							 </p:column>
+						</p:dataTable>
+					</p:panel>				
+				</h:panelGroup>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateAuth.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{logedBean.check}" />
+		<f:viewAction action="#{desplegarMensajesErrorController.desplegarMensajesError(flash['desplegarMensajesError'])}" />
+	</f:metadata>
+
+	<ui:define name="title">
+       CERTIFICACION
+    </ui:define>
+
+	<ui:define name="body">
+		<f:event type="preRenderView"
+			listener="#{menuLateralBean.actualizaMenuLateral()}" />
+			
+		<ui:define name="title">
+			<p:growl autoUpdate="true" life="4000" />
+
+			
+			<h2 class="align-center">
+				Bienvenido <span class="text-aqua"> <i><a
+						href="http://karanalpe.com.br/" target="_blank"
+						style="text-transform: none; text-decoration: none"> SIN</a></i></span>!
+				<br /> <small>Utilizando <p:link value="Primefaces"
+						href="http://primefaces.org" target="_blank" />, <p:link
+						value="Bootstrap" href="http://getbootstrap.com/" target="_blank" />
+					e <p:link value="Admin LTE"
+						href="https://almsaeedstudio.com/themes/AdminLTE/index2.html"
+						target="_blank" /> com <p:link value="JSF"
+						href="https://javaserverfaces.java.net/" target="_blank" />.
+				</small>
+			</h2>
+
+		</ui:define>
+
+	</ui:define>
+</ui:composition>

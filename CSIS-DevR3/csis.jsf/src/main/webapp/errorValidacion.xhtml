@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<f:viewAction action="#{solicitudCertificacionController.tieneErroresValidacion(flash['autorizacionSolicitudCertificacion'].size())}" />
+	</f:metadata>
+
+	<ui:define name="title">
+       FACTURACION
+    </ui:define>
+
+
+	<ui:define name="body">
+		<h:form id="SolicitudCertificacionForm">
+				
+ 		<!-- tam : #{flash['param2'].size()} -->
+			<p:dataTable id="idErrores"
+					value="#{flash['autorizacionSolicitudCertificacion'].entrySet().toArray()}"
+					var="asc"
+					rowIndexVar="rowIndex"
+					rows="5"
+					paginator="true"
+					sortMode="multiple"
+         		 			paginatorPosition="bottom"
+         		 			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+         		 			currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"													
+					styleClass="table table-striped table-bordered table-hover table-sm">					
+
+					 <f:facet name="header">
+			            SE PRESENTARON LOS SIGUIENTES ERRORES
+			        </f:facet>
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Nro."></h:outputText>
+						</f:facet>
+						<h:outputText value="#{rowIndex+1}"></h:outputText>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="VALIDACION"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{asc.key}"></h:outputText>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="DESCRIPCION DEL ERROR"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{asc.value}"></h:outputText>
+					</p:column>
+				</p:dataTable>
+	</h:form>
+	
+	</ui:define>
+</ui:composition>

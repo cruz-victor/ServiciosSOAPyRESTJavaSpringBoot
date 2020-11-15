@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<composite:interface>
+ <composite:attribute name="editable" type="java.lang.Boolean" default="true"/>
+</composite:interface>
+<composite:implementation>
+	<p:panel id="idPanelVerificacionInSitu"
+		header="Listado Observaciones Componentes Verificados In Situ"
+		styleClass="box-primary">
+		<h:form id="formDetalleRegistroVerificacionInSitu">
+			<p:growl widgetVar="msgs" id="msgs" showDetail="true"/>
+			<p:dataTable var="registro"
+				rowIndexVar="rowIndex"
+				widgetVar="grillaRegistroVerificacionInSitu"
+				id="grillaRegistroVerificacionInSitu" value="#{rvi.lista}"
+				editable="#{cc.attrs.editable}" editMode="cell" >
+				<p:ajax event="cellEdit" listener="#{rvi.onCellEdit}"
+					update="@widgetVar(msgs)" />
+				<p:column headerText="Nro.">
+					<p:outputLabel value="#{rowIndex+1}" />
+				</p:column>
+				<p:column headerText="Id" visible="false">
+				<p:cellEditor>
+                	<f:facet name="output"><h:outputText value="#{registro.observacionInsituId}" /></f:facet>
+                	<f:facet name="input"><h:outputText value="#{registro.observacionInsituId}" /></f:facet>
+                </p:cellEditor>			
+				</p:column>
+				
+				<p:column headerText="Prueba">
+					<p:outputLabel value="#{registro.descripcionPrueba}" />
+				</p:column>
+				
+				<!-- <p:column headerText="Prueba">
+				
+				<p:cellEditor>
+                	<f:facet name="output"><h:outputText value="#{registro.descripcionPrueba}" /></f:facet>
+                	<f:facet name="input"><h:outputText value="#{registro.descripcionPrueba}" /></f:facet>
+                </p:cellEditor>
+				</p:column> -->
+				
+				 <p:column headerText="Estado">
+            	<p:cellEditor>
+                	<f:facet name="output"><h:outputText value="#{registro.estadoPruebaDescripcion}" /></f:facet>
+                	<f:facet name="input">
+            	        <p:selectOneMenu value="#{registro.estadoPruebaId}" style="width:100%">
+                        <f:selectItems value="#{rvi.listaEstadoPrueba}" var="man" itemLabel="#{man.descripcion}" itemValue="#{man.clasificadorId}" />
+        	            </p:selectOneMenu>
+		            </f:facet>
+            	</p:cellEditor>
+        		</p:column>		
+				<p:column headerText="Observación">
+				<p:cellEditor>
+				<f:facet name="output"><h:outputText value="#{registro.observacion}" /></f:facet>
+                	<f:facet name="input">
+					<p:inputTextarea id="observacionPrueba"
+						value="#{registro.observacion}" rows="2"
+						styleClass="form-control" w:placeholder="Introduzca observación"
+						maxlength="250"
+						autoResize="false">
+					</p:inputTextarea>
+					<p:message for="observacionPrueba"/>
+					</f:facet>
+					</p:cellEditor>
+				</p:column>
+<!-- 				<p:column styleClass="ui-icon-table" headerText="Guardar"> -->
+<!-- 					<p:commandButton id="Guardar" -->
+<!-- 						actionListener="#{rvi.actualizarPrueba(registro)}"  -->
+<!-- 						ajax="true"	update="@widgetVar(grillaRegistroVerificacionInSitu)" -->
+<!-- 						icon="fa fa-save text-primary"> -->
+<!-- 					</p:commandButton> -->
+<!-- 				</p:column> -->
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+</composite:implementation>
+</html>
+

@@ -1,0 +1,44 @@
+<configuration scan="true" scanPeriod="30 seconds">
+	<property resource="admin-config.properties" />
+	<property scope="context" name="LOGSTASH" value="${logstash.servers}" />
+	<property scope="context" name="APP_NAME" value="${info.artifact}" />
+	<property scope="context" name="APP_VERSION" value="${info.version}" />
+	<property scope="context" name="LOG_FOLDER" value="${logfolder}"/>
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+		<!-- by default -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_FOLDER}app_${APP_NAME}_v_${APP_VERSION}_%d{dd-MM-yyyy}.log
+			</fileNamePattern>
+
+			<maxHistory>2</maxHistory>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>5MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n%ex{full}
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n%ex{full}
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="STASH"
+		class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+		<destination>${LOGSTASH}</destination>
+		<!-- encoder is required -->
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+	</appender>
+	<root level="${logback.loglevel}">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="STASH" />
+		<appender-ref ref="FILE" />
+	</root>
+</configuration>

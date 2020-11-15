@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:workflowcder="http://java.sun.com/jsf/composite/workflow/cder"
+	xmlns:workflowcbot="http://java.sun.com/jsf/composite/workflow/cbot"
+	xmlns:workflowcead="http://java.sun.com/jsf/composite/workflow/cead"
+	xmlns:sreSeguimiento="http://java.sun.com/jsf/composite/componentsSeguimientoEtapaFaseDosSre"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+	
+	<f:metadata>
+		<f:viewAction action="#{gestionPruebasController.Load()}" />
+	</f:metadata>
+
+	<ui:define name="title">
+      Datos Pruebas, Registro Huellas
+    </ui:define>
+
+	<ui:define name="body">
+		<script type="text/javascript">
+		function handleTab(tabIndex) {
+			
+			$('#pnlHuellas').attr('style','display:none');  	
+			$('#pnlbitacora').attr('style','display:none');  	
+    		if(tabIndex==3){    
+        		$('#pnlHuellas').attr('style','');          				
+        	}
+
+    		if(tabIndex==4){    
+        		$('#pnlbitacora').attr('style','');          				
+        	}
+    	return false;
+			}
+</script>
+<style>
+.cellStyleError {
+	background-color: #ef5350 !important;
+}
+
+.cellStyleWarning {
+	background-color: #ffa726 !important;
+}
+
+.cellStyleSuccess {
+	background-color: #9ccc65 !important;
+}
+
+.btn-round {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+}
+
+.btn-round.btn-lg {
+	width: 48px;
+	height: 48px;
+}
+
+.btn-round.btn-sm {
+	width: 34px;
+	height: 34px;
+}
+
+.btn-round.btn-xs {
+	width: 24px;
+	height: 24px;
+}
+</style>
+
+		<p:panel header="Datos Contribuyente" styleClass="box-primary"
+			toggleable="true">
+			<sre:ComponenteDatosBasicos></sre:ComponenteDatosBasicos>
+		</p:panel>
+
+		<p:panel header="Datos Solicitud" styleClass="box-primary"
+			toggleable="true">
+			<sre:ComponenteAsignacionEquipoCertificacion></sre:ComponenteAsignacionEquipoCertificacion>
+		</p:panel>
+		<p:panel header="Datos Persona Contacto" toggleable="true" styleClass="card box-primary">
+			<sre:ComponenteGrillaContactosVista></sre:ComponenteGrillaContactosVista>
+		</p:panel>
+	
+		<p:panel header="Datos Pruebas, Registro Huellas "
+			styleClass="box-primary" toggleable="true">
+
+			<p:tabView id="tabPantallas"
+				onTabChange="handleTab(index)"
+				activeIndex="#{gestionPruebasController.activeTab}"
+				binding="#{gestionPruebasController.tabview}">
+				
+
+				<p:tab title="Pruebas Generales Fase I" id="tabPruebasGenerales" rendered="#{gestionPruebasController.controlTabsGestionPruebas['Pruebas_Generales']}">
+					<sre:ComponenteSeguimientoCertificacion/>
+				</p:tab>
+			
+				<!-- rendered="#{gestionPruebasController.controlTabsGestionPruebas['Consulta_Huellas']}" -->
+			
+				<p:tab title="Pruebas Generales Fase II" >                                 					
+					<sreSeguimiento:ComponenteSeguimientoFaseDos EsVisibleOperaciones="false"></sreSeguimiento:ComponenteSeguimientoFaseDos>
+                    <!-- <sre:ComponenteConsultaRegistroHuella></sre:ComponenteConsultaRegistroHuella> -->                                               
+				</p:tab>
+				
+				<p:tab title="Consulta de Verificación InSitu" >
+                     <sre:ComponenteRegistroVerificacionInsitu editable="true"></sre:ComponenteRegistroVerificacionInsitu>					 
+				</p:tab>
+			</p:tabView>
+			<!-- <div class="modal-footer">
+				<p:outputPanel id="pnlBotonera">
+					<sre:ComponenteBotoneraGestionPruebas
+						id="cmpBotoneraGestionPruebas"
+						mostrarBotonInsitu="#{gestionPruebasController.mostrarVerificarInsitu}"
+						mostrarBotonRegistroComponentes="#{gestionPruebasController.mostrarRegistroComponentes}"
+						ComponenteButtonPruebas="#{gestionPruebasController.onMostrarPruebas()}"
+						ComponenteButtonVisitaInCitu="#{gestionPruebasController.onVerificarInSitu()}"
+						ComponenteButtonRegistroHuellas="#{gestionPruebasListaHuellasDigitalesController.onRegistroComponentes()}">
+					</sre:ComponenteBotoneraGestionPruebas>
+				</p:outputPanel>
+			</div> -->
+		</p:panel>
+		<p:confirmDialog id="Advertencia" global="true"
+			widgetVar="ConfirmarGestionPruebas" showEffect="fade"
+			hideEffect="fade">
+			<p:commandButton id="btnAceptar" value="Aceptar" type="button"
+				ajax="true" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="Cancelar" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+<div class="modal-footer">
+		<p:commandButton onclick="window.open('#{contextoUsuarioModel.RedireccionarBitacoraPagina()}','bitácora','menubar=1,resizable=1,width=700px,height=390px,top=100,left=100')"
+							immediate="true" class="btn-sm btn-primary" value="Bitácora">
+		</p:commandButton>
+		<workflowcder:botonDerivacion id="customBotonDeriva" class="btn-sm btn-primary" linkRedireccion="" managedBean="#{derivacionEtapaPruebasBean}" />
+
+</div>
+</ui:define>
+</ui:composition>
+

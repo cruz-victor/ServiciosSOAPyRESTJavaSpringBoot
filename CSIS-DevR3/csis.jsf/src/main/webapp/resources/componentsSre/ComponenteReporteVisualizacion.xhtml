@@ -1,0 +1,139 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+
+   <composite:interface>
+<!--       <composite:attribute name = "ComponenteLabelNit" />
+      <composite:attribute name = "ComponenteInputTextNit" />
+      <composite:attribute name = "ComponenteLabelDependencia" />
+      <composite:attribute name = "ComponenteLabelRazonSocial" />
+      <composite:attribute name = "ComponenteTextButtonNit" />      
+      <composite:attribute name = "ComponenteButtonNit" method-signature = "void DefaultMetod()" />      
+      <composite:attribute name = "ComponenteTextButtonLimpiar" />
+      <composite:attribute name = "ComponenteEsVisibleLimpiar" />      
+      <composite:attribute name = "ComponenteButtonLimpiar" method-signature = "void DefaultMetod()" />
+      <composite:attribute name = "ComponenteNombreFormPrincipal"/> -->
+      
+      	<composite:attribute name = "ComponentetituloPagina" />
+	
+		<composite:attribute name = "ComponentecabeceraTexto" />
+		<composite:attribute name = "ComponentecabeceraTextoTitulo1" />
+		<composite:attribute name = "ComponentecabeceraTextoTitulo2" />
+		<composite:attribute name = "ComponentecabeceraTextoTitulo3" />
+		<composite:attribute name = "ComponentecabeceraTextoTitulo4" />
+		<composite:attribute name = "ComponentecabeceraTextoTituloValor1" />
+		<composite:attribute name = "ComponentecabeceraTextoTituloValor2" />
+		<composite:attribute name = "ComponentecabeceraTextoTituloValor3" />
+		<composite:attribute name = "ComponentecabeceraTextoTituloValor4" />
+			
+		<composite:attribute name = "ComponentecontenidoTexto" />
+		<composite:attribute name = "ComponentecontenidoTextoTitulo1" />
+		<composite:attribute name = "ComponentecontenidoTextoTitulo2" />
+		<composite:attribute name = "ComponentecontenidoTextoTitulo3" />
+		<composite:attribute name = "ComponentecontenidoTextoTitulo4" />
+		<composite:attribute name = "ComponentecontenidoTextoTituloValor1" />
+		<composite:attribute name = "ComponentecontenidoTextoTituloValor2" />
+		<composite:attribute name = "ComponentecontenidoTextoTituloValor3" />
+		<composite:attribute name = "ComponentecontenidoTextoTituloValor4" />
+		<composite:attribute name = "ComponentecontenidoGrilaTextoTitulo" />
+		<composite:attribute name = "ComponentecontenidocontenidoGrilaValor" />
+		<composite:attribute name = "Componentecampos" />
+		<composite:attribute name = "Componenteposiciones" />
+			
+		<composite:attribute name = "ComponentepiePaginaTextoBoton1" />
+		<composite:attribute name = "ComponentepiePaginaTextoBoton2" />
+		<composite:attribute name = "ComponentepiePaginaTextoBoton3" />
+   </composite:interface>
+
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+
+
+	<p:commandButton style="width:80px" id="idComponenteVisualizacion" value="#{cc.attrs.ComponentepiePaginaTextoBoton1}" actionListener="#{componenteReporteVisualizacion.GenerarVisualizacion(cc.attrs.ComponentetituloPagina,
+																				cc.attrs.ComponentecabeceraTexto,
+																				cc.attrs.ComponentecabeceraTextoTitulo1,
+																				cc.attrs.ComponentecabeceraTextoTitulo2,
+																				cc.attrs.ComponentecabeceraTextoTitulo3,
+																				cc.attrs.ComponentecabeceraTextoTitulo4,
+																				cc.attrs.ComponentecabeceraTextoTituloValor1,
+																				cc.attrs.ComponentecabeceraTextoTituloValor2,
+																				cc.attrs.ComponentecabeceraTextoTituloValor3,
+																				cc.attrs.ComponentecabeceraTextoTituloValor4,																							
+																				cc.attrs.ComponentecontenidoTexto,
+																				cc.attrs.ComponentecontenidoTextoTitulo1,
+																				cc.attrs.ComponentecontenidoTextoTitulo2,
+																				cc.attrs.ComponentecontenidoTextoTitulo3,
+																				cc.attrs.ComponentecontenidoTextoTitulo4,
+																				cc.attrs.ComponentecontenidoTextoTituloValor1,
+																				cc.attrs.ComponentecontenidoTextoTituloValor2,
+																				cc.attrs.ComponentecontenidoTextoTituloValor3,
+																				cc.attrs.ComponentecontenidoTextoTituloValor4,
+																				cc.attrs.ComponentecontenidoGrilaTextoTitulo,
+																				cc.attrs.ComponentecontenidocontenidoGrilaValor,
+																				cc.attrs.Componentecampos,
+																				cc.attrs.Componenteposiciones,																							
+																				cc.attrs.ComponentepiePaginaTextoBoton1,
+																				cc.attrs.ComponentepiePaginaTextoBoton2,
+																				cc.attrs.ComponentepiePaginaTextoBoton3)}"  immediate="true" styleClass="btn btn-warning btn-sm" >			
+	</p:commandButton>		
+
+<!-- <h:form id="idComponentBusqueda">
+<h:panelGroup id="panelIdNit">
+	<div class="form-group">
+		<div class="row">
+		  	<div class="col-xs-3">
+				<h:outputLabel value="#{cc.attrs.ComponenteLabelNit} " style="font-weight:bold"/>
+				<br />
+			</div> 			
+	
+			<div class="col-xs-3">
+				<p:inputText id="idNit" w:placeholder="Nit" required="false" value="#{cc.attrs.ComponenteInputTextNit}" disabled="#{busquedaDatosBasicosComponent.fueBuscado}"
+					styleClass="form-control pull-left" maxlength="13">
+					<p:keyFilter regEx="/[0-9]/i" />
+				</p:inputText>
+				<br />
+			</div>
+			
+			<div class="col-xs-6">					
+				<p:commandButton style="width:80px" id="idBuscar" disabled="#{busquedaDatosBasicosComponent.fueBuscado}" value="#{cc.attrs.ComponenteTextButtonNit}" actionListener="#{busquedaDatosBasicosComponent.BuscarDatosContribuyentes(cc.attrs.ComponenteInputTextNit)}" action="#{cc.attrs.ComponenteButtonNit}" 
+					styleClass="btn btn-primary btn-sm" process="@form">
+					<f:ajax render="panelIdNit"></f:ajax>
+					<f:ajax render="#{cc.attrs.ComponenteNombreFormPrincipal}"></f:ajax>				
+									
+				</p:commandButton>
+				<p:commandButton style="width:80px" id="idLimpiar" rendered="#{cc.attrs.ComponenteEsVisibleLimpiar}" value="#{cc.attrs.ComponenteTextButtonLimpiar}" actionListener="#{busquedaDatosBasicosComponent.LimpiarDatosContribuyente}" action="#{cc.attrs.ComponenteButtonLimpiar}" immediate="true"
+					styleClass="btn btn-warning btn-sm">
+					<f:ajax render="panelIdNit"></f:ajax>		
+					<f:ajax render="#{cc.attrs.ComponenteNombreFormPrincipal}"></f:ajax>			
+				</p:commandButton>		
+				<br />		
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-xs-3">
+				<h:outputLabel value="DEPENDENCIA " style="font-weight:bold"/>
+				<br />
+			</div> 
+	
+			<div class="col-xs-3">
+				: #{cc.attrs.ComponenteLabelDependencia}
+				<br />
+			</div>
+			
+			<div class="col-xs-6">
+				<h:outputLabel value="NOMBRE O RAZON SOCIAL " style="font-weight:bold"/>: #{cc.attrs.ComponenteLabelRazonSocial}
+				<br />		
+			</div>
+		</div>
+		
+		<br />	
+	</div>
+</h:panelGroup>
+</h:form> -->
+</composite:implementation>
+</html>

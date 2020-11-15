@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre"> 
+
+	<f:metadata>
+<!-- 		<f:viewAction action="#{logedBean.check}" /> -->
+		<f:viewAction action="#{registrarHuellaSistemaContribuyenteController.Load}" />
+	</f:metadata>
+
+	<ui:define name="title">
+       
+    </ui:define>
+
+	<ui:define name="body" >
+
+		<p:panel header="Registro Huella de Sistema - Contribuyente" styleClass="card box-primary" toggleable="true">
+			<h:form id="RegistrarHuellaSistemaContribuyenteForm" widgetVar="RegistrarHuellaSistemaContribuyenteForm">
+			
+				<p:panelGrid columns="1" columnClasses="ui-grid-col-12" layout="grid">
+					
+					<p:fieldset legend="Datos del Contribuyente" toggleable="true" toggleSpeed="500" styleClass="ui-fluid">
+						<sre:ComponenteDatosBasicos></sre:ComponenteDatosBasicos>
+					</p:fieldset>
+
+					<p:row>
+						<p:fieldset legend="Datos del Sistema">
+							<p:outputLabel value="Seleccione el sistema"></p:outputLabel>
+							<p:panelGrid columns="5" columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid">
+								<p:outputLabel for = "idSistema" value = "SISTEMA" style="font-weight:bold"></p:outputLabel>
+								<p:row>
+									<p:selectOneMenu id = "idSistema"
+									value = "#{registrarHuellaSistemaContribuyenteController.registrarHuellaSistemaContribuyenteModel.sistemaId}"
+									valueChangeListener="#{registrarHuellaSistemaContribuyenteController.cambiarDatosSistema}"
+									validatorMessage="Debe seleccionar un valor"
+									requiredMessage="Campo requerido" required="true">
+									<f:selectItems
+									value = "#{registrarHuellaSistemaContribuyenteController.registroHuellaSistemaList.listaSistemasEnProcesoContribuyente}" 
+									var = "lista" itemLabel="#{lista.nombreSistema}" 
+									itemValue="#{lista.sistemaId}" />
+									<p:ajax event="change" update="idModalidad idTipoSistema " />
+									</p:selectOneMenu>
+									<p:message for="idSistema"></p:message>
+								</p:row>
+								
+							</p:panelGrid>
+							<p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid">
+								<p:outputLabel value = "TIPO SISTEMA" style="font-weight:bold"></p:outputLabel>
+								<p:outputLabel id="idTipoSistema" style="font-weight:normal" value="#{registrarHuellaSistemaContribuyenteController.registroHuellaSistemaModel.descripcionTipoSistema}"></p:outputLabel>
+								<p:outputLabel value = "MODALIDAD" style="font-weight:bold"></p:outputLabel>
+								<p:outputLabel id="idModalidad" style="font-weight:normal" value="#{registrarHuellaSistemaContribuyenteController.registroHuellaSistemaModel.descripcionModalidad}"></p:outputLabel>
+							</p:panelGrid>
+						</p:fieldset>
+						<p:spacer/>
+						<p:spacer/>
+						
+						
+						<h:panelGroup id = "idRegistroArchivos" rendered = "#{registrarHuellaSistemaContribuyenteController.comportamientoPaginaModel.esVisiblePanelGroup}">
+							<p:fieldset legend="Cargado de archivos" toggleable="true" toggleSpeed="500" styleClass="ui-fluid">
+
+								<p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-4,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank">
+									<p:spacer/>
+									<p:spacer/>
+									<p:spacer/>
+									<p:commandButton id="idAdicionar" value="Adicionar Archivo"  
+									 styleClass="btn btn-primary btn-sm btn-block" onclick="PF('dialogArchivos').show();" validateClient="false">
+									</p:commandButton>
+								</p:panelGrid>
+								<p:spacer/>	
+								<h:panelGroup id= "idRegistros" >					
+									<p:dataTable 
+												 value="#{registrarHuellaSistemaContribuyenteController.registrarHuellaSistemaContribuyenteModel.listaArchivosSistema}"
+												 var="lsa">
+										<p:column headerText="Nombre del archivo">
+											<p:outputLabel value = "#{lsa.nombre}"></p:outputLabel>
+										</p:column>
+										<p:column headerText="Componente">
+											<p:outputLabel value = "#{lsa.componenteMinimo}"></p:outputLabel>
+										</p:column>
+										<p:column headerText="Ruta">
+											<p:outputLabel value="#{lsa.rutaArchivo}"></p:outputLabel>
+										</p:column>
+										<p:column headerText="SHA">
+											<p:outputLabel value="#{lsa.sha2}"></p:outputLabel>
+										</p:column>
+										<p:column headerText="CRC">
+											<p:outputLabel value="#{lsa.crc}"></p:outputLabel>
+										</p:column>
+										<p:column headerText="MD5">
+											<p:outputLabel value="#{lsa.md5}"></p:outputLabel>
+										</p:column>
+										<p:column headerText="Operaciones">
+	<!-- 										<h:commandButton value = "Eliminar" process="@this" actionListener="#{registrarHuellaSistemaContribuyenteController.eliminarRegistroArchivo(lsa)}" update="idRegistros registroHuellaFormModal"> -->
+												
+	<!-- 										</h:commandButton> -->
+											
+											<p:commandLink value = "Eliminar" process="@this" actionListener="#{registrarHuellaSistemaContribuyenteController.eliminarRegistroArchivo(lsa)}" update="#{p:component('idRegistros')} #{p:component('registroHuellaFormModal')}"></p:commandLink>
+										</p:column>
+									</p:dataTable>								
+									<p:panelGrid id="idFunciones" 
+										columns="4" columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank">
+									
+										<p:spacer/>
+										
+										<p:spacer/>						
+										
+										<p:commandButton id="idGuardar" value="Guardar"  
+											 styleClass="btn btn-primary btn-sm btn-block" actionListener="#{registrarHuellaSistemaContribuyenteController.insertarRegistroArchivos}" process="@this" 
+											 update="registroHuellaFormModal" resetValues="true">
+										</p:commandButton>
+										
+										<p:commandButton id="idNuevo" value="Nuevo"
+											 styleClass="btn btn-warning btn-sm btn-block" action="#{registrarHuellaSistemaContribuyenteController.nuevoFormulario}"
+											  ajax="true" process="@this" update="RegistrarHuellaSistemaContribuyenteForm">
+										</p:commandButton>
+										
+									</p:panelGrid>								
+								</h:panelGroup>
+							</p:fieldset>
+						</h:panelGroup>	
+<!-- 						modal para cargado de   archivos									 -->
+						 <p:dialog header="Cargar archivos" position="top center" widgetVar="dialogArchivos" modal="false" height="400" width = "750" showEffect="fade" hideEffect="fade">
+							
+							<p:fieldset legend="Por favor cargue los archivos slicitados" toggleable="true" toggleSpeed="500" styleClass="ui-fluid">
+									<p:panelGrid id="registroHuellaFormModal" columns="2" columnClasses="ui-grid-col-3,ui-grid-col-9" layout="grid" styleClass="ui-panelgrid-blank">
+										<p:outputLabel value = " * RUTA DE ARCHIVO"></p:outputLabel>
+										<p:row>
+											<p:inputText id = "idRutaArchivo" 
+														 placeholder="C:\Conexion\BD" 
+														 value = "#{registrarHuellaSistemaContribuyenteController.registrarHuellaSistemaContribuyenteModel.rutaArchivo}"  
+														 validatorMessage="Ruta del archivo incorrecto"
+														 requiredMessage="Campo requerido"
+														 required="true">
+												<p:clientValidator event="click" />
+												<p:clientValidator event="blur" />
+												<p:clientValidator event="keyup" />
+												<f:validateRegex pattern="^([a-zA-Z]:)?(\\[a-zA-Z0-9_-]+)+\\?$" />
+											</p:inputText>
+											<p:message for="idRutaArchivo" display="text"></p:message>
+										</p:row>			
+										<p:outputLabel value = " * COMPONENTES MINIMOS"></p:outputLabel>
+										<p:row>
+											<p:selectCheckboxMenu id="idComponente"		
+												value = "#{registrarHuellaSistemaContribuyenteController.registrarHuellaSistemaContribuyenteModel.componentesMinimosId}"
+												multiple="true" 
+												filter="true" 
+												filterMatchMode="startsWith" 
+												appendTo="@this"
+												validatorMessage="Seleccione un valor"
+												requiredMessage="Campo requerido"
+												required="true">
+											<f:selectItems 
+													value = "#{registrarHuellaSistemaContribuyenteController.certificacionParametrics.listaComponentesMinimos}"
+													var = "c"
+													itemLabel = "#{c.descripcion}"
+													itemValue = "#{c.clasificadorId}"/>
+											</p:selectCheckboxMenu>
+											<p:message for = "idComponente" display="text"></p:message>
+										</p:row>
+										<p:outputLabel value = " * ARCHIVO"></p:outputLabel>
+										<p:row>
+											<p:fileUpload id="idCargarArchivo"
+												value="#{registrarHuellaSistemaContribuyenteController.registrarHuellaSistemaContribuyenteModel.file}"
+												uploadLabel="Subir Archivo" cancelLabel="Cancelar" label="Examinar"
+												auto="true"
+												fileUploadListener="#{registrarHuellaSistemaContribuyenteController.handleFileUpload}"
+												required="true" 
+												requiredMessage="Campo requerido"
+												update="idArchivoRecibido">
+											</p:fileUpload>	
+											
+											<p:inputText id="idArchivoRecibido"
+												value="#{registrarHuellaSistemaContribuyenteController.registrarHuellaSistemaContribuyenteModel.nombreArchivoSubido}"
+												widgetVar="idArchivoRecibido" w:placeholder="" readonly="true"
+												validatorMessage="Nombre Incorrecto"
+												requiredMessage="Campo requerido" 
+												required="true" 
+												styleClass="form-control pull-left">
+												<p:clientValidator event="click" />
+												<p:clientValidator event="blur" />
+												<p:clientValidator event="keyup" />
+												<p:clientValidator event="mousemove" />
+											</p:inputText>
+											
+											<p:message for="idCargarArchivo" display="text" autoUpdate="true"></p:message>
+											<p:message for="idArchivoRecibido" display="text" autoUpdate="true"></p:message>
+										</p:row>		
+									</p:panelGrid>
+									<p:row>
+										<p:panelGrid columns="4" columnClasses="ui-grid-col-3,ui-grid-col-3,ui-grid-col-3,ui-grid-col-3" layout="grid" styleClass="ui-panelgrid-blank">
+												<p:spacer/>
+												<p:spacer/>
+												<p:commandButton id="idGuardarArchivo" value="Guardar" onclick="PF('dialogArchivos').close();" 
+												styleClass="btn btn-primary btn-sm pull-right" action = "#{registrarHuellaSistemaContribuyenteController.agregarArchivo}" 
+												update = "registroHuellaFormModal"
+												validateClient="true"
+												ajax="true"/>
+												<p:commandButton id="idSalir" value="Salir" onclick="PF('dialogArchivos').close();" styleClass="btn btn-warning btn-sm pull-right"/>
+										</p:panelGrid>
+									</p:row>
+							</p:fieldset>
+						</p:dialog>
+<!-- 						fin de modal de cargado de archivos -->
+					</p:row>
+				</p:panelGrid>
+			</h:form>
+		</p:panel>
+	</ui:define>
+</ui:composition>

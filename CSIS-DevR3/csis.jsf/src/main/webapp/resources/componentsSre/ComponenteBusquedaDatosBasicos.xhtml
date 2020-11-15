@@ -1,0 +1,78 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+
+   <composite:interface>
+      <composite:attribute name = "ComponenteLabelNit" />
+      <composite:attribute name = "ComponenteInputTextNit" />
+      <composite:attribute name = "ComponenteLabelDependencia" />
+      <composite:attribute name = "ComponenteLabelRazonSocial" />
+      <composite:attribute name = "ComponenteTextButtonNit" />      
+      <composite:attribute name = "ComponenteButtonNit" method-signature = "void DefaultMetod()" />      
+      <composite:attribute name = "ComponenteTextButtonLimpiar" />
+      <composite:attribute name = "ComponenteEsVisibleLimpiar" />      
+      <composite:attribute name = "ComponenteButtonLimpiar" method-signature = "void DefaultMetod()" />
+      <composite:attribute name = "ComponenteNombreFormPrincipal"/>
+   </composite:interface>
+
+<!-- IMPLEMENTATION -->
+	<composite:implementation>
+			<p:panel id="panelIdNit" styleClass="no-border">
+				<div class="ui-fluid">
+					<p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-1,ui-grid-col-1,ui-grid-col-6" layout="grid" styleClass="ui-fluid">
+						
+						<p:outputLabel value="#{cc.attrs.ComponenteLabelNit}" />
+						
+						<p:row>
+							<p:inputText 
+								id="idNit" w:placeholder="Nit" value="#{cc.attrs.ComponenteInputTextNit}" disabled="#{busquedaDatosBasicosComponent.fueBuscado}"
+								maxlength="13" readonly="false"
+								validatorMessage="Debe seleccionar un valor"
+								requiredMessage="Campo requerido"
+								converterMessage="Debe ser un número Válido"											
+								required="true">
+								<p:keyFilter regEx="/[0-9]/i" preventPaste="false"/>
+								<p:clientValidator event="blur" />
+								<p:clientValidator event="keyup" />		
+							</p:inputText>
+							<p:message for="idNit"></p:message>
+						</p:row>																		
+						
+						<p:commandButton 
+							id="idLimpiar" rendered="#{cc.attrs.ComponenteEsVisibleLimpiar}" value="#{cc.attrs.ComponenteTextButtonLimpiar}" 
+							actionListener="#{busquedaDatosBasicosComponent.LimpiarDatosContribuyente}" action="#{cc.attrs.ComponenteButtonLimpiar}" immediate="false"
+							styleClass="btn btn-warning btn-sm btn-block" async="true" process="@this" render="panelIdNit" update="#{cc.attrs.ComponenteNombreFormPrincipal}">
+							<f:ajax render="idLimpiar"></f:ajax>		
+						</p:commandButton>
+						
+						<p:commandButton 
+							id="idBuscar" disabled="#{busquedaDatosBasicosComponent.fueBuscado}" value="#{cc.attrs.ComponenteTextButtonNit}" 
+							actionListener="#{busquedaDatosBasicosComponent.BuscarDatosContribuyentes(cc.attrs.ComponenteInputTextNit)}" action="#{cc.attrs.ComponenteButtonNit}"  
+							styleClass="btn btn-primary btn-sm btn-block" process="@this, idNit" render="panelIdNit" update="#{cc.attrs.ComponenteNombreFormPrincipal}">		
+							<f:ajax render="idBuscar #{cc.attrs.ComponenteNombreFormPrincipal}"></f:ajax>				
+						</p:commandButton>
+						
+						
+						<p:row></p:row>
+						
+					</p:panelGrid>
+					
+					<p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-5,ui-grid-col-2,ui-grid-col-3" layout="grid">
+						
+						<p:outputLabel value="#{cc.attrs.ComponenteLabelDependencia} :" rendered="#{busquedaDatosBasicosComponent.fueBuscado}"/>
+						
+						<p:outputLabel value="#{busquedaDatosBasicosComponent.nitDatosBasicosDto.descripcionAdministracion}" style="font-weight:normal" />
+						
+						<p:outputLabel value="#{cc.attrs.ComponenteLabelRazonSocial} :" rendered="#{busquedaDatosBasicosComponent.fueBuscado}"/>
+						
+						<p:outputLabel value="#{busquedaDatosBasicosComponent.nitDatosBasicosDto.razonSocial}" style="font-weight:normal" />
+						
+					</p:panelGrid>
+				</div>
+			</p:panel>
+	</composite:implementation>
+</html>

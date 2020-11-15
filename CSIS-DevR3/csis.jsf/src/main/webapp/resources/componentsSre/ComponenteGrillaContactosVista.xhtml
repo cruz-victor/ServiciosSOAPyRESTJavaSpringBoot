@@ -1,0 +1,69 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+
+<composite:interface>
+
+</composite:interface>
+
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+
+	<h:form id="idComponentGrillaContactosVistaForm">
+			<p:dataTable id="idComponentelistaDatoContribuyentesVista"
+				value="#{listaDatosContacto.listaContactos}"
+				var="gc" rowIndexVar="rowIndex" rows="5"
+				widgetVar="idComponentelistaDatoContribuyentesVista" paginator="false" editable="false"
+				emptyMessage="Registros no encontrados." paginatorPosition="bottom"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+				styleClass="table table-striped table-bordered table-hover table-sm">
+	
+				<p:column headerText="N°" width="5%">
+					<p:outputLabel value="#{rowIndex+1}" />
+				</p:column>
+	
+				<p:column headerText="Nombre Completo"
+					filterBy="#{gc.nombre}" filterMatchMode="contains"
+					filterStyle="display:none">
+					<p:outputLabel value="#{gc.nombre}" />
+				</p:column>
+				
+				<p:column headerText="Tipo Documento"
+					filterBy="#{gc.nombre}" filterMatchMode="contains"
+					filterStyle="display:none">
+					<p:outputLabel value="#{(solicitudCertificacionController.certificacionParametrics.listaTipoDocumentoIdentidad.stream().filter(lista -> lista.clasificadorId.equals(gc.tipoDocumentoIdentidad)).findFirst().orElse(null)).descripcion}" />
+				</p:column>
+	
+				<p:column headerText="Número Documento"
+					filterBy="#{gc.numeroDocumento}" filterMatchMode="contains"
+					filterStyle="display:none">
+					<p:outputLabel value="#{gc.numeroDocumento}" />
+				</p:column>
+				
+				<p:column headerText="Complemento"
+					filterBy="#{gc.complemento}" filterMatchMode="contains"
+					filterStyle="display:none">
+					<p:outputLabel value="#{gc.complemento}" />		
+				</p:column>
+				<p:column headerText="Correo Eletrónico"
+					filterBy="#{gc.correo}" filterMatchMode="contains"
+					filterStyle="display:none">
+					<p:outputLabel value="#{gc.correo}" />
+				</p:column>
+				<p:column headerText="Celular"
+					filterBy="#{gc.celular}" filterMatchMode="contains"
+					filterStyle="display:none">
+					<p:outputLabel value="#{gc.celular}" />
+				</p:column>
+			</p:dataTable>
+	</h:form>
+</composite:implementation>
+
+
+</html>
+

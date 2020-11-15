@@ -1,0 +1,42 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+<composite:interface>
+	<composite:attribute name="componenteAsignacionEquipoCertificacion" required="false" />
+</composite:interface>
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+
+		<p:panelGrid columns="4"
+		columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid">
+		
+		<p:outputLabel  value="Nombre Comercial" style="font-weight:bold" />
+		<p:row>
+			<h:outputLabel value="#{asignacionEquiposComputacionComponent.datosSistemasSolCertificacion.nombreSistema}" />
+		</p:row>
+
+		<p:outputLabel  value="Versión" style="font-weight:bold" />
+		<p:row>
+		<h:outputLabel value="#{asignacionEquiposComputacionComponent.datosSistemasSolCertificacion.version}" />
+		</p:row>
+		
+		<p:outputLabel  value="Tipo Sistema" style="font-weight:bold" />
+		<p:row>
+			<h:outputLabel value="#{asignacionEquiposComputacionComponent.datosSistemasSolCertificacion.tipoSistema}" />
+		</p:row>
+
+		<p:outputLabel  value="Modalidad Facturación" style="font-weight:bold" />
+		<p:row>
+			<h:outputLabel
+				value="#{asignacionEquiposComputacionComponent.datosSistemasSolCertificacion.modalidad}" />
+		</p:row>
+			
+		</p:panelGrid>
+		
+
+</composite:implementation>
+</html>

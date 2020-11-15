@@ -1,0 +1,193 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+<composite:interface>
+	<composite:attribute name="ComponenteRegistroHuellasDigitales"
+		required="false" />
+</composite:interface>
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+	<f:event type="postAddToView"
+		listener="#{registroHuellasDigitalesController.Load}" />
+	<div class="form-group">
+		<h:panelGroup id="panelDatosId">
+			<div class="row">
+				<div class="col-md-2">
+					<h:outputLabel value="RUTA DEL ARCHIVO: " style="font-weight:bold" />
+					<br />
+				</div>
+				<div class="col-md-4">
+					<p:inputText id="idRutaArchivo"
+						w:placeholder="RUTA DEL ARCHIVO  (Ejemplo C:\RutaArchivo\Carpeta)"
+						readonly="false"
+						value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.rutaArchivo}"
+						validatorMessage="RUTA DEL ARCHIVO Incorrecto"
+						requiredMessage="Campo requerido" required="true"
+						styleClass="form-control pull-left">
+						<p:clientValidator event="click" />
+						<p:clientValidator event="blur" />
+						<p:clientValidator event="keyup" />
+						<f:validateRegex pattern="^([a-zA-Z]:)?(\\[a-zA-Z0-9_-]+)+\\?$" />
+					</p:inputText>
+					<p:message for="idRutaArchivo" display="text" class="width:100px">
+					</p:message>
+				</div>
+
+
+			</div>
+
+			<BR />
+
+			<div class="row">
+				<h:panelGroup id="panelComponenteId">
+					<div class="col-md-2">
+						<label class="box-tools pull-left"><b>COMPONENTES
+								MINIMOS:</b></label> <br />
+					</div>
+					<div class="col-md-4">
+						<p:selectCheckboxMenu id="idEstadosFacturas"
+							style="width: 100%;height:30px"
+							value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.componentesMinimosId}"
+							multiple="true" filter="true" filterMatchMode="startsWith"
+							validatorMessage="Seleccione un valor"
+							requiredMessage="Campo requerido" required="true">
+							<f:selectItems
+								value="#{certificacionParametrics.listaComponentesMinimos}"
+								var="c" itemLabel="#{c.descripcion}"
+								itemValue="#{c.clasificadorId}" />
+						</p:selectCheckboxMenu>
+						<p:message for="idEstadosFacturas" display="text">
+						</p:message>
+					</div>
+				</h:panelGroup>
+			</div>
+			<BR />
+			<div class="row">
+				<div class="col-md-2">
+					<h:outputLabel value="ARCHIVO:" style="font-weight:bold" />
+					<br />
+				</div>
+
+				<div class="col-md-4">
+
+					<p:fileUpload id="idCargarArchivo"
+						value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.file}"
+						mode="advanced" auto="false" showButtons="true" skinSimple="true"
+						uploadLabel="Subir Archivo" cancelLabel="Cancelar"
+						allowTypes="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.tipoArchivoPermitido}" label="Examinar"
+						invalidSizeMessage="El archivo que esta cargando excede los 4 megas!"
+						invalidFileMessage="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.mensajeArchivoInvalido}"
+						style="width:100% !important;margin-bottom: -25px;" fileLimit="1"
+						fileLimitMessage="Solo se puede subir una archivo."
+						sizeLimit="5000000" required="true" validateClient="true"
+						fileUploadListener="#{registroHuellasDigitalesController.handleFileUpload}"
+						update="idArchivoRecibido">
+						<p:focus for="idArchivoRecibido" />
+					</p:fileUpload>
+					<p:growl id="messages" showDetail="true" />
+					<p:message for="idCargarArchivo" display="text" class="width:100px"
+						autoUpdate="true">
+					</p:message>
+					<br />
+					<p:message for="idArchivoRecibido" display="text"
+						class="width:100px">
+					</p:message>
+
+					<br />
+
+					<p:inputText id="idArchivoRecibido"
+						value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.nombreArchivoSubido}"
+						widgetVar="idArchivoRecibido" w:placeholder="" readonly="true"
+						validatorMessage="Nombre Incorrecto"
+						requiredMessage="Campo requerido" required="true"
+						styleClass="form-control pull-left">
+						<p:clientValidator event="click" />
+						<p:clientValidator event="blur" />
+						<p:clientValidator event="keyup" />
+						<p:clientValidator event="mousemove" />
+					</p:inputText>
+				</div>
+			</div>
+		</h:panelGroup>
+		<div class="row">
+			<div class="col-md-11">
+				<p:commandButton id="idAdicionar" value="Adicionar"
+					actionListener="#{registroHuellasDigitalesController.adicionarComponente}"
+					styleClass="btn btn-primary pull-right"  process="@this listaDetalleReporteConsulta panelDatosId"
+					validateClient="false" ajax="true" 
+					update="listaDetalleReporteConsulta panelDatosId">
+				</p:commandButton>
+			</div>
+		</div>
+			<p:remoteCommand name="rc"  update="listaDetalleReporteConsulta panelDatosId"/>
+		<div class="row">
+
+			<div class="col-xs-12">
+				<p:dataTable id="listaDetalleReporteConsulta" 
+					value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.listaRegistroHuellasDigitalesDto}"
+					var="lrc" rowIndexVar="rowIndex" widgetVar="listaReporteConsulta"
+					styleClass="table table-striped table-bordered table-hover table-sm">
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="NOMBRE DEL ARCHIVO"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{lrc.nombre}"></h:outputText>
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="NOMBRE DEL COMPONENTE"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{lrc.componenteMinimo}"></h:outputText>
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="RUTA DEL ARCHIVO"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{lrc.rutaArchivo}"></h:outputText>
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="SHA"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{lrc.sha2}"></h:outputText>
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="CRC"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{lrc.crc}"></h:outputText>
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="MD5"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{lrc.md5}"></h:outputText>
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="OPERACIONES"></h:outputText>
+						</f:facet>
+						<p:commandButton icon="ui-icon-circle-minus" title="Eliminar"
+							ajax="true" process="@this"
+							actionListener="#{registroHuellasDigitalesController.eliminarFila(lrc)}"
+							update="#{p:component('panelDatosId')} #{p:component('listaDetalleReporteConsulta')}" >
+						</p:commandButton>
+					</p:column>
+
+				</p:dataTable>
+			</div>
+		</div>
+	</div>
+</composite:implementation>
+</html>

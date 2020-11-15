@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata></f:metadata>
+	<ui:define name="title">
+        CERTIFICACION
+    </ui:define>
+
+<!-- 	<ui:define name="title"> -->
+<!--         CERTIFICACION -->
+<!--     </ui:define> -->
+
+	<ui:define name="body">
+		<div class="box box-primary">
+			<h:form id="AprobacionRechazosistemasForm">
+				<div class="box-header with-border">
+					<h3 class="box-title ">Listado de Sistemas con Certificacion de Sistemas</h3>
+					<div class="box-tools pull-left">
+						<button type="button" class="btn btn-box-tool"
+							data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="chart">
+
+						<div class="row"></div>
+						<p />
+						<br />
+						<h:panelGroup id="idListadoDetalles">
+							<h:panelGroup id="idListadoSistemas">
+
+								<div class="row">
+									<div class="col-xs-12">
+										<p:fieldset legend="Pruebas Automáticas" toggleable="true"
+											toggleSpeed="500" style="margin-bottom:20px">
+											<div class="row">
+												<div class="col-xs-12">
+													<p:dataTable id="listaPruebasAutomaticas" value="#{listadoSistemasCertificacion.obtenerListadoSistemasCertificacion()}"
+														filteredValue="" var="ecs" rowIndexVar="rowIndex" rows="5"
+														widgetVar="listaPruebasAutomaticas" paginator="true"
+														sortMode="multiple" paginatorPosition="bottom"
+														paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+														currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} Registros"
+														styleClass="table table-striped table-bordered table-hover table-sm">
+														<f:facet name="header">
+
+														</f:facet>
+														<div class="ui-g-2 ui-md-2">
+															<p:column>
+																<f:facet name="header">
+																	<h:outputText value="Nro"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{rowIndex+1}"></h:outputText>
+															</p:column>
+
+															<p:column sortBy="#{ecs.nit}"
+																filterBy="#{ecs.nit}"
+																filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="NIT"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.nit}"></h:outputText>
+
+															</p:column>
+
+															<p:column sortBy="#{ecs.nombreSistema}" filterBy="#{ecs.nombreSistema}"
+																filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="Sistemas"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.nombreSistema}"></h:outputText>
+															</p:column>
+
+															<p:column sortBy="#{ecs.version}"
+																filterBy="#{ecs.version}" filterMatchMode="contains"
+																filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="Version "></h:outputText>
+																</f:facet>
+																<h:outputText value=""></h:outputText>
+															</p:column>
+
+															<p:column sortBy="#{ecs.modalidad}"
+																		filterBy="#{ecs.modalidad}" filterMatchMode="contains"
+																		filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="Modalidad"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.modalidad}">
+																</h:outputText>
+															</p:column>
+
+
+															<p:column sortBy="#{ecs.estadoSolicitud}"
+																filterBy="#{ecs.estadoSolicitud}"
+																filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="Estado Certificacion"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{ecs.estadoSolicitud}"></h:outputText>
+															</p:column>															
+
+														</div>
+													</p:dataTable>
+
+												</div>
+											</div>
+										</p:fieldset>
+									</div>
+								</div>
+
+							</h:panelGroup>
+						</h:panelGroup>
+
+					</div>
+
+				</div>
+
+			</h:form>
+		</div>
+	</ui:define>
+</ui:composition>
+

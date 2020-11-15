@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre"> 
+
+	<f:metadata>
+		<f:viewAction action="#{logedBean.check}" />
+		<f:viewAction action="#{registroHuellaSistemaController.Load}" />
+	</f:metadata>
+
+	<ui:define name="title">
+       
+    </ui:define>
+
+	<ui:define name="body" >
+
+		<h:form id="RegistrarHuellaSistemaForm" widgetVar="RegistrarHuellaSistemaForm">
+
+                <p:panel header="Registro Huella de Sistema" styleClass="box-primary" toggleable="true">
+				
+					<div class="chart">
+							<div class='col-md-12'>
+								<div class="form-group">
+									<p:fieldset legend="Datos Contribuyente" toggleable="true"
+										toggleSpeed="500">
+											<sre:ComponenteDatosBasicos></sre:ComponenteDatosBasicos>											
+									</p:fieldset>
+								</div>
+							</div>
+							<hr />
+							<div class='col-md-12'>
+								<div class="form-group">
+									<p:fieldset legend="Seleccione el Sistema a Registrar" toggleable="true"
+										toggleSpeed="500" style="margin-bottom:20px">
+											<div class="row">
+												<div class="col-md-2">
+													<label class="box-tools pull-left"><b>SISTEMA</b></label>
+													<br />
+												</div>
+												<div class="col-md-4">
+													<p:selectOneMenu id="idSistema"
+														value="#{registroHuellaSistemaController.registroHuellaSistemaModel.sistemaId}"
+														valueChangeListener="#{registroHuellaSistemaController.cambiarDatosSistema}"
+														readonly="false"
+														validatorMessage="Debe seleccionar un valor"
+														requiredMessage="Campo requerido" required="true">
+														<f:selectItem itemValue="#{null}"
+															itemLabel="Seleccione Opción" />
+														<f:selectItems
+															value="#{registroHuellaSistemaController.registroHuellaSistemaList.listaSistemasEnProceso}"
+															var="lista" itemLabel="#{lista.nombreSistema}"
+															itemValue="#{lista.sistemaId}" />
+														<p:ajax event="change" update="idModalidad idTipoSistema idTipoComponente" />
+														<p:clientValidator event="change" />
+													</p:selectOneMenu>
+													<p:message for="idSistema" display="text">
+													</p:message>
+
+												</div>
+												
+												<div class="col-md-1">
+													<h:outputLabel value="MODALIDAD"
+														style="font-weight:bold" />
+													<br />
+												</div>
+												<div class="col-md-2">
+													<h:outputText id="idModalidad"
+														value="#{registroHuellaSistemaController.registroHuellaSistemaModel.descripcionModalidad}" />
+													<p:message for="idModalidad" display="text"
+														class="width:100px">
+													</p:message>
+												</div>
+												
+												<div class="col-md-1">
+													<h:outputLabel value="TIPO SISTEMA"
+														style="font-weight:bold" />
+													<br />
+												</div>
+												<div class="col-md-2">
+													<h:outputText id="idTipoSistema"
+														value="#{registroHuellaSistemaController.registroHuellaSistemaModel.descripcionTipoSistema}" />
+													<p:message for="idTipoSistema" display="text"
+														class="width:100px">
+													</p:message>
+												</div>
+
+										</div>										
+									</p:fieldset>
+								</div>
+							</div>
+							<hr />
+							
+							<div class='col-md-12'>
+								<div class="form-group">
+									<p:fieldset legend="Por favor cargue los archivos solicitados" toggleable="true"
+										toggleSpeed="500" style="margin-bottom:20px">
+      									 <div class="row">
+										<div class="col-md-3">
+												<h:outputLabel value="TIPO COMPONENTE:" style="font-weight:bold"/>
+												<br />
+											</div>
+											<div class="col-md-5">												
+												<p:selectCheckboxMenu id="idTipoComponente"
+													style="width: 100%;height:40px"
+													value="#{registroHuellaSistemaController.registroHuellaSistemaList.listaComponenteSeleccionado}" 
+													multiple="true" filter="true"
+													filterMatchMode="startsWith"
+													validatorMessage="Seleccione un valor"
+													requiredMessage="Campo requerido"										
+													required="true">
+													<f:selectItems 
+													value="#{registroHuellaSistemaController.registroHuellaSistemaList.listaComponentes}"
+													var="lista" 
+													itemLabel="#{lista.descripcion}" 
+													itemValue="#{lista.clasificadorId}"/>														
+												</p:selectCheckboxMenu>
+												
+												<p:message for="idTipoComponente" display="text" class="width:100px"></p:message>
+											</div>
+										</div>
+									
+										<div class="row">
+											<div class="col-md-3">
+												<label class="box-tools pull-left"><b>ARCHIVO:</b></label>
+											</div>
+											
+											<div class="col-md-5">
+<!-- 													<h:form></h:form> -->
+												    <p:fileUpload fileUploadListener="#{registroHuellaSistemaController.handleFileUpload}" mode="advanced" label="Examinar"
+												                     update=":RegistrarHuellaSistemaForm:sha2 :RegistrarHuellaSistemaForm:md5 :RegistrarHuellaSistemaForm:crc32 " auto="true" sizeLimit="100000" 
+												                     required="true" requiredMessage="Campo requerido" />
+														 
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-3">
+												<label class="box-tools pull-left"><b>SHA2:</b></label>
+											</div>
+ 										<div class="col-xs-5">
+											     <h:outputLabel id="sha2" value="#{registroHuellaSistemaController.registroHuellaSistemaModel.sha2}"/>
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-3">
+												<label class="box-tools pull-left"><b>CRC32:</b></label>
+											</div>
+ 										<div class="col-xs-5"
+											      >
+											     <h:outputLabel id="crc32" value="#{registroHuellaSistemaController.registroHuellaSistemaModel.crc}"/>
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-3">
+												<label class="box-tools pull-left"><b>MD5:</b></label>
+											</div>
+ 										<div class="col-xs-5">
+											     <h:outputLabel id="md5" value="#{registroHuellaSistemaController.registroHuellaSistemaModel.md5}"/>
+											</div>
+										</div>
+										
+									</p:fieldset>
+									
+									<br />
+									<div class="box-footer">
+
+										<p:commandButton id="idLimpiar" 
+											value="Limpiar"
+											actionListener="#{registroHuellaSistemaController.limpiarDatos()}"
+											immediate="true" 
+											styleClass="btn btn-default pull-right">
+											<f:ajax render="RegistrarHuellaSistemaForm" resetValues="true"/>
+										</p:commandButton>
+
+										<h:commandButton 
+											id="idGuardar" 
+											value="Guardar" 
+											ajax="true" 
+											actionListener="#{registroHuellaSistemaController.registrarHuellaSistema}"												 
+											styleClass="btn btn-primary pull-right"
+											validateClient="true"
+											oncomplete="PF('cuadroDialogo').show()">
+										</h:commandButton>
+									</div>
+								</div>
+							</div>
+							<br />
+						</div>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

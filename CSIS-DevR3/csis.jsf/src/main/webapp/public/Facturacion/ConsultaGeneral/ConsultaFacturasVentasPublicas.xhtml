@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+
+	</f:metadata>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+
+		<h:form id="ConsultaReporteVentasForm">
+			<p:panel header="Consulta Facturación" styleClass="box-primary"
+				toggleable="true">
+
+				<h:panelGroup id="SolCertificacion">
+					<div class="chart">
+
+						<h:panelGroup render="false">
+
+							<div class='col-md-12'>
+								<div class="form-group">
+									<p:fieldset
+										legend="Bienvenido al Servicio de Facturación del SIN"
+										toggleable="true" toggleSpeed="500" style="margin-bottom:20px">
+										<!-- 											<div class="row"> -->
+										<!-- 												<div class="col-md-2"> -->
+										<!-- 													<h:outputLabel value="FECHA DE FACTURA:" -->
+										<!-- 														style="font-weight:bold" /> -->
+										<!--												<br /> -->
+										<!-- 												</div> -->
+										<!-- 												<div class="col-md-4"> -->
+										<!-- 													<div class="ui-fluid"> -->
+										<!-- 														<p:calendar id="IdFechaHasta" -->
+										<!-- 															value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.solicitudConsultasFacturasPublicasVentas.fechaFactura}" -->
+										<!-- 															showOn="button" navigator="true" effect="fadeIn" -->
+										<!-- 															pattern="dd/MM/yyyy" readonly="false" locale="en" -->
+										<!-- 															styleClass="datepicker" converterMessage="dd/MM/yyyy" -->
+										<!-- 															w:placeholder="dd/mm/aaaa" -->
+										<!-- 															validatorMessage="Debe seleccionar un valor" -->
+										<!-- 															requiredMessage="Campo requerido" required="true"> -->
+										<!-- 															<f:convertDateTime pattern="dd/MM/yyyy" /> -->
+										<!-- 															<p:clientValidator event="dateSelect" /> -->
+										<!-- 															<p:clientValidator event="click" /> -->
+										<!-- 															<p:clientValidator event="keyup" /> -->
+										<!-- 														</p:calendar> -->
+										<!-- 														<p:message for="IdFechaHasta" display="text" -->
+										<!-- 															class="width:100px"> -->
+										<!-- 														</p:message> -->
+
+										<!-- 													</div> -->
+										<!-- 												</div> -->
+										<!-- 											</div> -->
+										<!-- 											<br /> -->
+										<!-- 											<div class="row"> -->
+										<!-- 												<div class="col-md-2"> -->
+										<!-- 													<h:outputLabel value="NIT EMISOR:" style="font-weight:bold" /> -->
+										<!--													<br /> -->
+										<!-- 												</div> -->
+										<!-- 												<div class="col-md-4"> -->
+
+										<!-- 													<p:inputText id="idNitEmisor" -->
+										<!-- 														value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.solicitudConsultasFacturasPublicasVentas.nitEmisor}" -->
+										<!-- 														w:placeholder="NIT EMISOR" readonly="false" -->
+										<!-- 														validatorMessage="Nombre Incorrecto" -->
+										<!-- 														requiredMessage="Campo requerido" required="true" -->
+										<!-- 														styleClass="form-control pull-left" maxlength="13"> -->
+										<!-- 														<p:clientValidator event="click" /> -->
+										<!-- 														<p:clientValidator event="blur" /> -->
+										<!-- 														<p:clientValidator event="keyup" /> -->
+										<!-- 														<p:keyFilter regEx="/[0-9]/i" /> -->
+										<!-- 													</p:inputText> -->
+										<!-- 													<p:message for="idNitEmisor" display="text" class="width:100px"> -->
+										<!-- 													</p:message> -->
+										<!-- 												</div> -->
+										<!-- 											</div> -->
+										<!-- 											<br /> -->
+										<!-- 											<div class="row">	 -->
+										<!-- 												<div class="col-md-2"> -->
+										<!-- 													<h:outputLabel value="NÚMERO DE FACTURA:" -->
+										<!-- 														style="font-weight:bold" /> -->
+										<!-- 													<br /> -->
+										<!-- 												</div> -->
+										<!-- 												<div class="col-md-4"> -->
+
+										<!-- 													<p:inputText id="idNumeroFactura" -->
+										<!-- 														value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.solicitudConsultasFacturasPublicasVentas.numeroFactura}" -->
+										<!-- 														w:placeholder="NÚMERO DE FACTURA" readonly="false" -->
+										<!-- 														validatorMessage="Nombre Incorrecto" -->
+										<!-- 														requiredMessage="Campo requerido" required="true" -->
+										<!-- 														styleClass="form-control pull-left" maxlength="13"> -->
+										<!-- 														<p:clientValidator event="click" /> -->
+										<!-- 														<p:clientValidator event="blur" /> -->
+										<!-- 														<p:clientValidator event="keyup" /> -->
+										<!-- 														<p:keyFilter regEx="/[0-9]/i" /> -->
+										<!-- 													</p:inputText> -->
+										<!-- 													<p:message for="idNumeroFactura" display="text" class="width:100px"> -->
+										<!-- 													</p:message> -->
+										<!-- 												</div> -->
+										<!-- 											</div> -->
+										<br />
+										<div class="row">
+											<div class="col-md-2">
+												<h:outputLabel value="CUF:" style="font-weight:bold" />
+												<br />
+											</div>
+											<div class="col-md-4">
+
+												<p:inputText id="idCUF" w:placeholder="CUF" readonly="false"
+													value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.solicitudConsultasFacturasPublicasVentas.cuf}"
+													validatorMessage="Nombre Incorrecto"
+													requiredMessage="Campo requerido" required="true"
+													styleClass="form-control pull-left">
+													<p:clientValidator event="click" />
+													<p:clientValidator event="blur" />
+													<p:clientValidator event="keyup" />
+												</p:inputText>
+												<p:message for="idCUF" display="text" class="width:100px">
+												</p:message>
+											</div>
+										</div>
+
+										<!-- 											<br /> -->
+										<div class="row">
+											<div class="col-md-12" align="right">
+
+												<p:commandButton style="width:80px" id="idCancelar1"
+													value="Cancelar"
+													actionListener="#{consultaFacturasVentasPublicasController.Cancelar}"
+													immediate="true"
+													styleClass="btn btn-danger btn-sm pull-right">
+													<f:ajax render="ConsultaReporteVentasForm"></f:ajax>
+												</p:commandButton>
+
+												<p:commandButton style="width:80px" id="idLimpiar"
+													value="Limpiar"
+													actionListener="#{consultaFacturasVentasPublicasController.LimpiarDatosReporte}"
+													immediate="true"
+													styleClass="btn btn-warning btn-sm pull-right">
+													<f:ajax render="ConsultaReporteVentasForm"></f:ajax>
+												</p:commandButton>
+
+												<p:commandButton id="idSolicitar" validateClient="true"
+													inmediate="false" value="Verificar"
+													styleClass="btn btn-primary btn-sm pull-right"
+													actionListener="#{consultaFacturasVentasPublicasController.CargarConsultaComprasVentas}"
+													update="ConsultaReporteVentasForm">
+													<f:ajax render="idPanellistaReporteConsulta"></f:ajax>
+												</p:commandButton>
+											</div>
+										</div>
+
+									</p:fieldset>
+								</div>
+							</div>
+							<!-- 								       <h:panelGrid columns="2"> -->
+							<!--                         <h:column> -->
+							<!--                                 <h:outputText value="dato1" /> -->
+							<!--                         </h:column> -->
+							<!--                         <h:column> -->
+							<!--                                 <h:inputText value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.cuf}" /> -->
+							<!--                         </h:column> -->
+
+							<!--                 </h:panelGrid> -->
+							<h:panelGroup id="idPanellistaReporteConsulta">
+								<h:panelGroup
+									rendered="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.mostrarGrillaReporte}">
+									<div class='col-md-12'>
+										<div class="form-group">
+											<p:fieldset
+												legend="Se tiene registrada la siguiente información"
+												toggleable="true" toggleSpeed="500"
+												style="margin-bottom:20px">
+
+												<div class="row">
+													<div class="form-group">
+														<p:outputPanel id="panelCuadroDialogo"
+															style="text-align:center;">
+															<div class="row">
+																<h:panelGroup id="panelModuloII">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label> <br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.nombreRazonSocialNIT}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+															</div>
+															<div class="row">
+																<h:panelGroup id="panelModuloIIi">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label> <br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="Sucurursal No. #{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.sucursalId}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+															</div>
+															<div class="row">
+																<h:panelGroup id="panelModuloV">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label>
+
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.direccion}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+															</div>
+															<div class="row">
+																<h:panelGroup id="panelModuloVq">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label>
+
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="Zona Central"></h:outputText>
+																	</div>
+																</h:panelGroup>
+															</div>
+																			<div class="row">
+																<h:panelGroup id="panelModuloVqq">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label>
+
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="Teléfonos 22606060"></h:outputText>
+																	</div>
+																</h:panelGroup>
+															</div>
+															<div class="row">
+																<h:panelGroup id="panelModuloI">
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label>
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="NIT: #{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.nitEmisor}"></h:outputText>
+																	</div>
+																	<br />
+																</h:panelGroup>
+															</div>
+															<div class="row">
+																<h:panelGroup id="panelModuloVI">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label> <br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="Documento Fiscal Nro.: #{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.numeroFactura}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+															</div>
+															<div class="row">
+																<h:panelGroup id="panelModuloIII">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label>
+
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="CUF: #{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.cuf}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+															</div>
+															<div class="row">
+																<h:panelGroup id="panelModuloVIiiV">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label> <br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.leyenda}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+															</div>
+															<div class="row">
+																<h:panelGroup id="panelModuloVIiiI">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label> <br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="FACTURA"></h:outputText>
+																	</div>
+																</h:panelGroup>
+															</div>
+															<div class="row">
+																<h:panelGroup id="panelModuloVIii">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label> <br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="FACTURA COMPUTARIZADA"></h:outputText>
+																	</div>
+																</h:panelGroup>
+															</div>
+															<div class="row">
+																<h:panelGroup id="panelModuloVI1">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label> <br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="REPRESENTACIÓN GRÁFICA"></h:outputText>
+																	</div>
+																</h:panelGroup>
+															</div>
+
+															<div class="row">
+																<h:panelGroup id="panelModuloVII">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label> <br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.fechaEmision}">
+																			<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+																		</h:outputText>
+																	</div>
+																</h:panelGroup>
+
+															</div>
+
+															<div class="row">
+																<h:panelGroup id="panelModuloVIII">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label> <br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="NIT/CI: #{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.numeroDocumento}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+
+															</div>
+
+															<div class="row">
+																<h:panelGroup id="panelModuloVIIIV">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label> <br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="Nombre/Razón Social: #{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.nombreRazonSocial}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+
+															</div>
+
+															<div class="row">
+																<h:panelGroup id="panelModuloVIIIVi">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b></b></label> <br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-lefth"
+																			value="Código Cliente: #{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.codigoCliente}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+
+															</div>
+															<div class="row">
+																<h:panelGroup id="panelModuloIX"
+																	rendered="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.mostrarCabeceraFacturaGasolina}">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b>PLACA:</b></label>
+																		<br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-right"
+																			value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.placa_vehiculo}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+
+															</div>
+
+															<div class="row">
+																<h:panelGroup id="panelModuloX"
+																	rendered="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.mostrarCabeceraFacturaGasolina}">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b>PAÍS:</b></label>
+																		<br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-right"
+																			value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.codigoPais}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+
+															</div>
+
+															<div class="row">
+																<h:panelGroup id="panelModuloXI"
+																	rendered="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.mostrarCabeceraFacturaGasolina}">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b>TIPO
+																				DE ENVASE:</b></label> <br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-right"
+																			value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.tipoEnvase}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+
+															</div>
+
+															<div class="row">
+																<h:panelGroup id="panelModuloXII"
+																	rendered="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.mostrarCabeceraFacturaEstudiante}">
+
+																	<div class="col-md-3">
+																		<label class="box-tools pull-right"><b>ESTUDIANTE:</b></label>
+																		<br />
+																	</div>
+																	<div class="col-md-4">
+																		<h:outputText class="box-tools pull-right"
+																			value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.nombreEstudiante}"></h:outputText>
+																	</div>
+																</h:panelGroup>
+
+															</div>
+<br />
+															<p:dataTable id="listaDetalleReporteConsulta"
+																value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasList.listaReportePublicas.listaFacturasPublicas}"
+																var="lrc" rowIndexVar="rowIndex"
+																widgetVar="listaReporteConsulta"
+																styleClass="table table-striped table-bordered table-hover table-sm">
+
+																<f:facet name="header"> </f:facet>
+
+																<p:column
+																	style="display:#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.mostrarCampoTablaCodigoProducto}">
+																	<f:facet name="header">
+																		<h:outputText value="Codigo Producto"></h:outputText>
+																	</f:facet>
+																	<h:outputText value="#{lrc.productoId}"></h:outputText>
+																</p:column>
+
+																<p:column
+																	style="display:#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.mostrarCampoTablaCodigoEstudiante}">
+																	<f:facet name="header">
+																		<h:outputText value="Codigo Estudiante"></h:outputText>
+																	</f:facet>
+																	<h:outputText
+																		value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.codigoCliente}"></h:outputText>
+																</p:column>
+
+																<p:column
+																	style="display:#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.mostrarCampoTablaPeriodo}">
+																	<f:facet name="header">
+																		<h:outputText value="Periodo"></h:outputText>
+																	</f:facet>
+																	<h:outputText
+																		value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.periodoFacturado}">
+																		<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+																	</h:outputText>
+																</p:column>
+
+																<p:column>
+																	<f:facet name="header">
+																		<h:outputText value="Descripcion"></h:outputText>
+																	</f:facet>
+																	<h:outputText value="#{lrc.descripcion}"></h:outputText>
+																</p:column>
+
+																<p:column
+																	style="display:#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.mostrarCampoTablaPrecioUnitarioCantidad}">
+																	<f:facet name="header">
+																		<h:outputText value="Cantidad"></h:outputText>
+																	</f:facet>
+																	<h:outputText value="#{lrc.cantidad}"></h:outputText>
+																</p:column>
+
+																<p:column
+																	style="display:#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.mostrarCampoTablaPrecioUnitarioCantidad}">
+																	<f:facet name="header">
+																		<h:outputText value="Precio Unitario"></h:outputText>
+																	</f:facet>
+																	<h:outputText value="#{lrc.precioUnitario}">
+																		<f:convertNumber pattern="#0.00" />
+																	</h:outputText>
+																</p:column>
+
+																<p:column>
+																	<f:facet name="header">
+																		<h:outputText value="SubTotal"></h:outputText>
+																	</f:facet>
+																	<h:outputText value="#{lrc.subTotal}">
+																		<f:convertNumber pattern="#0.00" />
+																	</h:outputText>
+																</p:column>
+
+															</p:dataTable>
+															<div class="row">
+																<h:panelGroup id="panelModuloXIII">
+
+																	<div class="col-md-5">
+																		<label class="box-tools pull-right"><b>DESCUENTO:</b></label>
+																		<br />
+																	</div>
+																	<div class="col-md-6">
+																		<h:outputText class="box-tools pull-right"
+																			value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.montoDescuento}">
+																			<f:convertNumber pattern="#0.00" />
+																		</h:outputText>
+																	</div>
+																</h:panelGroup>
+
+															</div>
+															<div class="row">
+																<h:panelGroup id="panelModuloXIV">
+
+																	<div class="col-md-5">
+																		<label class="box-tools pull-right"><b>TOTAL:</b></label>
+																		<br />
+																	</div>
+																	<div class="col-md-6">
+																		<h:outputText class="box-tools pull-right"
+																			value="#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.facturasVentasDto.montoTotal}">
+																			<f:convertNumber pattern="#0.00" />
+																		</h:outputText>
+																	</div>
+																</h:panelGroup>
+
+															</div>
+															<div class="box-footer">
+																<p:commandButton id="idCancelar" value="Salir"
+																	styleClass="btn btn-danger btn-sm pull-right"
+																	actionListener="#{consultaFacturasVentasPublicasController.Cancelar}">
+																	<f:ajax render="nada"></f:ajax>
+																</p:commandButton>
+																<p:commandButton id="idDescargarCsv" value="Imprimir"
+																	style="display:#{consultaFacturasVentasPublicasController.facturadorWebSistemasModel.mostrarBotonImpresion}"
+																	styleClass="btn btn-success btn-sm pull-right"
+																	oncomplete="PrimeFaces.monitorDownload(start, stop);"
+																	ajax="false">
+                                                                          <p:fileDownload
+																		value="#{consultaFacturasVentasPublicasController.ReporteFacturaVentas()}" />
+                                                            </p:commandButton>
+															</div>
+														</p:outputPanel>
+													</div>
+												</div>
+											</p:fieldset>
+
+										</div>
+									</div>
+								</h:panelGroup>
+							</h:panelGroup>
+							<!-- 	reporte de compras  -->
+
+						</h:panelGroup>
+					</div>
+				</h:panelGroup>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

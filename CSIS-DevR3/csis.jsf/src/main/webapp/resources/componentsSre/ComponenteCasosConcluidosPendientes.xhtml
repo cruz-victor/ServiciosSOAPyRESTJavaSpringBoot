@@ -1,0 +1,41 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+
+<composite:interface>
+	<composite:attribute name="ComponenteConcluidos" />
+	<composite:attribute name="ComponentePendientes" />
+</composite:interface>
+
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+
+	<style type="text/css">
+.ui-datatable .ui-row-editor .ui-icon-pencil:before {
+	content: "\f14b";
+}
+</style>
+	<h:form id="idComponenteGrillaSincronizacionForm">
+		<div style="display: flex; flex-direction: row;">
+			<div>
+				<h:graphicImage value="/images/ico_concluido.png"></h:graphicImage>
+			</div>
+			<div style="padding-left: 5px; padding-right: 60px; color: #084B8A;">
+				<h:outputText value="#{cc.attrs.ComponenteConcluidos}" />
+			</div>
+			<div>
+				<h:graphicImage value="/images/ico_pendiente.png"></h:graphicImage>
+			</div>
+			<div style="padding-left: 5px; color: #084B8A;">
+				<h:outputText value="#{cc.attrs.ComponentePendientes}" />
+			</div>
+		</div>
+	</h:form>
+</composite:implementation>
+
+</html>
+

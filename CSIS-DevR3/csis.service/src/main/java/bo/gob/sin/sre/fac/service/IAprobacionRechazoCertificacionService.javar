@@ -1,0 +1,40 @@
+package bo.gob.sin.sre.fac.service;
+
+
+
+import bo.gob.sin.sre.fac.dto.NotificacionElectronicaListaDto;
+import bo.gob.sin.sre.fac.dto.RespuestaCertificadoAprobacionDto;
+import bo.gob.sin.sre.fac.dto.RespuestaSolicitudCertificacionParaAutorizarDto;
+import bo.gob.sin.sre.fac.dto.SolicitudCertificadoAprobacionDto;
+import bo.gob.sin.sre.fac.dto.SolicitudSistemasEnProcesoDto;
+
+public interface IAprobacionRechazoCertificacionService {
+
+	/**
+	 * Obtener Lista de solicitud certificacion junto con los datos del sistema
+	 * 
+	 * @author: Carmen Rosa Silva
+	 * @Fecha: 22/06/20118
+	 * @param pSolicitud,objeto de tipo solicitud
+	 * @return Devuelve objeto respuesta Dto de tipo Respuesta Sistemas solicitud de Certificacion.
+	 * modificado por rosario garcia
+	 */
+	public RespuestaSolicitudCertificacionParaAutorizarDto obtenerListaSolicitudCertificacionParaAutorizar(
+			SolicitudSistemasEnProcesoDto pSolicitud);
+	
+	public RespuestaCertificadoAprobacionDto obtenerCertificadoDeAprobacion(
+			SolicitudCertificadoAprobacionDto pSolicitud);
+	
+	public RespuestaCertificadoAprobacionDto generarCertificadoDeAprobacion(
+			SolicitudCertificadoAprobacionDto pSolicitud);
+	
+	public RespuestaCertificadoAprobacionDto generarHash(
+			SolicitudCertificadoAprobacionDto pSolicitud);
+	
+	public RespuestaCertificadoAprobacionDto incrustarFirma(
+			SolicitudCertificadoAprobacionDto pSolicitud);
+	
+	public RespuestaCertificadoAprobacionDto guardarDocumentoAdjunto(SolicitudCertificadoAprobacionDto pSolicitud);
+	
+	public NotificacionElectronicaListaDto obtenerNotificacionElectronicaPorContribuyenteYActuado(SolicitudCertificadoAprobacionDto pSolicitud);
+}

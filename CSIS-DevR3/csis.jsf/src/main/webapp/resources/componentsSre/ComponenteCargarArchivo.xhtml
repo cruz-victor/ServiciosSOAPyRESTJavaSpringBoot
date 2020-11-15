@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough">
+<!-- INTERFACE -->
+<composite:interface>
+	<composite:attribute name="ComponenteRegistroHuellasDigitales" required="false" />
+</composite:interface>
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+
+
+<style>
+
+
+</style>
+
+<!-- 		<p:remoteCommand name="rc" update="#{p:component('idTextoModulos')} #{p:component('idMensajeEstadosFacturas')} #{p:component('idNombreArchivoSubido')} #{p:component('idRutaArchivoMensaje')} #{p:component('idNombreArchivoSubidoMensaje')} #{p:component('idNombreArchivoSubido')}" />  -->
+			<!-- <f:event type="preRenderView" listener="#{registroArchivoComponent.setearValidacionesMensajes}" /> -->
+			
+ 				<p:outputPanel autoUpdate="true">
+					<p:fileUpload id="idCargarArchivoComponent" 
+						name="idCargarArchivoComponent"
+						value="#{registroArchivoComponent.file}"
+						mode="advanced" auto="true"
+						uploadLabel="Subir Archivo" cancelLabel="Cancelar"
+						allowTypes="#{registroArchivoComponent.archivo.tipoArchivoPermitido}"
+						label="Examinar" style="margin-bottom: -25px; border: 0 none; background: none;"
+						invalidSizeMessage="#{registroArchivoComponent.archivo.mensajeTamanioInvalido}"
+						invalidFileMessage="#{registroArchivoComponent.archivo.mensajeArchivoInvalido}"
+						fileLimit="10"
+						fileLimitMessage="Solo se puede subir una archivo."
+						sizeLimit="#{registroArchivoComponent.archivo.tamanioArchivoBytes}" required="true" validateClient="true"
+						fileUploadListener="#{registroArchivoComponent.handleFileUpload}" update="#{p:component('idNombreArchivoSubidoComponent')}">						
+					</p:fileUpload>
+				
+					<p:outputLabel id="idNombreArchivoSubidoComponent"
+						value="Nombre Archivo: #{registroArchivoComponent.archivo.archivoRutaCompleta}" 
+						widgetVar="idArchivoRecibido" w:placeholder="" readonly="false"
+						validatorMessage="Nombre Incorrecto" 
+						requiredMessage="Campo requerido" required="true"
+						styleClass="form-control pull-left">
+					</p:outputLabel>
+			</p:outputPanel>
+</composite:implementation>
+</html>

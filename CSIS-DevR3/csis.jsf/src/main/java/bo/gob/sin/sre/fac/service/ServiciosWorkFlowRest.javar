@@ -1,0 +1,169 @@
+package bo.gob.sin.sre.fac.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import bo.gob.sin.procesos.dto.RespDerivacionMultipleDto;
+import bo.gob.sin.procesos.dto.RespUsuariosAsignancionProcesoDto;
+import bo.gob.sin.procesos.dto.SolicitudDerivacionMultipleDto;
+import bo.gob.sin.sen.enmo.jsf.model.Json;
+import bo.gob.sin.sen.enmo.jsf.service.RestClient;
+import bo.gob.sin.sre.fac.dto.RespuestaOperacionDto;
+import bo.gob.sin.sre.fac.dto.SolicitudIniciosCierreSistemasDto;
+import bo.gob.sin.str.ccs.jsfconf.RestUrl;
+import io.undertow.util.StatusCodes;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
+
+public class ServiciosWorkFlowRest extends PeticionesRest {
+	private static final Logger LOG = LoggerFactory.getLogger(ServiciosWorkFlowRest.class);
+	static MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+	static String PROCESO = "1002";
+	static String ETAPA = "2005";
+	String vToken;
+
+
+	public ServiciosWorkFlowRest(String host, OkHttpClient client) {
+		super();
+		LOG.info("Ingresando constructor ServiciosWorkFlowRest host={}, client={}", host, client);
+		this.host = host;
+		this.client = client;
+
+		LOG.info("Saliendo constructor ServiciosWorkFlowRest");
+	}
+
+	public void configTransversal() {
+		RestUrl vConf = new RestUrl();
+		String vUrlClasificador = vConf.getPropetyValue("url_servicio_workflow");
+		RestClient cl = new RestClient();
+		this.client = cl.obtenerCliente();
+		this.host = vUrlClasificador;
+	}
+
+	public ServiciosWorkFlowRest() {
+		mensajes = new ArrayList<>();
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public OkHttpClient getClient() {
+		return client;
+	}
+
+	/**
+	 * para poder obtener el PIN basándose en el PIN y el NIT retorna el PIN y como
+	 * parte de la información el estado del mismo como un valor booleano
+	 * 
+	 * @author: Sergio Ichaso
+	 * @Fecha: 22/11/2018
+	 * @return Devuelve objeto respuesta PinDto
+	 */
+	public RespUsuariosAsignancionProcesoDto obtenerUsuariosAsignacionEquipoCertificacion(String pToken) {
+		configTransversal();
+
+		RespUsuariosAsignancionProcesoDto vResultado = new RespUsuariosAsignancionProcesoDto();
+
+		try {
+			String json = "";
+			String ruta = host + "/rest/workflow/usuariosProceso/";
+
+			TypeReference<RespUsuariosAsignancionProcesoDto> typeRef = new TypeReference<RespUsuariosAsignancionProcesoDto>() {
+			};
+
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("proceso", PROCESO + "");
+			map.put("etapa", ETAPA + "");
+			Response response = ejecutarGetConParametrosToken(ruta, map);
+
+			if (response.code() == StatusCodes.NOT_FOUND) {
+				vResultado = new RespUsuariosAsignancionProcesoDto();
+			} else {
+				vResultado = Json.serializer().fromInputStream(response.body().byteStream(), typeRef);
+			}
+		} catch (Exception e) {
+			vResultado = new RespUsuariosAsignancionProcesoDto();
+			vResultado.setOk(false);
+		}
+
+		// vResultado.setMensajes(mensajes);
+
+		return vResultado;
+	}
+
+	/**
+	 * Para derivar asignacion multiple.
+	 * 
+	 * @author: Sergio Ichaso
+	 * @Fecha: 22/11/2018
+	 * @return Devuelve objeto respuesta PinDto
+	 */
+	public RespDerivacionMultipleDto derivarUsuariosAsignacionEquipoCertificacion(
+			SolicitudDerivacionMultipleDto pUsuariosAsignacion, String pToken) {
+		configTransversal();
+		RespDerivacionMultipleDto vResultado = new RespDerivacionMultipleDto();
+		try {
+
+			String ruta = host + "/rest/workflow/derivacionMultiple/";
+
+			TypeReference<RespDerivacionMultipleDto> typeRef = new TypeReference<RespDerivacionMultipleDto>() {
+			};
+
+			String json = "";
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(pUsuariosAsignacion);
+			Response response = ejecutarPostConParametroMapperToken(ruta, json);
+
+			if (response.code() == StatusCodes.NOT_FOUND) {
+				vResultado = new RespDerivacionMultipleDto();
+			} else {
+				vResultado = Json.serializer().fromInputStream(response.body().byteStream(), typeRef);
+			}
+		} catch (Exception e) {
+			vResultado = new RespDerivacionMultipleDto();
+		}
+
+		return vResultado;
+	}
+	
+	/**
+	 * @modificacion: Refactorizacion a proyecto electronica rest
+	 * @author: Reynaldo Chambi.
+	 * @fecha: 12/10/2018
+	 */
+	public RespuestaOperacionDto iniciarSistemasAutorizados(SolicitudIniciosCierreSistemasDto pSolicitud) {
+		configFacturacionElectronicaRest();
+		RespuestaOperacionDto resultado = new RespuestaOperacionDto();
+
+		try {
+			String json = "";
+			ObjectMapper mapper = new ObjectMapper();
+			json = mapper.writeValueAsString(pSolicitud);
+			String ruta = host + "/electronica/iniciarSistemas/iniciarcerrarSistemasAutorizado";
+			TypeReference<RespuestaOperacionDto> typeRef = new TypeReference<RespuestaOperacionDto>() {
+			};
+
+			Response response = ejecutarPostConParametroMapperToken(ruta, json);
+
+			if (response.code() == StatusCodes.NOT_FOUND) {
+				resultado = new RespuestaOperacionDto();
+			} else {
+				resultado = Json.serializer().fromInputStream(response.body().byteStream(), typeRef);
+			}
+		} catch (Exception e) {
+			resultado = new RespuestaOperacionDto();
+		}
+
+		return resultado;
+	}
+}

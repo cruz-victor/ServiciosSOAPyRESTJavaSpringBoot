@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<version>0.8.0.0-SNAPSHOT</version>
+	<name>sre.fac.csis.entities</name>
+	<description>sre.fac.csis.entidades</description>
+	<groupId>bo.gob.sin.sre.fac.csis</groupId>
+	<artifactId>csis.entities</artifactId>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<org.hibernate.version>5.2.12.Final</org.hibernate.version>
+		<m2e.jpa.activation>false</m2e.jpa.activation>
+		<spring.version>4.2.3.RELEASE</spring.version>
+	</properties>
+
+	<parent>
+		<groupId>bo.gob.sin.sre.fac.csis</groupId>
+		<artifactId>csis</artifactId>
+		<version>0.8.0.0-SNAPSHOT</version>
+	</parent>
+	<build>
+		<finalName>${project.artifactId}</finalName>
+	</build>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>http://siatrepositorio.impuestos.gob.bo:8081/artifactory/SIAT-Snapshot</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-envers</artifactId>
+			<version>${org.hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+<!-- 		<dependency>
+			<groupId>Transversales.ConfiguracionSistema</groupId>
+			<artifactId>Transversales.ConfiguracionSistema.Utiles</artifactId>
+			<version>RELEASE</version>
+		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>Sre.Fac</groupId> -->
+		<!-- <artifactId> -->
+		<!-- Sre.Fac.Audit -->
+		<!-- </artifactId> -->
+		<!-- <version>1.0.0</version> -->
+		<!-- </dependency> -->
+
+
+<!-- 		<dependency>
+			<groupId>Transversales.ConfiguracionSistema</groupId>
+			<artifactId>Transversales.ConfiguracionSistema.Entities</artifactId>
+			<version>RELEASE</version>
+		</dependency> -->
+		<!-- <dependency>
+			<groupId>bo.gob.sin.sre.fac.csis</groupId>
+			<artifactId>csis.dto</artifactId>
+			<version>RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<groupId>Transversales.Comun</groupId>
+					<artifactId>
+  	    				Transversales.Comun.Entities
+  	    			</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency> -->
+	</dependencies>
+
+</project>

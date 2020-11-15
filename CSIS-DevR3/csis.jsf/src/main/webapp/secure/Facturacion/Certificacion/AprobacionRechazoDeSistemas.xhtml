@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:visor="http://java.sun.com/jsf/composite/visor"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<!-- <f:viewAction action="#{logedBean.check}" /> -->
+<!-- 		<f:viewAction action="#{aprobacionRechazoDeSistemasController.Load}"/> -->
+<!-- 		<f:viewParam name="id" value="#{aprobacionRechazoDeSistemasController.pSistemaId}" required="true" requiredMessage="id is required"/>  -->
+			<f:viewParam name="id" value="3326" required="true" requiredMessage="id is required"/> 
+			<f:viewParam name="idNit" value="1020703023" required="true" requiredMessage="id is required"/> 
+	</f:metadata>
+
+	<ui:define name="title">
+      DETALLE DE SISTEMA
+    </ui:define>
+
+	<ui:define name="body">		
+	<p:panel header="Solicitudes pendientes de aprobación" styleClass="box-primary" toggleable="true">
+		<h:form id = "AprobacionRechazosistemasForm">
+			<p:fieldset legend="Datos Básicos" toggleable="true" toggleSpeed="500" styleClass="ui-fluid">
+					<sre:ComponenteBusquedaDatosBasicos
+							ComponenteLabelNit="NIT"
+							ComponenteInputTextNit="#{busquedaDatosBasicosComponent.nitDatosBasicosDto.nit}"													
+							ComponenteLabelDependencia="DEPENDENCIA"
+							ComponenteLabelRazonSocial="NOMBRE O RAZON SOCIAL"
+							ComponenteButtonNit="#{aprobacionRechazoSistemasController.buscarContribuyente}"
+							ComponenteTextButtonNit="Buscar"
+							ComponenteEsVisibleLimpiar="true"
+							ComponenteTextButtonLimpiar="Limpiar"
+							ComponenteButtonLimpiar="#{aprobacionRechazoSistemasController.LimpiarBusqueda}"
+							ComponenteNombreFormPrincipal="AprobacionRechazosistemasForm">
+					</sre:ComponenteBusquedaDatosBasicos>
+			</p:fieldset>
+			<p:separator/>
+			<p:fieldset legend = "Datos de contacto" toggleable = "true" toggleSpeed = "500" styleClass = "ui-fluid">
+			
+			</p:fieldset>
+			<p:separator/>
+			<p:fieldset legend = "Datos del Sistema" toggleable = "true" toggleSpeed = "500" styleClass = "ui-fluid">
+				<p:panelGrid columns = "4" columnClasses = "ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank">
+					<p:spacer/>	
+					<p:outputLabel value="Fecha solicitud"/>
+<!-- 					<p:outputLabel value="#{aprobacionRechazoDeSistemasController.certificacionSolicitudCertificacionModel.datosSistemasDto.fechaSolicitud}"> -->
+					<p:outputLabel value="">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</p:outputLabel>
+					<p:spacer/>
+					
+					<p:spacer/>
+					<p:outputLabel value="Sisteman"/>
+					<p:outputLabel value="#{aprobacionRechazoDeSistemasController.pSistemaId}"/>
+					<p:spacer/>
+					
+					<p:spacer/>
+					<p:outputLabel value="Modalidad"/>
+					<p:outputLabel value=""/>
+					<p:spacer/>
+					
+					<p:spacer/>
+					<p:outputLabel value="Fecha de aprobación de pruebas"/>
+					<p:outputLabel value="X"/>
+					<p:spacer/>
+					
+					<p:spacer/>
+					<p:outputLabel value="Resultado"/>
+					<p:outputLabel value="X"/>
+					<p:spacer/>
+					
+					<p:spacer/>
+					<p:commandButton  value="Ver Detalle de Pruebas" type="button" onclick="PF('dialogPruebas').show();"/>
+					<p:spacer/>
+					
+				</p:panelGrid>
+				<p:panelGrid columns = "6" columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2" layout="grid" styleClass="ui-panelgrid-blank">
+					<p:spacer/>
+					
+					<p:spacer/>
+					
+					<p:spacer/>
+					
+					<p:spacer/>
+					
+					<p:commandButton value = "Certificar" onclick="PF('dialogCertificacion').show();" styleClass="btn btn-primary btn-sm btn-block"/>
+					
+					<p:commandButton value = "Rechazar" onclick="PF('dialogRechazo').show();" styleClass="btn btn-danger btn-sm btn-block"/>
+				</p:panelGrid>
+				
+				modal de lista de pruebas
+				<p:dialog header="Detalle de Pruebas" position="top center" widgetVar="dialogPruebas" modal="true" height="100">
+				    <h:outputText value="This is a Modal Dialog." />
+				</p:dialog>
+				
+				modal de rechazo
+				<p:dialog header="Rechazo" position="top center" widgetVar="dialogRechazo" modal="true" height="100">
+				    <h:outputText value="This is a Modal Dialog." />
+				</p:dialog>
+				
+				modal de certificacion
+				<p:dialog header="Certificacion" position="top center" widgetVar="dialogCertificacion" modal="true" height="100">
+				    <h:outputText value="This is a Modal Dialog." />
+				</p:dialog>
+			</p:fieldset>
+		</h:form>	
+	 </p:panel>
+	</ui:define>
+</ui:composition>

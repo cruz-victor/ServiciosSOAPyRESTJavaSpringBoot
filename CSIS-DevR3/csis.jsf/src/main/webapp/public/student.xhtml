@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                template="/common/template2.xhtml">
+
+    <ui:define name="title">
+       Listado de Contribuyentes
+    </ui:define>
+
+    <ui:define name="body">
+      <form action="${request.contextPath}/appLogout" method="POST">
+        <input type="submit" value="Logout"/>
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>		
+      </form> 
+       <h3>Aplicación de ejemplo JSF</h3>
+		<h:form> 
+		    <p:dataScroller value="#{dataScrollerBean.students}" var="student" chunkSize="10">
+		        <f:facet name="header">
+		            Scroll Down to Load More Students
+		        </f:facet>
+		        <h:panelGrid columns="2" style="width:100%">
+		            <p:graphicImage name="images/cp.jpg" /> 
+		            <p:outputPanel>
+		                <h:panelGrid columns="2" cellpadding="5">
+		                    <h:outputText value="Id:" />
+		                    <h:outputText value="#{student.id}" />
+		                    <h:outputText value="Name:" />
+		                    <h:outputText value="#{student.name}"/>
+		                    <h:outputText value="Location:" />
+		                    <h:outputText value="#{student.location}"/>
+		                </h:panelGrid>
+		            </p:outputPanel>
+		        </h:panelGrid>
+		    </p:dataScroller>
+		    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>				
+		</h:form>
+    </ui:define>
+    
+   </ui:composition>
+   

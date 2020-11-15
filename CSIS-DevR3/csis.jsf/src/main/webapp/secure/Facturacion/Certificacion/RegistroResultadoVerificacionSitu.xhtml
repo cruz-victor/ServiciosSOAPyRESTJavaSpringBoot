@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:w="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:adm="http://github.com/adminfaces"
+	xmlns:p="http://primefaces.org/ui"
+	template="/common/templateNoAuth.xhtml"
+	xmlns:sre="http://java.sun.com/jsf/composite/componentsSre">
+
+	<f:metadata>
+		<!-- <f:viewAction action="#{logedBean.check}" /> -->
+		<f:viewAction
+			action="#{registroResultadoVerificacionSituCertificacionController.Load}" />
+	</f:metadata>
+
+	<ui:define name="title">
+
+	</ui:define>
+
+	<ui:define name="body">
+		<h:form id="RegistroResultadoVerificacionSituForm">
+
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">Registro de resultados de verificación
+						in situ</h3>
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool"
+							data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+					</div>
+				</div>
+				<!-- 				<h:panelGroup id="idPanelObservacionOtro"> -->
+				<!-- 					<h:panelGroup -->
+				<!-- 						rendered="#{registroResultadoVerificacionSituCertificacionController.certificacionSolicitudCertificacionModel.tipoResultadoCertificacion==0}"> -->
+				<div class="row">
+					<div class="box-body">
+						<div class="col-xs-12">
+							<p:fieldset legend="Datos del Contribuyente" toggleable="true"
+								toggleSpeed="500">
+								<sre:ComponenteBusquedaDatosBasicos ComponenteLabelNit="NIT"
+									ComponenteInputTextNit="#{busquedaDatosBasicosComponent.nitDatosBasicosDto.nit}"
+									ComponenteLabelDependencia="DEPENDENCIA"
+									ComponenteLabelRazonSocial="NOMBRE O RAZON SOCIAL"
+									ComponenteButtonNit="#{registroResultadoVerificacionSituCertificacionController.buscarContribuyente}"
+									ComponenteTextButtonNit="Buscar"
+									ComponenteEsVisibleLimpiar="true"
+									ComponenteTextButtonLimpiar="Limpiar"
+									ComponenteButtonLimpiar="#{registroResultadoVerificacionSituCertificacionController.limpiarBusqueda}"
+									ComponenteNombreFormPrincipal=":RegistroResultadoVerificacionSituForm">
+								</sre:ComponenteBusquedaDatosBasicos>
+
+							</p:fieldset>
+						</div>
+					</div>
+				</div>
+				<!-- 					</h:panelGroup> -->
+				<div class="row">
+					<div class="box-body">
+						<div class="col-xs-12">
+							<p:fieldset legend="Datos de Solicitud" toggleable="true"
+								toggleSpeed="500">
+								<sre:ComponenteAsignacionEquipoCertificacion></sre:ComponenteAsignacionEquipoCertificacion>
+							</p:fieldset>
+						</div>
+					</div>
+				</div>
+				<!-- 				</h:panelGroup> -->
+				<h:panelGroup
+					rendered="#{registroResultadoVerificacionSituCertificacionController.certificacionSolicitudCertificacionModel.mostrarPanel}">
+					<div class="box-body">
+						<div class="chart">
+							<p />
+							<br />
+							<h:panelGroup id="idPanelContenedor">
+								<h:panelGroup
+									rendered="#{registroResultadoVerificacionSituCertificacionController.certificacionSolicitudCertificacionModel.listaSistemasEnVerificacion.size()>0}">
+									<div class="row">
+										<div class="col-xs-12">
+											<p:fieldset legend="Estado" toggleable="true"
+												toggleSpeed="500" style="margin-bottom:20px">
+
+												<div class="row">
+													<div class="col-xs-12">
+														<p:dataTable id="idListaSistemasEnVerificacion"
+															widgetVar="idListaSistemasEnVerificacion"
+															value="#{registroResultadoVerificacionSituCertificacionController.certificacionSolicitudCertificacionModel.listaSistemasEnVerificacion}"
+															filteredValue="#{registroResultadoVerificacionSituCertificacionController.certificacionSolicitudCertificacionModel.listaSistemasEnVerificacionFiltrar}"
+															var="lista" rowIndexVar="rowIndex" rows="5"
+															paginator="true" sortMode="multiple"
+															paginatorPosition="bottom"
+															paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+															currentPageReportTemplate="{startRecord} a {endRecord} de {totalRecords} registros"
+															styleClass="table table-striped table-bordered table-hover table-sm">
+															<p:column>
+																<f:facet name="header">
+																	<h:outputText value="Nro."></h:outputText>
+																</f:facet>
+																<h:outputText value="#{rowIndex+1}"></h:outputText>
+															</p:column>
+															<f:facet name="header">
+																<p:outputPanel>
+																	<p:commandLink value="Limpiar Filtros"
+																		styleClass="text-blue"
+																		onclick="PF('idListaSistemasEnVerificacion').clearFilters();">
+																	</p:commandLink>
+																	<div>
+																		<p:inputText id="globalFilter"
+																			onkeyup="PF('idListaSistemasEnVerificacion').filter()"
+																			placeholder="Digite la búsqueda" />
+																	</div>
+																</p:outputPanel>
+															</f:facet>
+															<p:column>
+																<f:facet name="header">
+																	<h:outputText value="FECHA"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{lista.fechaUltimaModificacion}">
+																	<f:convertDateTime pattern="dd/MM/yyyy" />
+																</h:outputText>
+															</p:column>
+															<p:column sortBy="#{lista.nombreSistema}"
+																filterBy="#{lista.nombreSistema}"
+																filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="SISTEMA"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{lista.nombreSistema}"></h:outputText>
+															</p:column>
+															<p:column sortBy="#{lista.version}"
+																filterBy="#{lista.version}" filterMatchMode="contains"
+																filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="VERSION"></h:outputText>
+																</f:facet>
+																<h:outputText value="#{lista.version}"></h:outputText>
+															</p:column>
+															<p:column
+																sortBy="#{lista.descripcionModalidadFacturacionId}"
+																filterBy="#{lista.descripcionModalidadFacturacionId}"
+																filterMatchMode="contains" filterStyle="display:none">
+																<f:facet name="header">
+																	<h:outputText value="MODALIDAD"></h:outputText>
+																</f:facet>
+																<h:outputText
+																	value="#{lista.descripcionModalidadFacturacionId}"></h:outputText>
+															</p:column>
+															<p:column>
+																<f:facet name="header">
+																	<h:outputText value="ACCION"></h:outputText>
+																</f:facet>
+																<em> </em>
+																<p:commandLink value="Registrar" styleClass="text-green"
+																	process="@this"
+																	actionListener="#{registroResultadoVerificacionSituCertificacionController.seleccionarFila(lista)}"
+																	update="RegistroResultadoVerificacionSituForm">
+			                                                    </p:commandLink> 
+															</p:column>
+														</p:dataTable>
+													</div>
+												</div>
+											</p:fieldset>
+										</div>
+									</div>
+								</h:panelGroup>
+							</h:panelGroup>
+						</div>
+					</div>
+				</h:panelGroup>
+				<br />
+				<h:panelGroup
+					rendered="#{!registroResultadoVerificacionSituCertificacionController.certificacionSolicitudCertificacionModel.mostrarPanel}">
+					<div class="row">
+						<div class="box-body">
+							<div class="col-md-3">
+								<h:outputLabel value="RESULTADO" style="font-weight:bold" />
+								<br />
+							</div>
+							<div class="col-md-3">
+								<p:selectOneMenu id="idTipoEnvio" readonly="false"
+									validatorMessage="Debe seleccionar un valor"
+									requiredMessage="Campo requerido" required="true"
+									valueChangeListener="#{registroResultadoVerificacionSituCertificacionController.CambiarTipoResultado}">
+									<f:selectItem itemValue="#{null}"
+										itemLabel="Seleccione Tipo Envio" noSelectionOption="true" />
+									<f:selectItems
+										value="#{certificacionParametrics.listaTipoResultadoCertificacion}"
+										var="c" itemLabel="#{c.descripcion}"
+										itemValue="#{c.clasificadorId}" />
+									<f:ajax render=":RegistroResultadoVerificacionSituForm"
+										immediate="true"></f:ajax>
+								</p:selectOneMenu>
+								<p:message for="idTipoEnvio" display="text" class="width:100px">
+								</p:message>
+							</div>
+						</div>
+					</div>
+					<br />
+					<h:panelGroup id="idPanelComponente">
+						<h:panelGroup
+							rendered="#{registroResultadoVerificacionSituCertificacionController.certificacionSolicitudCertificacionModel.mostrarGrilla}">
+							<div class="row">
+								<div class="box-body">
+									<div class="col-xs-12">
+										<p:fieldset legend="Por favor cargue los archivos solicitados"
+											toggleable="true" toggleSpeed="500">
+											<sre:ComponenteCargadoHuellasDigital></sre:ComponenteCargadoHuellasDigital>
+											<div class="row">
+												<div class="col-xs-12">
+													<p:dataTable id="listaDetalleReporteConsulta"
+														value="#{registroHuellasDigitalesController.registroHuellasDigitalesComponent.listaRegistroHuellasDigitalesDto}"
+														var="lrc" rowIndexVar="rowIndex"
+														widgetVar="listaReporteConsulta"
+														styleClass="table table-striped table-bordered table-hover table-sm">
+
+														<p:column>
+															<f:facet name="header">
+																<h:outputText value="NOMBRE DEL ARCHIVO"></h:outputText>
+															</f:facet>
+															<h:outputText value="#{lrc.nombre}"></h:outputText>
+														</p:column>
+
+														<p:column>
+															<f:facet name="header">
+																<h:outputText value="NOMBRE DEL COMPONENTE"></h:outputText>
+															</f:facet>
+															<h:outputText value="#{lrc.componenteMinimo}"></h:outputText>
+														</p:column>
+
+														<p:column>
+															<f:facet name="header">
+																<h:outputText value="RUTA DEL ARCHIVO"></h:outputText>
+															</f:facet>
+															<h:outputText value="#{lrc.rutaArchivo}"></h:outputText>
+														</p:column>
+
+														<p:column>
+															<f:facet name="header">
+																<h:outputText value="SHA"></h:outputText>
+															</f:facet>
+															<h:outputText value="#{lrc.sha2}"></h:outputText>
+														</p:column>
+
+														<p:column>
+															<f:facet name="header">
+																<h:outputText value="CRC"></h:outputText>
+															</f:facet>
+															<h:outputText value="#{lrc.crc}"></h:outputText>
+														</p:column>
+
+														<p:column>
+															<f:facet name="header">
+																<h:outputText value="MD5"></h:outputText>
+															</f:facet>
+															<h:outputText value="#{lrc.md5}"></h:outputText>
+														</p:column>
+
+														<p:column>
+															<f:facet name="header">
+																<h:outputText value="OPERACIONES"></h:outputText>
+															</f:facet>
+															<p:commandButton icon="ui-icon-circle-minus"
+																title="Eliminar" ajax="true" process="@this"
+																actionListener="#{registroHuellasDigitalesController.eliminarFilaComponente(lrc)}"
+																update="#{p:component('idPanelComponente')}">
+																<p:confirm header="Confirmación"
+																	message="¿Está seguro de eliminar el registro?"
+																	icon="pi pi-exclamation-triangle" />
+															</p:commandButton>
+															<p:confirmDialog global="true" showEffect="fade"
+																appendTo="@(body)" hideEffect="fade">
+																<p:commandButton value="Yes" type="button"
+																	process="@this" styleClass="ui-confirmdialog-yes"
+																	icon="pi pi-check" />
+																<p:commandButton value="No" type="button"
+																	styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+															</p:confirmDialog>
+														</p:column>
+
+													</p:dataTable>
+												</div>
+											</div>
+										</p:fieldset>
+									</div>
+								</div>
+							</div>
+						</h:panelGroup>
+					</h:panelGroup>
+					<br />
+					<h:panelGroup id="idPanelObservacion">
+						<h:panelGroup
+							rendered="#{registroResultadoVerificacionSituCertificacionController.certificacionSolicitudCertificacionModel.tipoResultadoCertificacion!=0}">
+							<div class="box-footer">
+								<p:commandButton id="idGuardar" value="Guardar"
+									styleClass="btn btn-primary pull-right" resetValues="true"
+									validateClient="false" async="true"
+									process="@this idPanelObservacion" inmediate="true"
+									actionListener="#{registroResultadoVerificacionSituCertificacionController.almacenarRegistro}"
+									update="RegistroResultadoVerificacionSituForm idPanelComponente">
+									<p:confirm header="Confirmación"
+										message="¿Está seguro que desea guardar la información?"
+										icon="pi pi-exclamation-triangle" />
+								</p:commandButton>
+								<p:confirmDialog global="true" showEffect="fade"
+									appendTo="@(body)" hideEffect="fade">
+									<p:commandButton value="Yes" type="button" process="@this"
+										styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+									<p:commandButton value="No" type="button"
+										styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+								</p:confirmDialog>
+							</div>
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

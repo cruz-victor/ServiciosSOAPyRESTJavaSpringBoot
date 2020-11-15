@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CancelacionSolicitudCertificacion" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="94a85b61-bab1-44f7-924f-9d6655e1d284">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="usuario" class="java.lang.Long"/>
+	<parameter name="cite" class="java.lang.String"/>
+	<parameter name="fecha" class="java.lang.String"/>
+	<parameter name="sistema" class="java.lang.String"/>
+	<parameter name="nit" class="java.lang.String"/>
+	<parameter name="razonSocial" class="java.lang.String"/>
+	<parameter name="version" class="java.lang.String"/>
+	<parameter name="modalidad" class="java.lang.String"/>
+	<parameter name="fechaSolicitud" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band height="9" splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="132" splitType="Stretch">
+			<staticText>
+				<reportElement x="24" y="62" width="526" height="19" uuid="a10052c8-a039-4cb2-ac51-96e26eaa67d4"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Tahoma" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Solicitud de Certificación de Sistemas]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="53" y="37" width="280" height="20" uuid="3e420564-aadf-4289-96a1-25aac0cdf172"/>
+				<textFieldExpression><![CDATA[$P{cite}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="24" y="84" width="526" height="19" uuid="861bac11-e63d-4487-8b41-96ad4f2c37af"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Tahoma" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cancelación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="24" y="107" width="526" height="20" uuid="f8e7ec6b-e49f-4cdb-b690-9207b14ef689"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[R -XXXX]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="320" splitType="Stretch">
+			<staticText>
+				<reportElement x="72" y="132" width="100" height="20" uuid="24ac41d6-b279-48c9-b162-780b8b52b258"/>
+				<text><![CDATA[Sistema:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="192" y="132" width="300" height="20" uuid="a10dcc52-1558-4d2c-9876-24ebacc803fa"/>
+				<textFieldExpression><![CDATA[$P{sistema}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="72" y="209" width="100" height="20" uuid="b939eb7a-2673-427b-a18f-f204972b9165"/>
+				<text><![CDATA[Fecha Solicitud:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="80" width="100" height="20" uuid="6a26725e-7d78-4f3e-a01b-1717a3e996ee"/>
+				<text><![CDATA[NIT:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="108" width="100" height="20" uuid="8d6d63c9-d2a5-436e-a922-1e0e90e3a3ce"/>
+				<text><![CDATA[RAZON SOCIAL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="158" width="100" height="20" uuid="4921808c-8752-4937-b87e-88531ac0df53"/>
+				<text><![CDATA[Versión:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="183" width="100" height="20" uuid="1bc81cef-5581-4103-b127-2c1d2696a44e"/>
+				<text><![CDATA[Modalidad:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="192" y="158" width="300" height="20" uuid="e2374131-4947-4304-a439-82fbcb49155a"/>
+				<textFieldExpression><![CDATA[$P{version}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="192" y="183" width="300" height="20" uuid="276107b1-5c02-473e-b471-f026818c0ec8"/>
+				<textFieldExpression><![CDATA[$P{modalidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="192" y="209" width="300" height="20" uuid="36e0e26e-3db8-483a-a615-24f6549815a6"/>
+				<textFieldExpression><![CDATA[$P{fechaSolicitud}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="192" y="108" width="300" height="20" uuid="84f8ead4-2521-48d2-88ee-2a9938357670"/>
+				<textFieldExpression><![CDATA[$P{razonSocial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="192" y="80" width="300" height="20" uuid="be2563a9-5406-4739-af6d-616460cd9211"/>
+				<textFieldExpression><![CDATA[$P{nit}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="24" y="239" width="526" height="20" uuid="bb3aa3a2-2fab-45e0-b813-3ff0c24ec9c0"/>
+				<text><![CDATA[Fue procesada de forma exitosa.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="286" width="270" height="20" uuid="9d5de5f4-6557-4236-8994-5c8922162a69"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[<Firma Autorizada>]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="24" y="18" width="526" height="52" uuid="ae0ce40a-5b4c-4190-b158-0301a6354ebd"/>
+				<textFieldExpression><![CDATA["Señor Contribuyente: "
+
++"Mediante la presente confirmamos que la solicitud de cancelacion de la certificación de sistema recibida en fecha "+$P{fecha}+" para el sistema con las siguientes características:"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
